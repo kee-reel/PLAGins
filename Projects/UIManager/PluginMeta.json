@@ -1,0 +1,7 @@
+{
+    "Interface": "IUIManager",
+    "Name": "UIManager",
+    "RelatedPluginInterfaces": [
+        "IPluginLinker"
+    ]
+}
