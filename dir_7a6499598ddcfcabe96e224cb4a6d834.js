@@ -1,0 +1,27 @@
+var dir_7a6499598ddcfcabe96e224cb4a6d834 =
+[
+    [ "COMPortDataManager", "dir_d7bc06e9cdb9a38a38a3e6a3ef49dc4f.html", "dir_d7bc06e9cdb9a38a38a3e6a3ef49dc4f" ],
+    [ "DataBase", "dir_5519bacf90ff0dd366d130db3f06f4af.html", "dir_5519bacf90ff0dd366d130db3f06f4af" ],
+    [ "DayPlan", "dir_6a49d082f13d841da17c6b3b5ce1c7ff.html", "dir_6a49d082f13d841da17c6b3b5ce1c7ff" ],
+    [ "DayPlanView", "dir_cddc365ddb39d306e63238fde516d476.html", "dir_cddc365ddb39d306e63238fde516d476" ],
+    [ "ExtendableDataManager", "dir_d0821988c9446531b68c12605fadf5d0.html", "dir_d0821988c9446531b68c12605fadf5d0" ],
+    [ "FuzzyLogicManager", "dir_c03ebe6a20f1bb21faa2652db3c2df8a.html", "dir_c03ebe6a20f1bb21faa2652db3c2df8a" ],
+    [ "GridMainMenuView", "dir_f3e78ac513806cd167d8de13ea523fc1.html", "dir_f3e78ac513806cd167d8de13ea523fc1" ],
+    [ "HeartRateDeviceModel", "dir_a8c9f6c96470ac508701b9098cee2b08.html", "dir_a8c9f6c96470ac508701b9098cee2b08" ],
+    [ "HeartRateDeviceView", "dir_4e61307289caf451959f65e59aae7963.html", "dir_4e61307289caf451959f65e59aae7963" ],
+    [ "MachineLearningManager", "dir_53b2e4b19f7cb88575ff53c163084e3c.html", "dir_53b2e4b19f7cb88575ff53c163084e3c" ],
+    [ "ModbusDataReader", "dir_83355ea5acd3e44a945bbb74466e979e.html", "dir_83355ea5acd3e44a945bbb74466e979e" ],
+    [ "ModbusDataReaderView", "dir_b615df08111d3949a1fb4a8ba7061504.html", "dir_b615df08111d3949a1fb4a8ba7061504" ],
+    [ "ModbusDeviceDataManager", "dir_66f3cf1975efca178a49c8ce9cb13cb8.html", "dir_66f3cf1975efca178a49c8ce9cb13cb8" ],
+    [ "NotificationManager", "dir_878e0beed9b5a5603aa0c95869b6e90b.html", "dir_878e0beed9b5a5603aa0c95869b6e90b" ],
+    [ "PerceptronNeuralNetworkView", "dir_ad11278e12441617f2f95dca1a8c98c2.html", "dir_ad11278e12441617f2f95dca1a8c98c2" ],
+    [ "PomodoroManager", "dir_f8cd327328a1d44e8a0d1decb0afe4a3.html", "dir_f8cd327328a1d44e8a0d1decb0afe4a3" ],
+    [ "PomodoroManagerView", "dir_3755c0ba5ceef08866670cd446a2b381.html", "dir_3755c0ba5ceef08866670cd446a2b381" ],
+    [ "RootPluginLinker", "dir_0cc908e7ddb9017ff967152c991c9f67.html", "dir_0cc908e7ddb9017ff967152c991c9f67" ],
+    [ "TaskCalendar", "dir_7fe3e13f862584775dd7522597f66144.html", "dir_7fe3e13f862584775dd7522597f66144" ],
+    [ "TaskSketchManager", "dir_c7e24fc4017c6508d2c0e322224bebf2.html", "dir_c7e24fc4017c6508d2c0e322224bebf2" ],
+    [ "TaskSketchManagerView", "dir_edab63fb44966915a6f7c0f5a38e1aad.html", "dir_edab63fb44966915a6f7c0f5a38e1aad" ],
+    [ "UIManager", "dir_bc40cc2a5a9a36de24c93ff1e3f5ea23.html", "dir_bc40cc2a5a9a36de24c93ff1e3f5ea23" ],
+    [ "UserTaskManager", "dir_b796c8f84d3690b17c99f2ebe53be3b8.html", "dir_b796c8f84d3690b17c99f2ebe53be3b8" ],
+    [ "UserTaskManagerView", "dir_415b1b0b26c36636e3ffa7f0725c9c22.html", "dir_415b1b0b26c36636e3ffa7f0725c9c22" ]
+];
