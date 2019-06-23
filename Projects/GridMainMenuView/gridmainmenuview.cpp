@@ -9,12 +9,6 @@ GridMainMenuView::GridMainMenuView() :
     m_uniqueIdCounter(0),
     m_exitItem(nullptr)
 {
-
-    //    quickView = new QQuickView();
-    //    container = QWidget::createWindowContainer(quickView, this);
-    //    quickView->setSource(QUrl(QStringLiteral("qrc:///Menu.qml")));
-    //    ui->verticalLayout->addWidget(container);
-
     layout = new AspectAwareGridLayout(this);
     ui->scrollAreaWidgetContents->setLayout(layout);
 #ifdef Q_OS_ANDROID
@@ -134,9 +128,11 @@ bool GridMainMenuView::open()
 
         for(const auto &menuItem : menuItems)
         {
+            auto &&meta = menuItem.data()->getMeta();
+            if(meta.Name == "UIManager" || meta.Name == "NotificationManager")
+                continue;
             auto uniqueId = getUniqueId();
             m_uiElements.insert(uniqueId, menuItem);
-            auto &&meta = menuItem.data()->getMeta();
             UniquePushButton *uniqueButton = new UniquePushButton(uniqueId, FormatMenuItemName(meta.Name), this);
             uniqueButton->setMinimumHeight(itemMinHeight);
             connect(uniqueButton, SIGNAL(OnMenuItemSelected(UniquePushButton *)), SLOT(UniqueButtonPressed(UniquePushButton *)));
@@ -148,7 +144,7 @@ bool GridMainMenuView::open()
     QSpacerItem *bottomSpacer = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
     layout->addItem(bottomSpacer);
 
-    UniquePushButton *exitItem = new UniquePushButton(getUniqueId(), "Exit", this);
+    UniquePushButton *exitItem = new UniquePushButton(PredefinedIndices::EXIT, "Exit", this);
     m_exitItem = exitItem;
     connect(exitItem, SIGNAL(OnMenuItemSelected(UniquePushButton *)), SLOT(UniqueButtonPressed(UniquePushButton *)));
     m_uniqueButtons.append(exitItem);

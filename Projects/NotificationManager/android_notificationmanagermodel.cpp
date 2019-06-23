@@ -2,10 +2,9 @@
 
 #include <QDebug>
 
-#if (defined(Q_OS_ANDROID))
 static bool isTriggered = false;
 
-void NotificationManagerModel::ShowNotification(QString title, QString message, int id)
+void NotificationManager::ShowNotification(QString title, QString message, int id)
 {
     QAndroidJniObject javaTitle = QAndroidJniObject::fromString(title);
     QAndroidJniObject javaMessage = QAndroidJniObject::fromString(message);
@@ -17,7 +16,7 @@ void NotificationManagerModel::ShowNotification(QString title, QString message, 
             jint(id));
 }
 
-void NotificationManagerModel::CancelNotification(int id)
+void NotificationManager::CancelNotification(int id)
 {
     //    public static void cancelNotification(int notifyId)
     QAndroidJniObject::callStaticMethod<void>("com/mass/mainapp/QtActivityExtention", "cancelNotification",
@@ -25,7 +24,7 @@ void NotificationManagerModel::CancelNotification(int id)
             jint(id));
 }
 
-void NotificationManagerModel::ShowToast(const QString &message, Duration duration)
+void NotificationManager::ShowToast(const QString &message, Duration duration)
 {
     //    public static void showToast(String msg, int delay)
     QAndroidJniObject javaMessage = QAndroidJniObject::fromString(message);
@@ -35,7 +34,7 @@ void NotificationManagerModel::ShowToast(const QString &message, Duration durati
             jint(duration));
 }
 
-void NotificationManagerModel::PlanApplicationWakeup(TimeType type, QDateTime time)
+void NotificationManager::PlanApplicationWakeup(TimeType type, QDateTime time)
 {
     auto activity = QtAndroid::androidActivity();
     auto packageManager = activity.callObjectMethod("getPackageManager",
@@ -60,7 +59,7 @@ void NotificationManagerModel::PlanApplicationWakeup(TimeType type, QDateTime ti
                                   pendingIntent.object());
 }
 
-int NotificationManagerModel::SetAlarm(INotificationManager::TimeType type, QDateTime time)
+int NotificationManager::SetAlarm(INotificationManager::TimeType type, QDateTime time)
 {
     qDebug() << "SET ALARM" << time.toSecsSinceEpoch();
     //    public static void setAlarm(int type, int time)
@@ -72,7 +71,7 @@ int NotificationManagerModel::SetAlarm(INotificationManager::TimeType type, QDat
     delayedCallbackTimer.start();
 }
 
-int NotificationManagerModel::SetRepeatingAlarm(INotificationManager::TimeType type, QDateTime triggerTime, QDateTime interval)
+int NotificationManager::SetRepeatingAlarm(INotificationManager::TimeType type, QDateTime triggerTime, QDateTime interval)
 {
     qDebug() << "SET" << triggerTime.toSecsSinceEpoch() << interval.toSecsSinceEpoch();
     //    public static void setRepeatingAlarm(int type, int triggerTime, int interval)
@@ -84,7 +83,7 @@ int NotificationManagerModel::SetRepeatingAlarm(INotificationManager::TimeType t
     delayedCallbackTimer.start();
 }
 
-void NotificationManagerModel::SetAlarmedNotification(INotificationManager::TimeType type, QDateTime time, QString title,
+void NotificationManager::SetAlarmedNotification(INotificationManager::TimeType type, QDateTime time, QString title,
         QString message, int id)
 {
     QAndroidJniObject javaTitle = QAndroidJniObject::fromString(title);
@@ -99,7 +98,7 @@ void NotificationManagerModel::SetAlarmedNotification(INotificationManager::Time
             jint(id));
 }
 
-void NotificationManagerModel::SetAlarmedToast(INotificationManager::TimeType type, QDateTime time, const QString &message,
+void NotificationManager::SetAlarmedToast(INotificationManager::TimeType type, QDateTime time, const QString &message,
         INotificationManager::Duration duration)
 {
     QAndroidJniObject javaMessage = QAndroidJniObject::fromString(message);
@@ -112,20 +111,20 @@ void NotificationManagerModel::SetAlarmedToast(INotificationManager::TimeType ty
             jint(duration));
 }
 
-void NotificationManagerModel::CancelAlarm()
+void NotificationManager::CancelAlarm()
 {
     //    public static void cancelAlarm()
     QAndroidJniObject::callStaticMethod<void>("com/mass/mainapp/QtActivityExtention", "cancelAlarm");
 }
 
 
-void NotificationManagerModel::OnAndroidAlarmRecieved(JNIEnv *, jobject)
+void NotificationManager::OnAndroidAlarmRecieved(JNIEnv *, jobject)
 {
     qDebug() << "OnAndroidAlarmRecieved" << &isTriggered << isTriggered;
     isTriggered = true;
 }
 
-void NotificationManagerModel::CheckTimerTimeout()
+void NotificationManager::CheckTimerTimeout()
 {
     qDebug() << "~TIMEOUT" << &isTriggered << isTriggered;
 
@@ -137,7 +136,7 @@ void NotificationManagerModel::CheckTimerTimeout()
     }
 }
 
-void NotificationManagerModel::RegisterNativeMethods()
+void NotificationManager::RegisterNativeMethods()
 {
 //    qDebug() << "~Start";
 //    JNINativeMethod methods[]
@@ -145,7 +144,7 @@ void NotificationManagerModel::RegisterNativeMethods()
 //        {
 //            "OnAndroidAlarmRecieved", // const char* function name;
 //            "()V", // const char* function signature
-//            reinterpret_cast<void*>(&NotificationManagerModel::OnAndroidAlarmRecieved) // function pointer
+//            reinterpret_cast<void*>(&NotificationManager::OnAndroidAlarmRecieved) // function pointer
 //        }
 //    };
 //    QAndroidJniEnvironment env;
@@ -176,4 +175,3 @@ void NotificationManagerModel::RegisterNativeMethods()
 //    delayedCallbackTimer.setInterval(1000);
 //    connect(&delayedCallbackTimer, SIGNAL(timeout()), this, SLOT(CheckTimerTimeout()));
 }
-#endif

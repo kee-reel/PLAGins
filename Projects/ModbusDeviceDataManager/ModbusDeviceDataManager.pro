@@ -1,4 +1,5 @@
-
+android {}
+else {
 TARGET = ModbusDeviceDataManager
 TEMPLATE = lib
 QT += widgets serialbus serialport gui
@@ -17,3 +18,4 @@ HEADERS +=\
 
 DISTFILES += \
     PluginMeta.json
+}

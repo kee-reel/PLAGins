@@ -1,3 +1,4 @@
+!android {
 
 TARGET = COMPortDataManager
 TEMPLATE = lib
@@ -17,3 +18,4 @@ HEADERS +=\
 
 DISTFILES += \
     PluginMeta.json
+}

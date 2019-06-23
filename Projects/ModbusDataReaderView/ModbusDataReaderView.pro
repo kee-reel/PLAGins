@@ -1,4 +1,5 @@
-
+android {}
+else {
 TARGET = ModbusDataReaderView
 TEMPLATE = lib
 QT += widgets charts serialport serialbus
@@ -18,3 +19,4 @@ DISTFILES += \
 
 FORMS += \
     form.ui
+}

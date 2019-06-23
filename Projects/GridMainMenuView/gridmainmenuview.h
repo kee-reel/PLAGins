@@ -41,6 +41,12 @@ private:
     QVector<UniquePushButton *> m_uniqueButtons;
     UniquePushButton *m_exitItem;
 
+    enum PredefinedIndices
+    {
+        EXIT = -1,
+        ADD_ITEM = -2
+    };
+
 private slots:
     void UniqueButtonPressed(UniquePushButton *button);
     QString FormatMenuItemName(QString name);

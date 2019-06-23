@@ -13,9 +13,13 @@ QT += androidextras
 
 SOURCES += \
     qextendedtimer.cpp \
-    win_motificationmanagermodel.cpp \
-    android_notificationmanagermodel.cpp \
     common_notificationmanagermodel.cpp
+
+android {
+SOURCES += android_notificationmanagermodel.cpp
+} else {
+SOURCES += win_motificationmanagermodel.cpp
+}
 
 HEADERS +=\
     qextendedtimer.h \

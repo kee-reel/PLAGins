@@ -37,12 +37,6 @@ public:
     PluginLinkerCore();
     virtual ~PluginLinkerCore() override;
 
-    // ICorePlugin interface
-public:
-    virtual void addPlugins(const QVector<QWeakPointer<IPluginHandler> > &pluginHandlers) override;
-    virtual void start(QWeakPointer<IPluginHandler> selfHandler, QWidget *parentWidget) override;
-    virtual bool close() override;
-
     // IPlugin interface
 public:
     virtual QWidget *getWidget() override;
@@ -71,15 +65,17 @@ private:
     const QString META_FIELD_RELATED_PLUGIN_INTERFACES  = "RelatedPluginInterfaces";
 
 private:
-    //    IModelPlugin *rootModel;
-    //    IMainMenuModel::MenuItem *rootMenuItem;
-    //    QMap<MetaInfo*, PluginInfo*> menuItems;
-
     QWidget *m_parentWidget;
     QSharedPointer<LinkerItem> m_corePlugin;
     QMap<QString, QSharedPointer<LinkerItem>> m_interfacesMap;
     QMap<int, QSharedPointer<LinkerItem>> m_linkerItemsMap;
     int m_pluginUidCounter;
+
+    // ICorePlugin interface
+public:
+    virtual void coreInit(IApplication *app) override;
+
+    virtual bool coreFini() override;
 };
 //! @}
 #endif // PLUGINLINKER_H

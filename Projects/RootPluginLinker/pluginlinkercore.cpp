@@ -5,7 +5,6 @@ PluginLinkerCore::PluginLinkerCore() :
     m_parentWidget(nullptr),
     m_pluginUidCounter(0)
 {
-    //    rootMenuItem = new IMainMenuModel::MenuItem();
 }
 
 PluginLinkerCore::~PluginLinkerCore()
@@ -15,44 +14,6 @@ PluginLinkerCore::~PluginLinkerCore()
 int PluginLinkerCore::getCorePluginUID()
 {
     return m_corePlugin.data()->getPluginUID();
-}
-
-void PluginLinkerCore::addPlugins(const QVector<QWeakPointer<IPluginHandler> > &pluginHandlers)
-{
-    for(auto& plugin : pluginHandlers)
-    {
-        addPlugin(plugin);
-    }
-}
-
-void PluginLinkerCore::start(QWeakPointer<IPluginHandler> selfHandler, QWidget *parentWidget)
-{
-    if(!addCorePlugin(selfHandler))
-    {
-        raiseError("Can't add core plugin.");
-        return;
-    }
-
-    m_parentWidget = parentWidget;
-
-    if(!setupLinks())
-    {
-        raiseError("Can't link plugins.");
-    }
-
-    m_corePlugin->open();
-}
-
-bool PluginLinkerCore::close()
-{
-    for (auto iter = m_linkerItemsMap.begin(); iter != m_linkerItemsMap.end(); ++iter)
-    {
-        if(iter.key() != m_corePlugin.data()->getPluginUID())
-        {
-            iter.value().data()->unload();
-        }
-    }
-    return true;
 }
 
 QWidget *PluginLinkerCore::getWidget()
@@ -236,4 +197,35 @@ bool PluginLinkerCore::setupLinks()
 
     onLinkageFinished();
     return isLinkageSucceded;
+}
+
+
+void PluginLinkerCore::coreInit(IApplication *app)
+{
+    auto pluginHandlers = app->getPlugins();
+    for(auto& plugin : pluginHandlers)
+    {
+        addPlugin(plugin);
+    }
+
+    auto selfHandler = app->getCorePlugin();
+    if(!addCorePlugin(selfHandler))
+    {
+        raiseError("Can't add core plugin.");
+        return;
+    }
+
+    m_parentWidget = app->getParentWidget();
+
+    if(!setupLinks())
+    {
+        raiseError("Can't link plugins.");
+    }
+
+    m_corePlugin->open();
+}
+
+bool PluginLinkerCore::coreFini()
+{
+    return false;
 }

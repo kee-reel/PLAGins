@@ -1,4 +1,5 @@
-
+android { }
+else {
 TARGET = HeartRateDevice
 TEMPLATE = lib
 QT += widgets serialport serialbus charts
@@ -15,3 +16,4 @@ HEADERS += \
 
 DISTFILES += \
     PluginMeta.json
+}

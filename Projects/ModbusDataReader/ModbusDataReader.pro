@@ -1,7 +1,8 @@
-
+android {}
+else {
 TARGET = ModbusDataReader
 TEMPLATE = lib
-QT += widgets serialport serialbus charts jsonserializer
+QT += widgets serialport serialbus charts
 
 DEFINES += PLUGIN_BASE_QOBJECT
 
@@ -21,3 +22,4 @@ HEADERS +=\
 
 DISTFILES += \
     PluginMeta.json
+}

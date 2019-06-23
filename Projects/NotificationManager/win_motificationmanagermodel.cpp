@@ -1,6 +1,5 @@
 #include "notificationmanager.h"
 
-#if (defined(Q_OS_UNIX))
 void NotificationManager::ShowNotification(QString title, QString message, int id)
 {
 }
@@ -73,4 +72,3 @@ void NotificationManager::SetAlarmedToast(INotificationManager::TimeType type, Q
         INotificationManager::Duration duration)
 {
 }
-#endif
