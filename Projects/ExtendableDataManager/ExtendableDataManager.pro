@@ -18,8 +18,8 @@ SOURCES += \
     extendabledatamanager.cpp
 
 HEADERS += \
-    ../../PluginsInterfaces/iDataBase.h \
-    ../../PluginsInterfaces/iextendabledatamanager.h \
+    ../../Interfaces/iDataBase.h \
+    ../../Interfaces/iextendabledatamanager.h \
     tablehandler.h \
     extendableitemmodel.h \
     item.h \

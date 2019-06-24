@@ -14,7 +14,7 @@ SOURCES += \
 
 HEADERS += \
     linkeritem.h \
-    ../../PluginsInterfaces/ipluginlinker.h \
+    ../../Interfaces/ipluginlinker.h \
     ../../../Application/icoreplugin.h \
     pluginlinkercore.h
 

@@ -14,7 +14,7 @@ SOURCES += \
     uniquepushbutton.cpp
 
 HEADERS += \
-    ../../PluginsInterfaces/iuimanager.h \
+    ../../Interfaces/iuimanager.h \
     gridmainmenuview.h \
     aspectawaregridlayout.h \
     uniquepushbutton.h
@@ -22,7 +22,6 @@ HEADERS += \
 DISTFILES += \
     PluginMeta.json \
     MenuGrid.qml
-
 
 FORMS += \
     form.ui

@@ -55,10 +55,6 @@ public:
     virtual QObject *getObject() override;
     virtual QWidget *getWidget() override;
     virtual bool isReady() override;
-
-    virtual bool open() override;
-    virtual bool close() override;
-
     virtual void onAllReferencesSet();
     virtual void onAllReferencesReady();
 
@@ -69,6 +65,10 @@ signals:
 
 protected slots:
     virtual void onReferenceReady(IPlugin* reference) override;
+
+    virtual bool open() override;
+    virtual bool close() override;
+
 
 protected:
     void constructorInit();

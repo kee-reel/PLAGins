@@ -2,7 +2,6 @@
     "Interface": "",
     "Name": "GridMainMenuView",
     "RelatedPluginInterfaces": [
-        "IUIManager",
-        "IPluginLinker"
+        "IUIManager"
     ]
 }

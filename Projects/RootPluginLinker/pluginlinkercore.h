@@ -14,7 +14,6 @@
 #include "../../Common/plugin_base.h"
 
 #include "../../Interfaces/ipluginlinker.h"
-#include "../../Interfaces/iuimanager.h"
 
 #include "linkeritem.h"
 
@@ -43,9 +42,8 @@ public:
 
     // IPluginLinker interface
 public:
-    virtual bool addCorePlugin(QWeakPointer<IPluginHandler> pluginHandler) override;
-    virtual bool addPlugin(QWeakPointer<IPluginHandler> pluginHandler) override;
-    virtual bool setupLinks() override;
+    virtual bool unloadPlugin(QWeakPointer<ILinkerItem> linkerItem) override;
+    virtual bool loadPlugin(QString filename) override;
 
     virtual int getCorePluginUID() override;
     virtual QMap<int, QWeakPointer<ILinkerItem> > getPluginsMap() override;
@@ -54,6 +52,10 @@ signals:
     void onLinkageFinished();
 
 private:
+    bool addCorePlugin(QWeakPointer<IPluginHandler> pluginHandler);
+    bool addPlugin(QWeakPointer<IPluginHandler> pluginHandler);
+    bool setupLinks();
+
     template<class Type>
     Type *castToPlugin(QObject *possiblePlugin) const;
     QSharedPointer<MetaInfo> parseMetaInfo(const QJsonObject &metaInfoObject) const;
@@ -65,6 +67,7 @@ private:
     const QString META_FIELD_RELATED_PLUGIN_INTERFACES  = "RelatedPluginInterfaces";
 
 private:
+    IApplication* m_app;
     QWidget *m_parentWidget;
     QSharedPointer<LinkerItem> m_corePlugin;
     QMap<QString, QSharedPointer<LinkerItem>> m_interfacesMap;
@@ -76,6 +79,9 @@ public:
     virtual void coreInit(IApplication *app) override;
 
     virtual bool coreFini() override;
+
+    // IPluginLinker interface
+public:
 };
 //! @}
 #endif // PLUGINLINKER_H

@@ -113,12 +113,18 @@ QSharedPointer<MetaInfo> PluginLinkerCore::parseMetaInfo(const QJsonObject &meta
 
 QSharedPointer<LinkerItem> PluginLinkerCore::createLinkerItem(QWeakPointer<IPluginHandler> pluginHandler)
 {
+    if(pluginHandler.isNull())
+    {
+        qDebug() << "PluginLinker::createLinkerItem: given hander is empty";
+        return QWeakPointer<LinkerItem>();
+    }
+
     auto jsonObject = pluginHandler.data()->getMeta();
     auto metaInfo = parseMetaInfo(jsonObject);
 
     if(metaInfo.isNull())
     {
-        qCritical() << "PluginLinker::createLinkerItem: can't load plugin" << m_metaInfo.Name;
+        qDebug() << "PluginLinker::createLinkerItem: can't load plugin" << m_metaInfo.Name;
         return QWeakPointer<LinkerItem>();
     }
 
@@ -202,6 +208,7 @@ bool PluginLinkerCore::setupLinks()
 
 void PluginLinkerCore::coreInit(IApplication *app)
 {
+    m_app = app;
     auto pluginHandlers = app->getPlugins();
     for(auto& plugin : pluginHandlers)
     {
@@ -228,4 +235,19 @@ void PluginLinkerCore::coreInit(IApplication *app)
 bool PluginLinkerCore::coreFini()
 {
     return false;
+}
+
+
+bool PluginLinkerCore::unloadPlugin(QWeakPointer<ILinkerItem> linkerItem)
+{
+    auto uid = linkerItem.data()->getPluginUID();
+    auto pluginHandler = m_linkerItemsMap[uid];
+    pluginHandler.data()->unload();
+    m_linkerItemsMap.remove(uid);
+}
+
+bool PluginLinkerCore::loadPlugin(QString filename)
+{
+    auto handler = m_app->makePluginHandler(filename);
+    return addPlugin(handler);
 }

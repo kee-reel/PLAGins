@@ -9,8 +9,8 @@ SOURCES += \
 
 HEADERS += \
     uimanager.h \
-    ../../PluginsInterfaces/ipluginlinker.h \
-    ../../PluginsInterfaces/iuimanager.h \
+    ../../Interfaces/ipluginlinker.h \
+    ../../Interfaces/iuimanager.h \
     uielement.h
 
 DEFINES += \

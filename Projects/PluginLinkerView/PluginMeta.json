@@ -1,0 +1,7 @@
+{
+    "Interface": "IPluginLinkerView",
+    "Name": "PluginLinkerView",
+    "RelatedPluginInterfaces": [
+        "IPluginLinker"
+    ]
+}

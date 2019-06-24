@@ -226,6 +226,12 @@ void UIManager::onElementOpened(int elementId)
     auto widget = openedElement.data()->getElementWidget();
     qDebug() << "Opened" << openedElement.data()->getMeta().Name;
 
+    if(elementId == m_rootElementId && m_widgetStack.isEmpty())
+    {
+        open();
+        return;
+    }
+
     if(widget && widget != m_parentWidget)
     {
         push(widget);

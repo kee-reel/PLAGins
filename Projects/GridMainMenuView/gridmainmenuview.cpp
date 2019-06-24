@@ -2,6 +2,7 @@
 #include "ui_form.h"
 
 #include <QMessageBox>
+#include <QFileDialog>
 
 GridMainMenuView::GridMainMenuView() :
     PluginBase(),
@@ -11,6 +12,7 @@ GridMainMenuView::GridMainMenuView() :
 {
     layout = new AspectAwareGridLayout(this);
     ui->scrollAreaWidgetContents->setLayout(layout);
+    connect(ui->btnAddPlugin, &QPushButton::clicked, this, &GridMainMenuView::AddPluginBtnPressed);
 #ifdef Q_OS_ANDROID
     ui->scrollArea->grabGesture(Qt::TapAndHoldGesture);
     QScroller::grabGesture(ui->scrollArea, QScroller::LeftMouseButtonGesture);
@@ -76,6 +78,11 @@ QString GridMainMenuView::FormatMenuItemName(QString name)
     return itemMenuName;
 }
 
+void GridMainMenuView::AddPluginBtnPressed()
+{
+    auto filename = QFileDialog::getOpenFileName(this, "Load plugin");
+}
+
 int GridMainMenuView::getUniqueId()
 {
     return ++m_uniqueIdCounter;
@@ -106,17 +113,20 @@ void GridMainMenuView::onAllReferencesSet()
 
 bool GridMainMenuView::open()
 {
-    auto connectedElements = m_uiManager->getRootElement().data()->getConnectedElements();
+    auto rootItem = m_uiManager->getRootElement();
+    auto connectedElements = rootItem.data()->getConnectedElements();
 
     QVector<QWeakPointer<IUIManager::IUIElement>> menuItems;
-    menuItems.reserve(connectedElements.size());
+    menuItems.reserve(connectedElements.size()+1);
     for(const auto &item : connectedElements)
     {
+        qDebug() << item.data()->getMeta().Name;
         if(!item.data()->getElementWidget())
         {
             menuItems.append(item);
         }
     }
+    menuItems.append(rootItem);
 
     if(menuItems.count() != 0)
     {
@@ -129,8 +139,6 @@ bool GridMainMenuView::open()
         for(const auto &menuItem : menuItems)
         {
             auto &&meta = menuItem.data()->getMeta();
-            if(meta.Name == "UIManager" || meta.Name == "NotificationManager")
-                continue;
             auto uniqueId = getUniqueId();
             m_uiElements.insert(uniqueId, menuItem);
             UniquePushButton *uniqueButton = new UniquePushButton(uniqueId, FormatMenuItemName(meta.Name), this);

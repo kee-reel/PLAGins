@@ -44,9 +44,8 @@ public:
         void onConnectionsChanged(int itemId);
     };
 
-    virtual bool addCorePlugin(QWeakPointer<IPluginHandler> pluginHandler) = 0;
-    virtual bool addPlugin(QWeakPointer<IPluginHandler> pluginHandler) = 0;
-    virtual bool setupLinks() = 0;
+    virtual bool unloadPlugin(QWeakPointer<ILinkerItem> linkerItem) = 0;
+    virtual bool loadPlugin(QString filename) = 0;
 
     virtual int getCorePluginUID() = 0;
     virtual QMap<int, QWeakPointer<ILinkerItem> > getPluginsMap() = 0;
