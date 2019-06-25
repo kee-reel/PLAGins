@@ -2,7 +2,6 @@
 #include "ui_form.h"
 
 #include <QMessageBox>
-#include <QFileDialog>
 
 GridMainMenuView::GridMainMenuView() :
     PluginBase(),
@@ -80,7 +79,6 @@ QString GridMainMenuView::FormatMenuItemName(QString name)
 
 void GridMainMenuView::AddPluginBtnPressed()
 {
-    auto filename = QFileDialog::getOpenFileName(this, "Load plugin");
 }
 
 int GridMainMenuView::getUniqueId()
