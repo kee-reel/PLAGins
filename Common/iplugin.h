@@ -15,6 +15,7 @@ struct MetaInfo
     QString Name;
     //! \brief Name of parent plugin.
     QList<QString> RelatedPluginNames;
+    QString About;
 };
 
 //! \brief This interface provides basic methods for all plugins.

@@ -88,7 +88,7 @@ QSharedPointer<MetaInfo> PluginLinkerCore::parseMetaInfo(const QJsonObject &meta
     }
 
     // Set module type
-    newMetaInfo->InterfaceName = metaInfo.value(META_FIELD_INTERFACE).toString().toUpper();
+    newMetaInfo->InterfaceName = metaInfo.value(META_FIELD_INTERFACE).toString();
     if(newMetaInfo->InterfaceName == "")
     {
         qWarning() << QString("PluginBase::parseMetaInfo: plugin %1 field %2 is empty; "
@@ -101,8 +101,12 @@ QSharedPointer<MetaInfo> PluginLinkerCore::parseMetaInfo(const QJsonObject &meta
     QJsonArray array = metaInfo.value(META_FIELD_RELATED_PLUGIN_INTERFACES).toArray();
     for(auto iter = array.begin(); iter != array.end(); ++iter)
     {
-        newMetaInfo->RelatedPluginNames.append(iter->toString().toUpper());
+        newMetaInfo->RelatedPluginNames.append(iter->toString());
     }
+
+    // Set module parent name
+    auto jsonValueAbout = metaInfo.value(META_FIELD_ABOUT);
+    newMetaInfo->About = jsonValueAbout.isNull() ? "" : jsonValueAbout.toString();
 
     //    qDebug() << "PluginBase::parseMetaInfo: succesfuly parsed:" <<
     //             META_FIELD_NAME << newMetaInfo->Name << endl <<

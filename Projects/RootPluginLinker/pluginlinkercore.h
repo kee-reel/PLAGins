@@ -65,6 +65,7 @@ private:
     const QString META_FIELD_INTERFACE                  = "Interface";
     const QString META_FIELD_NAME                       = "Name";
     const QString META_FIELD_RELATED_PLUGIN_INTERFACES  = "RelatedPluginInterfaces";
+    const QString META_FIELD_ABOUT                      = "About";
 
 private:
     IApplication* m_app;

@@ -9,6 +9,7 @@ PluginLinkerView::PluginLinkerView() :
     connect(ui->btnAdd, &QPushButton::clicked, this, &PluginLinkerView::addPlugin);
     connect(ui->btnRemove, &QPushButton::clicked, this, &PluginLinkerView::removePlugin);
     connect(ui->btnExit, &QPushButton::clicked, this, &PluginLinkerView::close);
+    connect(ui->listPlugins, &QListView::clicked, this, &PluginLinkerView::onClicked);
     ui->listPlugins->setModel(&m_pluginsListModel);
 }
 
@@ -31,7 +32,6 @@ void PluginLinkerView::onAllReferencesSet()
     }
     PluginBase::onAllReferencesSet();
 }
-
 
 void PluginLinkerView::onAllReferencesReady()
 {
@@ -80,4 +80,12 @@ void PluginLinkerView::removePlugin()
         m_linkerItems.insert(meta.Name, iter.value());
     }
     m_pluginsListModel.setStringList(m_linkerItems.keys());
+}
+
+void PluginLinkerView::onClicked(const QModelIndex &index)
+{
+    auto pluginName = index.data().toString();
+    auto item = m_linkerItems[pluginName];
+    auto meta = item.data()->getMeta();
+    ui->textAbout->setText(meta.About);
 }

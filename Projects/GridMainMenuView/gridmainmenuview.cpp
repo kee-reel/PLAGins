@@ -98,7 +98,7 @@ void GridMainMenuView::onAllReferencesSet()
     {
         for(const auto &reference : m_referencesMap)
         {
-            if(reference->getPluginMetaInfo().InterfaceName == "IUIMANAGER")
+            if(!reference->getPluginMetaInfo().InterfaceName.compare("IUIMANAGER", Qt::CaseInsensitive))
             {
                 qDebug() << "Setup grid";
                 m_uiManager = castPluginToInterface<IUIManager>(reference);

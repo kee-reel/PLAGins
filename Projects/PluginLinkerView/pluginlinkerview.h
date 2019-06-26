@@ -35,6 +35,7 @@ public:
 private slots:
     void addPlugin();
     void removePlugin();
+    void onClicked(const QModelIndex &index);
 
 private:
     IPluginLinker* m_pluginLinker;
