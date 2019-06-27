@@ -11,7 +11,6 @@ GridMainMenuView::GridMainMenuView() :
 {
     layout = new AspectAwareGridLayout(this);
     ui->scrollAreaWidgetContents->setLayout(layout);
-    connect(ui->btnAddPlugin, &QPushButton::clicked, this, &GridMainMenuView::AddPluginBtnPressed);
 #ifdef Q_OS_ANDROID
     ui->scrollArea->grabGesture(Qt::TapAndHoldGesture);
     QScroller::grabGesture(ui->scrollArea, QScroller::LeftMouseButtonGesture);
@@ -41,44 +40,17 @@ QString GridMainMenuView::FormatMenuItemName(QString name)
 {
     QRegExp regExp = QRegExp("([A-Z]+[a-z]+)");
     regExp.setCaseSensitivity(Qt::CaseSensitive);
-    int pos = 0;
     QStringList list;
+    QString itemMenuName;
+    int pos = regExp.indexIn(name, itemMenuName.length());
     while(pos >= 0)
     {
-        pos = regExp.indexIn(name, pos);
-        if(pos == -1)
-        {
-            break;
-        }
-        list.append(regExp.cap(0));
-        pos += list.last().length();
+        itemMenuName.append(regExp.cap(0));
+        pos = itemMenuName.length();
+        pos = regExp.indexIn(name, itemMenuName.length());
     }
 
-    QString itemMenuName;
-    for(int i = 0; i < list.count(); ++i)
-    {
-        if(i == 0)
-        {
-            itemMenuName += list[i];
-        }
-        else if(i == list.count() - 1)
-        {
-            if(list[i].toLower() == "model")
-            {
-                break;
-            }
-            itemMenuName += list[i];
-        }
-        else
-        {
-            itemMenuName += list[i];
-        }
-    }
     return itemMenuName;
-}
-
-void GridMainMenuView::AddPluginBtnPressed()
-{
 }
 
 int GridMainMenuView::getUniqueId()
@@ -100,7 +72,6 @@ void GridMainMenuView::onAllReferencesSet()
         {
             if(!reference->getPluginMetaInfo().InterfaceName.compare("IUIMANAGER", Qt::CaseInsensitive))
             {
-                qDebug() << "Setup grid";
                 m_uiManager = castPluginToInterface<IUIManager>(reference);
                 Q_ASSERT(m_uiManager);
             }

@@ -68,10 +68,10 @@ QSharedPointer<MetaInfo> PluginLinkerCore::parseMetaInfo(const QJsonObject &meta
     {
         if(!metaInfo.contains(metaFieldName))
         {
-            qDebug() << "PluginBase::parseMetaInfo: meta has no field:" << metaFieldName << "But has fields:";
+            log(SeverityType::WARNING, QString("PluginBase::parseMetaInfo: meta has no field '%1' but has fields:").arg(metaFieldName));
             for(auto iter = metaInfo.begin(); iter != metaInfo.end(); ++iter)
             {
-                qDebug() << iter.key() << " = " << iter.value();
+                log(SeverityType::WARNING, QString("%1: %2").arg(iter.key()).arg(iter.value().toString()));
             }
             return nullptr;
         }
@@ -83,7 +83,7 @@ QSharedPointer<MetaInfo> PluginLinkerCore::parseMetaInfo(const QJsonObject &meta
     newMetaInfo->Name = metaInfo.value(META_FIELD_NAME).toString();
     if(newMetaInfo->Name == "")
     {
-        qCritical() << QString("PluginBase::parseMetaInfo: parse error: field %1 is empty.").arg(META_FIELD_NAME);
+        log(SeverityType::CRITICAL, QString("PluginBase::parseMetaInfo: parse error: field %1 is empty.").arg(META_FIELD_NAME));
         return nullptr;
     }
 
@@ -91,10 +91,10 @@ QSharedPointer<MetaInfo> PluginLinkerCore::parseMetaInfo(const QJsonObject &meta
     newMetaInfo->InterfaceName = metaInfo.value(META_FIELD_INTERFACE).toString();
     if(newMetaInfo->InterfaceName == "")
     {
-        qWarning() << QString("PluginBase::parseMetaInfo: plugin %1 field %2 is empty; "
-                              "this item won't be referenced by other plugins.")
-                   .arg(newMetaInfo->Name)
-                   .arg(META_FIELD_INTERFACE);
+        log(SeverityType::WARNING, QString("PluginBase::parseMetaInfo: plugin %1 field %2 is empty; "
+                                           "this item won't be referenced by other plugins.")
+                                .arg(newMetaInfo->Name)
+                                .arg(META_FIELD_INTERFACE));
     }
 
     // Set module parent name
@@ -119,7 +119,7 @@ QSharedPointer<LinkerItem> PluginLinkerCore::createLinkerItem(QWeakPointer<IPlug
 {
     if(pluginHandler.isNull())
     {
-        qDebug() << "PluginLinker::createLinkerItem: given hander is empty";
+        log(SeverityType::WARNING, "PluginLinker::createLinkerItem: given hander is empty");
         return QWeakPointer<LinkerItem>();
     }
 
@@ -128,7 +128,7 @@ QSharedPointer<LinkerItem> PluginLinkerCore::createLinkerItem(QWeakPointer<IPlug
 
     if(metaInfo.isNull())
     {
-        qDebug() << "PluginLinker::createLinkerItem: can't load plugin" << m_metaInfo.Name;
+        log(SeverityType::WARNING, QString("PluginLinker::createLinkerItem: can't load plugin '%1'").arg(m_metaInfo.Name));
         return QWeakPointer<LinkerItem>();
     }
 
@@ -137,7 +137,7 @@ QSharedPointer<LinkerItem> PluginLinkerCore::createLinkerItem(QWeakPointer<IPlug
     m_linkerItemsMap.insert(linkerItemPtr->getPluginUID(), linkerItemPtr);
     m_interfacesMap.insertMulti(metaInfo->InterfaceName, linkerItemPtr);
     ++m_pluginUidCounter;
-    qDebug() << "Plugin" << metaInfo->Name << "added";
+    log(SeverityType::INFO, QString("Plugin '%1' loaded").arg(m_metaInfo.Name));
     return linkerItemPtr;
 }
 
@@ -148,7 +148,7 @@ Type *PluginLinkerCore::castToPlugin(QObject *possiblePlugin) const
 
     if(!plugin)
     {
-        qDebug() << "Can't load the plugin " << possiblePlugin->objectName() << ": not QObject.";
+        log(SeverityType::WARNING, QString("Can't load the plugin '%1': not QObject.").arg(possiblePlugin->objectName()));
     }
 
     return plugin;
@@ -163,11 +163,9 @@ bool PluginLinkerCore::setupLinks()
     {
         auto &item = iter.value();
         auto &referencesNames = item->getReferenceNamesList();
-//        qDebug() << "Setup" << item.get()->getMeta().Name;
         // For all references of plugin.
         for(auto &referenceName : referencesNames)
         {
-//            qDebug() << "Link to reference" << referenceName;
             auto referenceIter = m_interfacesMap.find(referenceName);
             if(referenceIter != m_interfacesMap.end())
             {
@@ -193,11 +191,11 @@ bool PluginLinkerCore::setupLinks()
 
     if(isLinkageSucceded)
     {
-        qDebug() << "Linkage suceeded";
+        log(SeverityType::INFO, "Linkage suceeded");
     }
     else
     {
-        qWarning() << "Linkage failed, next referenced plugins not found:" << troubledPlugins;
+        //log(SeverityType::CRITICAL) << QString("Linkage failed, next referenced plugins not found: %1").arg(troubledPlugins);
     }
 
     for (auto iter = m_linkerItemsMap.begin(); iter != m_linkerItemsMap.end(); ++iter)

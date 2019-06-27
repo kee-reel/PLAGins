@@ -5,6 +5,7 @@ void PluginBase::constructorInit()
     m_isInited = false;
     m_isAllReferencesSet = false;
     m_isAllReferencesReady = false;
+    m_logSeverityType = SeverityType::INFO;
 }
 
 bool PluginBase::init(const MetaInfo &metaInfo, const QJsonObject &metaInfoJsonObject)
@@ -134,6 +135,32 @@ bool PluginBase::close()
     return true;
 }
 
+void PluginBase::log(SeverityType severityType, QString msg) const
+{
+    if(severityType < m_logSeverityType)
+        return;
+    auto&& descr = getPluginDescription(m_metaInfo);
+    auto&& msgTemplate = QString("[%1] (%2): %3");
+    switch (severityType)
+    {
+    case SeverityType::INFO:
+        qInfo() << msgTemplate.arg("INFO").arg(descr).arg(msg);
+        break;
+    case SeverityType::DEBUG:
+        qDebug() << msgTemplate.arg("DEBUG").arg(descr).arg(msg);
+        break;
+    case SeverityType::WARNING:
+        qWarning() << msgTemplate.arg("WARNING").arg(descr).arg(msg);
+        break;
+    case SeverityType::CRITICAL:
+        qCritical() << msgTemplate.arg("CRITICAL").arg(descr).arg(msg);
+        break;
+    case SeverityType::FATAL:
+        qFatal(msgTemplate.arg("FATAL").arg(descr).arg(msg).toStdString().c_str());
+        break;
+    }
+}
+
 void PluginBase::raiseError(QString errorMessage)
 {
     m_lastErrorString = errorMessage;
@@ -180,11 +207,6 @@ void PluginBase::checkAllReferencesReady()
             onAllReferencesReady();
         }
     }
-}
-
-QString PluginBase::getPluginDescription(const MetaInfo &meta)
-{
-    return QString("[%1 : %2]").arg(meta.InterfaceName).arg(meta.Name);
 }
 
 void PluginBase::onAllReferencesSet()

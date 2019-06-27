@@ -136,15 +136,12 @@ void AddForm::ClearEditors()
 
 void AddForm::AcceptChanges()
 {
-    qDebug() << "AcceptChanges";
     int rowCount = 0;
     for(auto iter = currentItemMap.begin(); iter != currentItemMap.end(); ++iter)
     {
-        qDebug() << "AcceptChanges";
         auto map = iter.value().toMap();
         for(auto mapIter = map.begin(); mapIter != map.end(); ++mapIter)
         {
-            qDebug() << "AcceptChanges";
             auto&& editWidgetsPair = editWidgets[rowCount];
             auto&& editWidget = editWidgetsPair.second;
             bool isDefaultEditor = editWidget->objectName() == DEFAULT_EDITOR_OBJECT_NAME;
@@ -156,11 +153,8 @@ void AddForm::AcceptChanges()
     QMap<int, QVariant> rolesMap;
     rolesMap.insert(Qt::UserRole, currentItemMap);
     model->setItemData(currentModelIndex, rolesMap);
-    qDebug() << "AcceptChanges";
     ClearEditors();
-    qDebug() << "ClearEditors";
     CancelChanges();
-    qDebug() << "CancelChanges";
 }
 
 void AddForm::CancelChanges()

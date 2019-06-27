@@ -50,7 +50,6 @@ private:
 private slots:
     void UniqueButtonPressed(UniquePushButton *button);
     QString FormatMenuItemName(QString name);
-    void AddPluginBtnPressed();
 
 private:
     int getUniqueId();

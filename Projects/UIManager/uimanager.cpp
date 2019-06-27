@@ -27,7 +27,7 @@ UIManager::~UIManager()
 
 void UIManager::pop()
 {
-    qDebug() << "Pop" << m_widgetStack.last()->objectName();
+    log(SeverityType::INFO, QString("Pop window: %1").arg(m_widgetStack.last()->objectName()));
 
     if (count() != 1)
     {
@@ -46,7 +46,7 @@ void UIManager::pop()
 
 void UIManager::push(QWidget *widget)
 {
-    qDebug() << "Push" << widget->objectName();
+    log(SeverityType::INFO, QString("Push window: %1").arg(widget->objectName()));
 
     if (count() != 0)
     {
@@ -224,7 +224,8 @@ void UIManager::onElementOpened(int elementId)
 {
     const auto &openedElement = getElementById(elementId);
     auto widget = openedElement.data()->getElementWidget();
-    qDebug() << "Opened" << openedElement.data()->getMeta().Name;
+
+    log(SeverityType::INFO, QString("Opened: %1").arg(openedElement.data()->getMeta().Name));
 
     if(elementId == m_rootElementId && m_widgetStack.isEmpty())
     {

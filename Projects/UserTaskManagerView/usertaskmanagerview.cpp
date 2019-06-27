@@ -70,12 +70,10 @@ void UserTaskManagerView::onAllReferencesReady()
 
 void UserTaskManagerView::OpenTaskEditor(int id)
 {
-    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!" << id;
 }
 
 void UserTaskManagerView::resizeEvent(QResizeEvent *event)
 {
-    qDebug() << "Resize";
     addForm->resize(event->size());
 }
 

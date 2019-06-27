@@ -24,6 +24,15 @@ class Form;
 
 #endif
 
+enum SeverityType
+{
+    INFO,
+    DEBUG,
+    WARNING,
+    CRITICAL,
+    FATAL
+};
+
 //! \brief This interface provides basic methods for all plugins.
 class PluginBase : public PLUGIN_BASE_PARENT, public IPlugin
 {
@@ -65,15 +74,17 @@ signals:
 
 protected slots:
     virtual void onReferenceReady(IPlugin* reference) override;
-
     virtual bool open() override;
     virtual bool close() override;
 
-
 protected:
+    void log(SeverityType severityType, QString msg) const;
     void constructorInit();
     void raiseError(QString errorMessage);
-    QString getPluginDescription(const MetaInfo &meta);
+    inline QString getPluginDescription(const MetaInfo &meta) const
+    {
+        return QString("[%1 : %2]").arg(meta.InterfaceName).arg(meta.Name);
+    }
 
     void checkAllReferencesSet();
     void checkAllReferencesReady();
@@ -103,6 +114,7 @@ protected:
     QMap<QString, bool> m_referencesReadyMap;
     QString m_lastErrorString;
     MetaInfo m_metaInfo;
+    SeverityType m_logSeverityType;
 
     bool m_isInited;
     bool m_isAllReferencesSet;

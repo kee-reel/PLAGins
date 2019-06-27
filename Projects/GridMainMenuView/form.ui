@@ -15,17 +15,6 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="btnAddPlugin">
-       <property name="text">
-        <string>Add plugin</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
     <widget class="QScrollArea" name="scrollArea">
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
@@ -48,7 +37,7 @@
         <x>0</x>
         <y>0</y>
         <width>491</width>
-        <height>269</height>
+        <height>300</height>
        </rect>
       </property>
      </widget>

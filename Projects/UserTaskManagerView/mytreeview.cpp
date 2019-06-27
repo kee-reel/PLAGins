@@ -51,7 +51,6 @@ bool MyTreeView::eventFilter(QObject *obj, QEvent *event)
             if (gestevent->gesture(Qt::TapAndHoldGesture)){
                 setDragEnabled(true);
                 setAcceptDrops(true);
-                qDebug() << "GRABBED";
                 setStyleSheet("QTreeView::item:selected{"
                 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #7C8282, stop: 1 #C9D3D3);}"
                 );
@@ -63,7 +62,6 @@ bool MyTreeView::eventFilter(QObject *obj, QEvent *event)
         case QEvent::MouseButtonRelease:
             setDragEnabled(false);
             setAcceptDrops(false);
-            qDebug() << "DROPPED";
             setStyleSheet("QTreeView::item:selected{"
             "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #D9E5E6, stop: 1 #C4D0D0);}"
             );
