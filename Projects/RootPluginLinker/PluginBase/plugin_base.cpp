@@ -8,18 +8,18 @@ void PluginBase::constructorInit()
     m_logSeverityType = SeverityType::INFO;
 }
 
-bool PluginBase::init(const MetaInfo &metaInfo, const QJsonObject &metaInfoJsonObject)
+bool PluginBase::pluginInit(const MetaInfo &metaInfo, const QJsonObject &metaInfoJsonObject)
 {
     m_metaInfo = metaInfo;
 
-    if(m_metaInfo.RelatedPluginNames.count())
+    if(m_metaInfo.RequiredInterfaces.count())
     {
-        for(const auto &reference : m_metaInfo.RelatedPluginNames)
+        for(const auto &reference : m_metaInfo.RequiredInterfaces)
         {
             m_referencesMap.insert(reference, nullptr);
         }
 
-        for(const auto &reference : m_metaInfo.RelatedPluginNames)
+        for(const auto &reference : m_metaInfo.RequiredInterfaces)
         {
             m_referencesReadyMap.insert(reference, false);
         }
@@ -50,7 +50,7 @@ bool PluginBase::addReferencePlugin(IPlugin *referencePlugin)
     if(!referenceIter.value())
     {
         m_referencesMap[referenceName] = referencePlugin;
-        connect(referencePlugin->getObject(), SIGNAL(onReady(IPlugin*)), this, SLOT(onReferenceReady(IPlugin*)));
+        QObject::connect(referencePlugin->getObject(), SIGNAL(onReady(IPlugin*)), m_object, SLOT(onReferenceReady(IPlugin*)));
         if(referencePlugin->isReady())
         {
             onReferenceReady(referencePlugin);
@@ -81,7 +81,7 @@ bool PluginBase::removeReferencePlugin(IPlugin *referencePlugin)
     if(referenceIter.value())
     {
         referenceIter.value() = nullptr;
-        disconnect(referencePlugin->getObject(), SIGNAL(onReady(IPlugin*)), this, SLOT(onReferenceReady(IPlugin*)));
+        QObject::disconnect(referencePlugin->getObject(), SIGNAL(onReady(IPlugin*)), m_object, SLOT(onReferenceReady(IPlugin*)));
     }
     else
     {
@@ -106,7 +106,7 @@ const MetaInfo &PluginBase::getPluginMetaInfo() const
 
 QObject *PluginBase::getObject()
 {
-    return this;
+    return m_object;
 }
 
 QWidget *PluginBase::getWidget()
@@ -114,7 +114,7 @@ QWidget *PluginBase::getWidget()
 #if defined(PLUGIN_BASE_QOBJECT)
     return nullptr;
 #else
-    return qobject_cast<QWidget *>(this);
+    return qobject_cast<QWidget *>(m_object);
 #endif
 }
 

@@ -5,24 +5,13 @@
 #include <QObject>
 #include <QJsonObject>
 
-//! \brief Holds basic information about plugin.
-struct MetaInfo
-{
-    //! \brief Type of plugin.
-    //! \brief Name of plugin interface.
-    QString InterfaceName;
-    //! \brief Plugin name.
-    QString Name;
-    //! \brief Name of parent plugin.
-    QList<QString> RelatedPluginNames;
-    QString About;
-};
+#include "../../Interfaces/ipluginlinker.h"
 
 //! \brief This interface provides basic methods for all plugins.
 class IPlugin
 {
 public:
-    virtual bool init(const MetaInfo &metaInfo, const QJsonObject &metaInfoJsonObject) = 0;
+    virtual bool pluginInit(const MetaInfo &metaInfo, const QJsonObject &metaInfoJsonObject) = 0;
     virtual bool addReferencePlugin(IPlugin *referencePlugin) = 0;
     virtual bool removeReferencePlugin(IPlugin *referencePlugin) = 0;
 

@@ -1,7 +1,15 @@
 {
-    "Interface": "IUIManager",
-    "Name": "UIManager",
-    "RelatedPluginInterfaces": [
-        "IPluginLinker"
-    ]
+    "iterface": "IUIManager",
+    "name": "UIManager",
+    "relations": {
+        "embedded": {
+
+        },
+        "required": {
+            "IPluginLinker"
+        },
+        "optional": {
+
+        }
+    }
 }

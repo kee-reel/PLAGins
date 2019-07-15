@@ -3,9 +3,27 @@
 
 #include <QtCore>
 
-
 #include "../../Application/ipluginhandler.h"
-#include "../Common/iplugin.h"
+
+//! \brief Holds basic information about plugin.
+struct MetaInfo
+{
+    //! \brief Plugin interface name. By this field all plugins are linked.
+    QString InterfaceName;
+    //! \brief Plugin name.
+    QString Name;
+    //! \brief Names of references' interfaces that required by plugin. If no reference with such interface exists,
+    //! plugin will use default instance with same interface that embedded in this plugin.
+    QList<QString> EmbeddedInterfaces;
+    //! \brief Names of references' interfaces that required by plugin. If no referece with such interface exists plugin won't work.
+    QList<QString> RequiredInterfaces;
+    //! \brief Names of references' interfaces. References' of this type not required for proper work of plugin,
+    //! but could be loaded to extend some of its features.
+    QList<QString> OptionalInterfaces;
+    //! \brief Description of features and purpose of this plugin.
+    QString About;
+};
+
 
 //!  \defgroup PluginLinker PluginLinker
 //!      \ingroup Plugins
@@ -39,6 +57,7 @@ public:
         virtual bool close() = 0;
 
     signals:
+        void onLoaded(int itemId);
         void onOpened(int itemId);
         void onClosed(int itemId);
         void onConnectionsChanged(int itemId);

@@ -1,7 +1,15 @@
 {
-    "Interface": "",
-    "Name": "GridMainMenuView",
-    "RelatedPluginInterfaces": [
-        "IUIManager"
-    ]
+    "interface": "",
+    "name": "GridMainMenuView",
+    "relations": {
+        "embedded": {
+
+        },
+        "required": {
+            "IUIManager"
+        },
+        "optional": {
+
+        }
+    }
 }

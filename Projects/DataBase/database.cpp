@@ -1,7 +1,9 @@
 #include "database.h"
 
 DataBase::DataBase() :
-    PluginBase ()
+    QObject(nullptr),
+    PluginBase(this),
+    Service::ServiceBase(this)
 {
     m_possibleDriverNames
             << "SQLITECIPHER"
@@ -55,7 +57,7 @@ QSqlQuery DataBase::ExecuteQuery(QString &queryText, QList<QString> *valuePlaceh
 
 void DataBase::SetPassword(QString password)
 {
-    this->m_password = password;
+    m_password = password;
 }
 
 bool DataBase::Setup()

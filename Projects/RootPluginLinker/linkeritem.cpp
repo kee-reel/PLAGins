@@ -1,6 +1,6 @@
 #include "linkeritem.h"
 
-#include "../../Common/iplugin.h"
+#include "PluginBase/iplugin.h"
 
 LinkerItem::LinkerItem(QWeakPointer<IPluginHandler> pluginHandler, QSharedPointer<MetaInfo> metaInfo, int uid) :
     QObject(nullptr),
@@ -32,7 +32,7 @@ const QString &LinkerItem::getInterfaceName()
 
 const QList<QString> &LinkerItem::getReferenceNamesList()
 {
-    return m_metaInfo.RelatedPluginNames;
+    return m_metaInfo.RequiredInterfaces;
 }
 
 void LinkerItem::addReference(QWeakPointer<LinkerItem> linkItem)

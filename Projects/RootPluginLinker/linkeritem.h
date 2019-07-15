@@ -11,7 +11,7 @@
 #include <QHash>
 
 #include "../../../Application/icoreplugin.h"
-#include "../../Common/plugin_base.h"
+#include "PluginBase/plugin_base.h"
 
 #include "../../Interfaces/ipluginlinker.h"
 
@@ -40,8 +40,6 @@ public:
     virtual bool open() override;
     virtual bool close() override;
 
-    const QString getPluginDescriptionName();
-
 signals:
     void onLoaded(int itemId);
     void onOpened(int itemId);
@@ -65,6 +63,7 @@ private:
     bool loadReferencePlugins();
     bool unloadReferencePlugins();
     void unloadItems(const QList<QWeakPointer<LinkerItem> > &loadedItemsList);
+    const QString getPluginDescriptionName();
 
 private slots:
     void onInstanceOpenSlot();

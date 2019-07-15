@@ -1,10 +1,3 @@
-# For nice folders organisation
-include(common.pri)
-
-# Only for plugins
-CONFIG += plugin
-DESTDIR = $${PWD}/../../Application/Plugins
-
 HEADERS += \
     $$PWD/iplugin.h \
     $$PWD/plugin_base.h

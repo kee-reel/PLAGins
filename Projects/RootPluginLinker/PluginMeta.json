@@ -1,8 +1,23 @@
 {
-    "IsCorePlugin": true,
-    "Interface": "IPluginLinker",
-    "Name": "PluginLinker",
-    "RelatedPluginInterfaces": [
-    ],
-    "About": "XXX"
+    "service": {
+        "interfaces": ["IPluginLinker"]
+    },
+    "pluginLinker": {
+        "interface": "",
+        "relations": {
+            "embedded": {
+                "IPluginLinker": 0
+            },
+            "required": {
+
+            },
+            "optional": {
+
+            }
+        },
+        "info": {
+            "Name": "PluginLinker",
+            "About": "XXX"
+        }
+    }
 }

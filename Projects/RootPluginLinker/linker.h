@@ -1,5 +1,5 @@
-#ifndef PLUGINLINKER_H
-#define PLUGINLINKER_H
+#ifndef LINKER_H
+#define LINKER_H
 
 #include <QtCore>
 #include <QObject>
@@ -10,31 +10,18 @@
 #include <QMap>
 #include <QHash>
 
-#include "../../../Application/icoreplugin.h"
-#include "Linker/PluginBase/plugin_base.h"
-
 #include "../../Interfaces/ipluginlinker.h"
-
-#include "Linker/linkeritem.h"
+#include "linkeritem.h"
 
 //! \ingroup MainMenuPlugin_imp
 //! @{
-class CorePlugin : public
-        PluginBase,
-        ICorePlugin,
-        IPluginLinker
+class Linker : public IPluginLinker
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
-    Q_INTERFACES(
-        IPlugin
-        ICorePlugin
-        IPluginLinker
-    )
 
 public:
-    CorePlugin();
-    virtual ~CorePlugin() override;
+    Linker();
+    virtual ~Linker();
 
     // IPluginLinker interface
 public:
@@ -58,16 +45,20 @@ private:
     QSharedPointer<LinkerItem> createLinkerItem(QWeakPointer<IPluginHandler>);
 
 private:
-    const QString META_FIELD_INTERFACE                  = "Interface";
-    const QString META_FIELD_NAME                       = "Name";
+    const QString META_FIELD_INTERFACE                  = "interface";
+    const QString META_FIELD_NAME                       = "name";
     const QString META_FIELD_RELATED_PLUGIN_INTERFACES  = "RelatedPluginInterfaces";
-    const QString META_FIELD_ABOUT                      = "About";
+    const QString META_FIELD_ABOUT                      = "about";
 
 private:
+    QWidget *m_parentWidget;
     QSharedPointer<LinkerItem> m_corePlugin;
     QMap<QString, QSharedPointer<LinkerItem>> m_interfacesMap;
     QMap<int, QSharedPointer<LinkerItem>> m_linkerItemsMap;
     int m_pluginUidCounter;
+
+    // IPluginLinker interface
+public:
 };
 //! @}
-#endif // PLUGINLINKER_H
+#endif // LINKER_H

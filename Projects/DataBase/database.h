@@ -6,19 +6,21 @@
 #include <QDebug>
 #include <QList>
 
+#include "../RootPluginLinker/PluginBase/plugin_base.h"
+#include "../CorePlugin/ServiceBase/servicebase.h"
 #include "../../Interfaces/idatabase.h"
-#include "../../Common/plugin_base.h"
 
 #define CONNECTION_FAILED -1
 
 //! \addtogroup DataBase_imp
 //! \{
-class DataBase : public PluginBase, public IDataBase
+class DataBase : public QObject, public PluginBase, public Service::ServiceBase, public IDataBase
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "TimeKeeper.DBModule.Test" FILE "PluginMeta.json")
     Q_INTERFACES(
         IPlugin
+        IService
         IDataBase
     )
 
@@ -43,7 +45,6 @@ private:
     QString m_password;
     QString m_connectionName;
     QSqlDatabase m_dbconn;
-
 };
 //! \}
 #endif // DATABASEMANAGERMODULE_H

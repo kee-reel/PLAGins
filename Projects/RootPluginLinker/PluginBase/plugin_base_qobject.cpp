@@ -1,8 +1,8 @@
 #if defined(PLUGIN_BASE_QOBJECT)
 #include "plugin_base.h"
 
-PluginBase::PluginBase(QObject *parent) :
-    QObject(parent)
+PluginBase::PluginBase(QObject *object) :
+    m_object(object)
 {
     constructorInit();
 }

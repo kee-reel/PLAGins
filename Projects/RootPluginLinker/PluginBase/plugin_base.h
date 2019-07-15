@@ -34,12 +34,11 @@ enum SeverityType
 };
 
 //! \brief This interface provides basic methods for all plugins.
-class PluginBase : public PLUGIN_BASE_PARENT, public IPlugin
+class PluginBase : public IPlugin
 {
-    Q_OBJECT
 public:
 #if defined(PLUGIN_BASE_QOBJECT)
-    explicit PluginBase(QObject *parent = nullptr);
+    explicit PluginBase(QObject *object = nullptr);
 
 #elif defined(PLUGIN_BASE_QWIDGET)
     explicit PluginBase(QWidget *parent = nullptr);
@@ -49,13 +48,13 @@ public:
 
 #endif
 
-    virtual ~PluginBase() override
+    virtual ~PluginBase()
     {
         qDebug() << "Plugin" << getPluginDescription(m_metaInfo) << "unloaded";
     }
 
 public:
-    virtual bool init(const MetaInfo &metaInfo, const QJsonObject &metaInfoJsonObject) override;
+    virtual bool pluginInit(const MetaInfo &metaInfo, const QJsonObject &metaInfoJsonObject) override;
     virtual bool addReferencePlugin(IPlugin *referencePlugin) override;
     virtual bool removeReferencePlugin(IPlugin *referencePlugin) override;
 
@@ -119,6 +118,9 @@ protected:
     bool m_isInited;
     bool m_isAllReferencesSet;
     bool m_isAllReferencesReady;
+
+private:
+    QObject* m_object;
 
 #if defined(PLUGIN_BASE_QWIDGET)
 protected:

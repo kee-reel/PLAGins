@@ -1,4 +1,7 @@
 {
+    "service": {
+        "interfaces": ["IDataBase"]
+    },
     "Interface": "IDataBase",
     "Name": "DataBasePlugin",
     "RelatedPluginInterfaces": [
