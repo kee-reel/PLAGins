@@ -11,18 +11,22 @@ QT += core widgets
 SOURCES += \
     linkeritem.cpp \
     metadataparser.cpp \
-    pluginlinkercore.cpp
+    pluginlinker.cpp
 
 HEADERS += \
     ../../Interfaces/ipluginlinker.h \
     ../../../Application/icoreplugin.h \
     linkeritem.h \
     metadataparser.h \
-    pluginlinkercore.h
+    pluginlinker.h
 
 DEFINES += PLUGIN_BASE_QOBJECT
 
-include(PluginBase/PluginBase.pri)
+include(../../Common/common.pri)
+
+include(../../../Application/PluginBuildInfo.pri)
+
+include(../Core/CoreServiceBase/CoreServiceBase.pri)
 
 DISTFILES += \
     PluginMeta.json

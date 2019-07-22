@@ -3,7 +3,7 @@
 DataBase::DataBase() :
     QObject(nullptr),
     PluginBase(this),
-    Service::ServiceBase(this)
+    Service::CoreServiceBase(this)
 {
     m_possibleDriverNames
             << "SQLITECIPHER"

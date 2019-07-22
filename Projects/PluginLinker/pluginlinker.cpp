@@ -1,27 +1,22 @@
-#include "pluginlinkercore.h"
+#include "pluginlinker.h"
 
-CorePlugin::CorePlugin() :
-    PluginBase(nullptr),
-    m_parentWidget(nullptr),
+PluginLinker::PluginLinker() :
+    QObject(nullptr),
+    Service::CoreServiceBase(this),
     m_pluginUidCounter(0)
 {
 }
 
-CorePlugin::~CorePlugin()
+PluginLinker::~PluginLinker()
 {
 }
 
-int CorePlugin::getCorePluginUID()
+int PluginLinker::getCorePluginUID()
 {
-    return m_corePlugin.data()->getPluginUID();
+//    return m_PluginLinker.data()->getPluginUID();
 }
 
-QWidget *CorePlugin::getWidget()
-{
-    return m_parentWidget;
-}
-
-QMap<int, QWeakPointer<IPluginLinker::ILinkerItem> > CorePlugin::getPluginsMap()
+QMap<int, QWeakPointer<IPluginLinker::ILinkerItem> > PluginLinker::getPluginsMap()
 {
     QMap<int, QWeakPointer<IPluginLinker::ILinkerItem> > mapCopy;
     for(auto iter = m_linkerItemsMap.begin(); iter != m_linkerItemsMap.end(); ++iter)
@@ -31,7 +26,12 @@ QMap<int, QWeakPointer<IPluginLinker::ILinkerItem> > CorePlugin::getPluginsMap()
     return mapCopy;
 }
 
-bool CorePlugin::addCorePlugin(QWeakPointer<IPluginHandler> pluginHandler)
+void PluginLinker::onServiceManagerInitialized()
+{
+    Service::CoreServiceBase::onServiceManagerInitialized();
+}
+
+bool PluginLinker::addCorePlugin(QWeakPointer<IPluginHandler> pluginHandler)
 {
     auto linkerItem = createLinkerItem(pluginHandler);
     if(linkerItem.isNull())
@@ -39,11 +39,10 @@ bool CorePlugin::addCorePlugin(QWeakPointer<IPluginHandler> pluginHandler)
         qCritical() << "PluginLinker::addNewPlugin: core plugin adding failed";
         return false;
     }
-    m_corePlugin = linkerItem;
     return true;
 }
 
-bool CorePlugin::addPlugin(QWeakPointer<IPluginHandler> pluginHandler)
+bool PluginLinker::addPlugin(QWeakPointer<IPluginHandler> pluginHandler)
 {
     auto linkerItem = createLinkerItem(pluginHandler);
     if(linkerItem.isNull())
@@ -55,7 +54,7 @@ bool CorePlugin::addPlugin(QWeakPointer<IPluginHandler> pluginHandler)
     return true;
 }
 
-QSharedPointer<MetaInfo> CorePlugin::parseMetaInfo(const QJsonObject &metaInfoObject) const
+QSharedPointer<MetaInfo> PluginLinker::parseMetaInfo(const QJsonObject &metaInfoObject) const
 {
     QJsonObject metaInfo = metaInfoObject.value("MetaData").toObject();
     // Check if all meta fields exists
@@ -68,10 +67,10 @@ QSharedPointer<MetaInfo> CorePlugin::parseMetaInfo(const QJsonObject &metaInfoOb
     {
         if(!metaInfo.contains(metaFieldName))
         {
-            log(SeverityType::WARNING, QString("PluginBase::parseMetaInfo: meta has no field '%1' but has fields:").arg(metaFieldName));
+//            log(SeverityType::WARNING, QString("PluginBase::parseMetaInfo: meta has no field '%1' but has fields:").arg(metaFieldName));
             for(auto iter = metaInfo.begin(); iter != metaInfo.end(); ++iter)
             {
-                log(SeverityType::WARNING, QString("%1: %2").arg(iter.key()).arg(iter.value().toString()));
+//                log(SeverityType::WARNING, QString("%1: %2").arg(iter.key()).arg(iter.value().toString()));
             }
             return nullptr;
         }
@@ -83,7 +82,7 @@ QSharedPointer<MetaInfo> CorePlugin::parseMetaInfo(const QJsonObject &metaInfoOb
     newMetaInfo->Name = metaInfo.value(META_FIELD_NAME).toString();
     if(newMetaInfo->Name == "")
     {
-        log(SeverityType::CRITICAL, QString("PluginBase::parseMetaInfo: parse error: field %1 is empty.").arg(META_FIELD_NAME));
+//        log(SeverityType::CRITICAL, QString("PluginBase::parseMetaInfo: parse error: field %1 is empty.").arg(META_FIELD_NAME));
         return nullptr;
     }
 
@@ -91,10 +90,10 @@ QSharedPointer<MetaInfo> CorePlugin::parseMetaInfo(const QJsonObject &metaInfoOb
     newMetaInfo->InterfaceName = metaInfo.value(META_FIELD_INTERFACE).toString();
     if(newMetaInfo->InterfaceName == "")
     {
-        log(SeverityType::WARNING, QString("PluginBase::parseMetaInfo: plugin %1 field %2 is empty; "
-                                           "this item won't be referenced by other plugins.")
-                                .arg(newMetaInfo->Name)
-                                .arg(META_FIELD_INTERFACE));
+//        log(SeverityType::WARNING, QString("PluginBase::parseMetaInfo: plugin %1 field %2 is empty; "
+//                                           "this item won't be referenced by other plugins.")
+//                                .arg(newMetaInfo->Name)
+//                                .arg(META_FIELD_INTERFACE));
     }
 
     // Set module parent name
@@ -115,11 +114,11 @@ QSharedPointer<MetaInfo> CorePlugin::parseMetaInfo(const QJsonObject &metaInfoOb
     return newMetaInfo;
 }
 
-QSharedPointer<LinkerItem> CorePlugin::createLinkerItem(QWeakPointer<IPluginHandler> pluginHandler)
+QSharedPointer<LinkerItem> PluginLinker::createLinkerItem(QWeakPointer<IPluginHandler> pluginHandler)
 {
     if(pluginHandler.isNull())
     {
-        log(SeverityType::WARNING, "PluginLinker::createLinkerItem: given hander is empty");
+//        log(SeverityType::WARNING, "PluginLinker::createLinkerItem: given hander is empty");
         return QWeakPointer<LinkerItem>();
     }
 
@@ -128,7 +127,7 @@ QSharedPointer<LinkerItem> CorePlugin::createLinkerItem(QWeakPointer<IPluginHand
 
     if(metaInfo.isNull())
     {
-        log(SeverityType::WARNING, QString("PluginLinker::createLinkerItem: can't load plugin '%1'").arg(m_metaInfo.Name));
+//        log(SeverityType::WARNING, QString("PluginLinker::createLinkerItem: can't load plugin '%1'").arg(m_metaInfo.Name));
         return QWeakPointer<LinkerItem>();
     }
 
@@ -137,24 +136,24 @@ QSharedPointer<LinkerItem> CorePlugin::createLinkerItem(QWeakPointer<IPluginHand
     m_linkerItemsMap.insert(linkerItemPtr->getPluginUID(), linkerItemPtr);
     m_interfacesMap.insertMulti(metaInfo->InterfaceName, linkerItemPtr);
     ++m_pluginUidCounter;
-    log(SeverityType::INFO, QString("Plugin '%1' loaded").arg(m_metaInfo.Name));
+//    log(SeverityType::INFO, QString("Plugin '%1' loaded").arg(metaInfo.data()->Name));
     return linkerItemPtr;
 }
 
 template<class Type>
-Type *CorePlugin::castToPlugin(QObject *possiblePlugin) const
+Type *PluginLinker::castToPlugin(QObject *possiblePlugin) const
 {
     Type *plugin = qobject_cast<Type *>(possiblePlugin);
 
     if(!plugin)
     {
-        log(SeverityType::WARNING, QString("Can't load the plugin '%1': not QObject.").arg(possiblePlugin->objectName()));
+//        log(SeverityType::WARNING, QString("Can't load the plugin '%1': not QObject.").arg(possiblePlugin->objectName()));
     }
 
     return plugin;
 }
 
-bool CorePlugin::setupLinks()
+bool PluginLinker::setupLinks()
 {
     bool isLinkageSucceded = true;
     QStringList troubledPlugins;
@@ -191,7 +190,7 @@ bool CorePlugin::setupLinks()
 
     if(isLinkageSucceded)
     {
-        log(SeverityType::INFO, "Linkage suceeded");
+//        log(SeverityType::INFO, "Linkage suceeded");
     }
     else
     {
@@ -207,40 +206,7 @@ bool CorePlugin::setupLinks()
     return isLinkageSucceded;
 }
 
-
-void CorePlugin::coreInit(IApplication *app)
-{
-    m_app = app;
-    auto pluginHandlers = app->getPlugins();
-    for(auto& plugin : pluginHandlers)
-    {
-        addPlugin(plugin);
-    }
-
-    auto selfHandler = app->getCorePlugin();
-    if(!addCorePlugin(selfHandler))
-    {
-        raiseError("Can't add core plugin.");
-        return;
-    }
-
-    m_parentWidget = app->getParentWidget();
-
-    if(!setupLinks())
-    {
-        raiseError("Can't link plugins.");
-    }
-
-    m_corePlugin->open();
-}
-
-bool CorePlugin::coreFini()
-{
-    return false;
-}
-
-
-bool CorePlugin::unloadPlugin(QWeakPointer<ILinkerItem> linkerItem)
+bool PluginLinker::unloadPlugin(QWeakPointer<ILinkerItem> linkerItem)
 {
     auto uid = linkerItem.data()->getPluginUID();
     auto pluginHandler = m_linkerItemsMap[uid];
@@ -248,8 +214,8 @@ bool CorePlugin::unloadPlugin(QWeakPointer<ILinkerItem> linkerItem)
     m_linkerItemsMap.remove(uid);
 }
 
-bool CorePlugin::loadPlugin(QString filename)
+bool PluginLinker::loadPlugin(QString filename)
 {
-    auto handler = m_app->makePluginHandler(filename);
-    return addPlugin(handler);
+//    auto handler = m_app->makePluginHandler(filename);
+//    return addPlugin(handler);
 }

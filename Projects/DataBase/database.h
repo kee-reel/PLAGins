@@ -7,20 +7,20 @@
 #include <QList>
 
 #include "../RootPluginLinker/PluginBase/plugin_base.h"
-#include "../CorePlugin/ServiceBase/servicebase.h"
+#include "../CorePlugin/ServiceBase/coreservicebase.h"
 #include "../../Interfaces/idatabase.h"
 
 #define CONNECTION_FAILED -1
 
 //! \addtogroup DataBase_imp
 //! \{
-class DataBase : public QObject, public PluginBase, public Service::ServiceBase, public IDataBase
+class DataBase : public QObject, public PluginBase, public Service::CoreServiceBase, public IDataBase
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "TimeKeeper.DBModule.Test" FILE "PluginMeta.json")
     Q_INTERFACES(
         IPlugin
-        IService
+        ICoreService
         IDataBase
     )
 

@@ -12,19 +12,20 @@
 
 #include "PluginBase/plugin_base.h"
 
-#include "../CorePlugin/ServiceBase/servicebase.h"
+#include "../../../Application/iapplication.h"
+#include "../Core/CoreServiceBase/coreservicebase.h"
 #include "../../Interfaces/ipluginlinker.h"
 
 #include "linkeritem.h"
 
 //! \ingroup MainMenuPlugin_imp
 //! @{
-class PluginLinker : public Service::ServiceBase, public IPluginLinker
+class PluginLinker : public QObject, public Service::CoreServiceBase, public IPluginLinker
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
     Q_INTERFACES(
-        IPlugin
+        Service::ICoreService
         IPluginLinker
     )
 
@@ -42,6 +43,9 @@ public:
 
 signals:
     void onLinkageFinished();
+
+public slots:
+    void onServiceManagerInitialized();
 
 private:
     bool addCorePlugin(QWeakPointer<IPluginHandler> pluginHandler);
@@ -64,6 +68,9 @@ private:
     QMap<QString, QSharedPointer<LinkerItem>> m_interfacesMap;
     QMap<int, QSharedPointer<LinkerItem>> m_linkerItemsMap;
     int m_pluginUidCounter;
+
+private:
+    IApplication* m_app;
 };
 //! @}
 #endif // PLUGINLINKER_H

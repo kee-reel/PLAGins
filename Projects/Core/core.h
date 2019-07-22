@@ -7,21 +7,21 @@
 
 #include "../../../Application/icoreplugin.h"
 
-#include "iservice.h"
-#include "servicesmanager.h"
+#include "icoreservice.h"
+#include "coreservicesmanager.h"
 
 
 //! addtogroup CorePlugin_imp
 //! {
-class CorePlugin : public QObject, ICorePlugin
+class Core : public QObject, public ICore
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "MASS.Module.CorePlugin" FILE "PluginMeta.json")
-    Q_INTERFACES(ICorePlugin)
+    Q_INTERFACES(ICore)
 
 public:
-    CorePlugin();
-    virtual ~CorePlugin() override;
+    Core();
+    virtual ~Core() override;
 
     // ICorePlugin interface
 public:
@@ -30,7 +30,7 @@ public:
 
  private:
     IApplication* m_app;
-    Service::ServicesManager* m_servicesManager;
+    Service::CoreServicesManager* m_servicesManager;
 };
 //! }
 #endif // COREPLUGIN_H

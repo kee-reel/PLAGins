@@ -15,9 +15,7 @@
 
 #include "../../Interfaces/ipluginlinker.h"
 
-class LinkerItem :
-    public QObject,
-    public IPluginLinker::ILinkerItem
+class LinkerItem : public QObject, public IPluginLinker::ILinkerItem
 {
     Q_OBJECT
 public:
