@@ -1,7 +1,8 @@
 #include "tasksketchmanager.h"
 
 TaskSketchManager::TaskSketchManager() :
-    PluginBase()
+    QObject(nullptr),
+    PluginBase(this)
 {
     tableName = "iTaskSketchManager";
     coreRelationName = "iTaskSketchManager";
@@ -56,11 +57,11 @@ void TaskSketchManager::onAllReferencesSet()
         auto&& plugin = iter.value();
         if(!QString::compare(interfaceName, "IExtendableDataManager", Qt::CaseInsensitive))
         {
-            dataManager = castPluginToInterface<IExtendableDataManager>(plugin);
+            dataManager = castPluginToInterface<IExtendableDataManager>(interfaceName, plugin);
         }
         else if(!QString::compare(interfaceName, "IUserTaskManager", Qt::CaseInsensitive))
         {
-            myModel = castPluginToInterface<IUserTaskManager>(plugin);
+            myModel = castPluginToInterface<IUserTaskManager>(interfaceName, plugin);
         }
     }
     PluginBase::onAllReferencesSet();

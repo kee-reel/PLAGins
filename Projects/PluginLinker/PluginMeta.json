@@ -1,23 +1,7 @@
 {
     "service": {
+        "name": "PluginLinker",
+        "about": "Linker",
         "interfaces": ["IPluginLinker"]
-    },
-    "pluginLinker": {
-        "interface": "",
-        "relations": {
-            "embedded": {
-                "IPluginLinker": 0
-            },
-            "required": {
-
-            },
-            "optional": {
-
-            }
-        },
-        "info": {
-            "Name": "PluginLinker",
-            "About": "XXX"
-        }
     }
 }

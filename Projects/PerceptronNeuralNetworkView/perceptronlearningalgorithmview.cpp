@@ -2,7 +2,7 @@
 #include "ui_form.h"
 
 PerceptronLearningAlgorithmView::PerceptronLearningAlgorithmView() :
-    PluginBase()
+    PluginBase(this)
 {
     model = nullptr;
     network = nullptr;

@@ -1,15 +1,15 @@
 {
-    "interface": "",
-    "name": "GridMainMenuView",
-    "relations": {
-        "embedded": {
-
-        },
-        "required": {
-            "IUIManager"
-        },
-        "optional": {
-
+    "iplugin": {
+        "interface": "IUIElement",
+        "references": [],
+        "info": {
+            "name": "GridMainMenuView",
+            "about": "View plugin for plugin with interface IPluginLinker. Allows to load new plugins, unload existing plugins, read about plugin (this text)."
         }
+    },
+    "iuielement": {
+        "nodeName": "MainMenu",
+        "displayName": "MainMenu",
+	"links": []
     }
 }

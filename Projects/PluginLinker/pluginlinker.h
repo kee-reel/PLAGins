@@ -10,13 +10,14 @@
 #include <QMap>
 #include <QHash>
 
-#include "PluginBase/plugin_base.h"
-
 #include "../../../Application/iapplication.h"
-#include "../Core/CoreServiceBase/coreservicebase.h"
 #include "../../Interfaces/ipluginlinker.h"
 
-#include "linkeritem.h"
+#include "../../../Application/ipluginhandler.h"
+#include "../Core/CoreServiceBase/coreservicebase.h"
+
+#include "pluginlinkeritem.h"
+#include "servicelinkeritem.h"
 
 //! \ingroup MainMenuPlugin_imp
 //! @{
@@ -33,13 +34,19 @@ public:
     PluginLinker();
     virtual ~PluginLinker() override;
 
+    // ICoreService interface
+public:
+    virtual bool setReferences(Interface interface, QList<IReferenceDescriptorPtr> references) override;
+
     // IPluginLinker interface
 public:
-    virtual bool unloadPlugin(QWeakPointer<ILinkerItem> linkerItem) override;
-    virtual bool loadPlugin(QString filename) override;
-
-    virtual int getCorePluginUID() override;
-    virtual QMap<int, QWeakPointer<ILinkerItem> > getPluginsMap() override;
+    virtual QWeakPointer<ILinkerItem> loadNewPlugin(QString filename) override;
+    virtual bool loadPlugin(uid_t uid) override;
+    virtual bool unloadPlugin(uid_t uid) override;
+    virtual bool linkPlugins(uid_t referentUID, QString interface, uid_t referenceUID) override;
+    virtual bool unlinkPlugins(uid_t referent, QString interface, uid_t referenceUID) override;
+    virtual QWeakPointer<ILinkerItem> getItemByUID(uid_t uid) override;
+    virtual QWeakPointer<QList<QWeakPointer<ILinkerItem> > > getItemsWithInterface(Interface interface) override;
 
 signals:
     void onLinkageFinished();
@@ -53,24 +60,18 @@ private:
     bool setupLinks();
 
     template<class Type>
-    Type *castToPlugin(QObject *possiblePlugin) const;
-    QSharedPointer<MetaInfo> parseMetaInfo(const QJsonObject &metaInfoObject) const;
-    QSharedPointer<LinkerItem> createLinkerItem(QWeakPointer<IPluginHandler>);
+    Type *castToInterface(QObject *possiblePlugin) const;
+    QSharedPointer<LinkerItemBase> createLinkerItem(QWeakPointer<IPluginHandler>);
 
 private:
-    const QString META_FIELD_INTERFACE                  = "Interface";
-    const QString META_FIELD_NAME                       = "Name";
-    const QString META_FIELD_RELATED_PLUGIN_INTERFACES  = "RelatedPluginInterfaces";
-    const QString META_FIELD_ABOUT                      = "About";
+    QMap<Interface, QSharedPointer< QList<QWeakPointer<LinkerItemBase>> > > m_interfacesMap;
+    QMap<uid_t, QSharedPointer<LinkerItemBase>> m_linkerItemsMap;
+
+    QMap<Interface, QSharedPointer< QList<QWeakPointer<ILinkerItem>> > > m_rawInterfacesMap;
+    QMap<uid_t, QSharedPointer<ILinkerItem>> m_rawLinkerItemsMap;
 
 private:
-    QSharedPointer<LinkerItem> m_corePlugin;
-    QMap<QString, QSharedPointer<LinkerItem>> m_interfacesMap;
-    QMap<int, QSharedPointer<LinkerItem>> m_linkerItemsMap;
-    int m_pluginUidCounter;
-
-private:
-    IApplication* m_app;
+    ReferenceInstance<IApplication> m_app;
 };
 //! @}
 #endif // PLUGINLINKER_H

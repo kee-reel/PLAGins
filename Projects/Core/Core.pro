@@ -1,16 +1,14 @@
 
 TARGET = Core
 TEMPLATE = lib
-QT += widgets
+QT += core widgets
 
 SOURCES += \
     core.cpp \
-    servicesmanager.cpp
-
+    simplelinker.cpp
 HEADERS += \
     core.h \
-    coreservicesmanager.h \
-    icoreservice.h
+    simplelinker.h
 
 DEFINES += \
     PLUGIN_BASE_QOBJECT
@@ -22,4 +20,4 @@ include(../../Common/common.pri)
 
 include(../../../Application/PluginBuildInfo.pri)
 
-include(CoreServiceBase/CoreServiceBase.pri)
+include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)

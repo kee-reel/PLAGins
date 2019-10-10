@@ -1,73 +1,17 @@
 #include "uimanager.h"
 
 UIManager::UIManager() :
-    PluginBase()
+    QObject(nullptr),
+    Service::CoreServiceBase(this, {INTERFACE(Service::ICoreService)}, {}),
+    m_pluginLinker(nullptr),
+    m_parentWidget(nullptr),
+    m_lastGeneratedUID(1),
+    m_rootElementUID(0)
 {
 }
 
 UIManager::~UIManager()
 {
-    if(!m_elementsMap.count())
-    {
-        return;
-    }
-
-    auto elementsMapCopy = m_elementsMap;
-    for(const auto &element : elementsMapCopy)
-    {
-        if(!removeChildItem(element.get()->getElementId()))
-        {
-            qCritical() << QString("Error occured during UIManager finalization with element with id '%d'")
-                        .arg(element.data()->getElementId());
-        }
-    }
-
-    m_elementsMap.clear();
-}
-
-void UIManager::pop()
-{
-    log(SeverityType::INFO, QString("Pop window: %1").arg(m_widgetStack.last()->objectName()));
-
-    if (count() != 1)
-    {
-        auto last = m_widgetStack.last();
-        last->setParent(nullptr);
-        last->close();
-        m_widgetStack.removeLast();
-        m_widgetStack.last()->show();
-
-    }
-    else
-    {
-        QApplication::exit();
-    }
-}
-
-void UIManager::push(QWidget *widget)
-{
-    log(SeverityType::INFO, QString("Push window: %1").arg(widget->objectName()));
-
-    if (count() != 0)
-    {
-        auto last = m_widgetStack.last();
-        last->setVisible(false);
-    }
-
-    m_widgetStack.append(widget);
-    widget->setParent(m_parentWidget);
-    m_parentWidget->layout()->addWidget(widget);
-    widget->show();
-}
-
-int UIManager::count()
-{
-    return m_widgetStack.length();
-}
-
-QWidget *UIManager::getTop()
-{
-    return m_widgetStack.last();
 }
 
 bool UIManager::eventFilter(QObject *watched, QEvent *event)
@@ -78,7 +22,7 @@ bool UIManager::eventFilter(QObject *watched, QEvent *event)
 
         if (keyEvent->key() == Qt::Key_Back)
         {
-            pop();
+            onCloseSelf(getActive()->m_element);
             return true;
         }
     }
@@ -86,236 +30,169 @@ bool UIManager::eventFilter(QObject *watched, QEvent *event)
     return QObject::eventFilter(watched, event);
 }
 
-bool UIManager::addRootItem(QWeakPointer<IPluginLinker::ILinkerItem> rootItem)
+void UIManager::onServiceManagerInitialized()
 {
-    m_parentWidget = rootItem.data()->getWidget();
-    Q_ASSERT_X(m_parentWidget, "UIManager initialization", "parent widget is null");
-    Q_ASSERT_X(addChildItem(rootItem), "UIManager::init", "rootElement already set");
-
-    m_parentWidget->installEventFilter(this);
-    m_parentWidget->layout()->setMargin(0);
-    m_rootElementId = rootItem.data()->getPluginUID();
-    return true;
-}
-
-bool UIManager::addChildItem(QWeakPointer<IPluginLinker::ILinkerItem> item)
-{
-    auto element = QSharedPointer<UIElement>(new UIElement(item));
-    if(!validateElement(element))
+    auto appServices = getServices("IApplication");
+    if(appServices.isNull())
     {
-        qCritical() << "UIManager::addChildItem: skip element adding: validation fail";
-        return false;
+        qCritical() << "No IApplication service found";
+        return;
     }
 
-    const auto &object = element.data()->getElementSignalsLinkObject();
+    for(auto& service : *appServices.data())
+    {
+        IApplication* app = castToInterface<IApplication>(service->getObject());
+        m_parentWidget = app->getParentWidget();
+    }
+
+    auto linkerServices = getServices("IPluginLinker");
+    if(linkerServices.isNull())
+    {
+        qCritical() << "No IPluginLinker service found";
+        return;
+    }
+
+    auto pluginLinker = castToInterface<IPluginLinker>(linkerServices.data()->last()->getObject());
+    auto items = pluginLinker->getItemsWithInterface("IUIElement");
+    for(auto item : *items.data())
+    {
+        pluginLinker->loadPlugin(item.data()->uid());
+        auto element = castToInterface<IUIElement>(item.data()->object());
+        registerUIElement(element, item.data()->meta());
+    }
+
+    for(auto element : m_elementsMap)
+    {
+        auto&& references = element.data()->m_element->getLinks().data();
+        for(auto referenceIter = references->begin(); referenceIter != references->end(); ++referenceIter)
+        {
+            auto elementsIter = m_elementLinksByNameMap.find(referenceIter.key());
+            if(elementsIter != m_elementLinksByNameMap.end())
+            {
+                auto&& elementsList = elementsIter.value();
+                auto referencesCount = referenceIter.value();
+                auto elementsCount = static_cast<uid_t>(elementsList->count());
+                if(referencesCount == 0 || referencesCount == elementsCount)
+                {
+                    element->m_element->setLinks(elementsIter.key(), *elementsList.data());
+                }
+                else if(referencesCount < elementsCount)
+                {
+                    QList<QWeakPointer<IUIElementDescriptor>> list;
+                    // TODO: Add picking of references.
+                    for(uid_t i = 0; i < referencesCount; ++i)
+                    {
+                        list.append(elementsList->at(static_cast<int>(i)));
+                    }
+                }
+                else
+                {
+                    qWarning() << "Not enough UI elements: need" << referencesCount << "has:" << elementsCount;
+                }
+            }
+        }
+    }
+
+    auto element = m_elementsMap[m_rootElementUID];
+    onOpenLink(element->m_element, element->m_elementDescr);
+}
+
+void UIManager::onOpenLink(IUIElement* self, QWeakPointer<IUIElementDescriptor> link)
+{
+    if(!m_elementsStack.isEmpty() && self != getActive()->m_element)
+    {
+        return;
+    }
+
+    auto iter = m_elementsMap.find(link.data()->uid());
+    if(iter == m_elementsMap.end())
+    {
+        return;
+    }
+
+    auto descr = iter.key();
+    auto element = iter.value();
+//    log(SeverityType::INFO, QString("Push window: %1").arg(uiElement->getNodeName()));
+
+    if (!m_elementsStack.isEmpty())
+    {
+        getActive()->m_element->close();
+    }
+
+    m_elementsStack.append(descr);
+    m_parentWidget->layout()->addWidget(element->m_element->getWidget());
+    element->m_element->open(m_parentWidget);
+}
+
+void UIManager::onCloseLink(IUIElement* self, QWeakPointer<IUIElementDescriptor> link)
+{
+    if(self != getActive()->m_element)
+    {
+        return;
+    }
+
+    auto iter = m_elementsMap.find(link.data()->uid());
+    if(iter == m_elementsMap.end())
+    {
+        return;
+    }
+//    log(SeverityType::INFO, QString("Pop window: %1").arg(uiElement->getNodeName()));
+    onCloseSelf(iter.value()->m_element);
+}
+
+void UIManager::onCloseSelf(IUIElement* self)
+{
+    if (m_elementsStack.count() > 1)
+    {
+        getActive()->m_element->close();
+        m_elementsStack.removeLast();
+        getActive()->m_element->open(m_parentWidget);
+    }
+    else
+    {
+        QApplication::exit();
+    }
+}
+
+bool UIManager::registerUIElement(IUIElement* uiElement, QWeakPointer<QJsonObject> meta)
+{
+    const auto &object = uiElement->getObject();
     if(!object)
     {
         qCritical() << "UIManager::addChildItem: skip element adding: no QObject available";
         return false;
     }
-    // TODO: add connect success checking; if failure skip adding.
-    connect(object, SIGNAL(onOpened(int)), this, SLOT(onElementOpened(int)));
-    connect(object, SIGNAL(onClosed(int)), this, SLOT(onElementClosed(int)));
-    connect(object, SIGNAL(onConnectionsChanged(int)), this, SLOT(onElementConnectionChanged(int)));
 
-    const auto &widget = element.data()->getElementWidget();
-    if(widget)
+
+    auto elementDescr = uiElement->initUIElement(m_lastGeneratedUID, meta);
+    auto&& elementHandler = QSharedPointer<UIElementHandler>(
+                new UIElementHandler({uiElement, elementDescr}));
+    m_elementsMap[m_lastGeneratedUID] = elementHandler;
+
+    if(m_rootElementUID == 0)
+        m_rootElementUID = m_lastGeneratedUID;
+    ++m_lastGeneratedUID;
+
+    auto key = elementHandler->m_elementDescr.data()->linkKey();
+    auto iter = m_elementLinksByNameMap.find(key);
+    if(iter != m_elementLinksByNameMap.end())
     {
-        widget->installEventFilter(this);
+        iter.value()->append(elementDescr);
+    }
+    else
+    {
+        auto list = new QList<QWeakPointer<IUIElementDescriptor>>();
+        list->append(elementDescr);
+        m_elementLinksByNameMap[key].reset(list);
     }
 
-    auto elementId = element.data()->getElementId();
-    m_elementsMap.insert(elementId, element);
+    connect(object, SIGNAL(openLink(IUIElement*, QWeakPointer<IUIElementDescriptor>)),
+            this, SLOT(onOpenLink(IUIElement*, QWeakPointer<IUIElementDescriptor>)));
+
+    connect(object, SIGNAL(closeLink(IUIElement*, QWeakPointer<IUIElementDescriptor>)),
+            this, SLOT(onCloseLink(IUIElement*, QWeakPointer<IUIElementDescriptor>)));
+
+    connect(object, SIGNAL(closeSelf(IUIElement*)), this, SLOT(onCloseSelf(IUIElement*)));
 
     return true;
-}
-
-bool UIManager::removeChildItem(int elementId)
-{
-    if(!validateElementId(elementId))
-    {
-        qCritical() << "UIManager::removeChildItem: skip element remove;";
-        return false;
-    }
-
-    auto element = getElementById(elementId);
-
-    const auto &widget = element.data()->getElementWidget();
-    widget->removeEventFilter(this);
-    widget->setParent(nullptr);
-
-    const auto &object = element.data()->getElementSignalsLinkObject();
-    disconnect(object, SIGNAL(onOpened(int)), this, SLOT(onElementOpened(int)));
-    disconnect(object, SIGNAL(OnClosed(int)), this, SLOT(onElementClosed(int)));
-    disconnect(object, SIGNAL(onConnectionsChanged(int)), this, SLOT(onElementConnectionChanged(int)));
-
-    m_elementsMap.remove(elementId);
-
-    return true;
-}
-
-void UIManager::setupElementsLinks()
-{
-    for(auto element : m_elementsMap)
-    {
-        auto connectionIds = element.data()->getConnectedElementsIDs();
-        for(auto connectionId : connectionIds)
-        {
-            element->addConnectedElement(m_elementsMap[connectionId]);
-        }
-    }
-}
-
-const QWeakPointer<IUIManager::IUIElement> UIManager::getRootElement()
-{
-    auto &&element = m_elementsMap[m_rootElementId];
-    return element;
-}
-
-const QVector<QWeakPointer<IUIManager::IUIElement> > UIManager::getChildElements()
-{
-    auto mapCopy = m_elementsMap;
-    mapCopy.remove(m_rootElementId);
-    QVector<QWeakPointer<IUIManager::IUIElement> > childVector;
-    childVector.reserve(mapCopy.count());
-    for(auto element : m_elementsMap)
-    {
-        childVector.append(element);
-    }
-    return childVector;
-}
-
-bool UIManager::validateElement(QWeakPointer<IUIManager::IUIElement> element)
-{
-    if(element.isNull())
-    {
-        qCritical() << "UIManager::validateElement: element is empty.";
-        return false;
-    }
-
-    return validateElementId(element.data()->getElementId());
-}
-
-bool UIManager::validateElementId(int elementId)
-{
-    if(m_elementsMap.contains(elementId))
-    {
-        qWarning() << QString("UIManager::validateElement: element with id '%1' already exist.").arg(elementId);
-        return false;
-    }
-
-    return true;
-}
-
-int UIManager::createElementIdForItem(QWeakPointer<IPluginLinker::ILinkerItem> item)
-{
-    return item.data()->getPluginUID();
-}
-
-QWeakPointer<IUIManager::IUIElement> UIManager::getElementById(int elementId)
-{
-    const auto &elementIter = m_elementsMap.find(elementId);
-    Q_ASSERT_X(elementIter != m_elementsMap.end(), "onOpen signal from element", "unknown element");
-
-    return elementIter.value();
-}
-
-void UIManager::onElementOpened(int elementId)
-{
-    const auto &openedElement = getElementById(elementId);
-    auto widget = openedElement.data()->getElementWidget();
-
-    log(SeverityType::INFO, QString("Opened: %1").arg(openedElement.data()->getMeta().Name));
-
-    if(elementId == m_rootElementId && m_widgetStack.isEmpty())
-    {
-        open();
-        return;
-    }
-
-    if(widget && widget != m_parentWidget)
-    {
-        push(widget);
-        return;
-    }
-
-    const auto connectedElements = openedElement.data()->getConnectedElements();
-    bool isOpened = false;
-    for(const auto &element : connectedElements)
-    {
-        auto &&elementPtr = element.data();
-        if(!elementPtr->isOpened() && elementPtr->getElementWidget())
-        {
-            elementPtr->open();
-            isOpened = true;
-            break;
-        }
-    }
-
-    if(!isOpened)
-    {
-        for(const auto &element : connectedElements)
-        {
-            auto &&elementPtr = element.data();
-            if(!elementPtr->isOpened())
-            {
-                elementPtr->open();
-                isOpened = true;
-                break;
-            }
-        }
-    }
-
-    if(!isOpened)
-    {
-        auto &&meta = openedElement.data()->getMeta();
-        qCritical() << QString("No connected to elements found to open [%1 : %2]")
-                    .arg(meta.Name).arg(meta.InterfaceName);
-    }
-}
-
-void UIManager::onElementClosed(int elementId)
-{
-    //const auto &element = getElementById(elementId);
-
-    // TODO: provide logic for closing lower layer elements;
-    pop();
-}
-
-void UIManager::onElementConnectionChanged(int elementId)
-{
-
-}
-
-void UIManager::onLinkageFinished()
-{
-    auto plugins = m_pluginLinker->getPluginsMap();
-
-    auto coreItemUID = m_pluginLinker->getCorePluginUID();
-    auto rootItem = plugins[coreItemUID];
-    addRootItem(rootItem);
-    plugins.remove(coreItemUID);
-
-    for(auto iter = plugins.begin(); iter != plugins.end(); ++iter)
-    {
-        addChildItem(iter.value());
-    }
-
-    setupElementsLinks();
-}
-
-void UIManager::onAllReferencesSet()
-{
-    for(auto iter = m_referencesMap.begin(); iter != m_referencesMap.end(); ++iter)
-    {
-        auto&& interfaceName = iter.key();
-        auto&& plugin = iter.value();
-        if(!QString::compare(interfaceName, "IPluginLinker", Qt::CaseInsensitive))
-        {
-            auto instance = plugin->getObject();
-            m_pluginLinker = qobject_cast<IPluginLinker*>(instance);
-            connect(instance, SIGNAL(onLinkageFinished()), this, SLOT(onLinkageFinished()));
-        }
-    }
-    PluginBase::onAllReferencesSet();
 }

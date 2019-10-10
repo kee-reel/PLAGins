@@ -1,15 +1,5 @@
 {
-    "iterface": "IUIManager",
-    "name": "UIManager",
-    "relations": {
-        "embedded": {
-
-        },
-        "required": {
-            "IPluginLinker"
-        },
-        "optional": {
-
-        }
+    "service": {
+        "interfaces": ["IUIManager"]
     }
 }

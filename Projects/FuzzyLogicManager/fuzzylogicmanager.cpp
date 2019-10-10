@@ -1,7 +1,7 @@
 #include "fuzzylogicmanager.h"
 
 FuzzyLogicManager::FuzzyLogicManager() :
-    PluginBase()
+    PluginBase(this)
 {
 }
 

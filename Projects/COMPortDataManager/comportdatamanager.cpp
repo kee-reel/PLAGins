@@ -1,7 +1,7 @@
 #include "comportdatamanager.h"
 
 COMPortDataManager::COMPortDataManager() :
-    PluginBase()
+    PluginBase(this)
 {
     supportedDevices["ArduinoUno"] = DeviceInfo{9025, 67};
 }

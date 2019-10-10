@@ -6,7 +6,8 @@
 #include <QLayout>
 #include <QWidget>
 
-#include "../../Common/plugin_base.h"
+
+#include "../PluginLinker/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/ipomodoromanager.h"
 #include "pomodorobutton.h"

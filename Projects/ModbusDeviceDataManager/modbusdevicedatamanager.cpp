@@ -6,7 +6,7 @@
 #include <qserialportinfo.h>
 
 ModbusDeviceDataManager::ModbusDeviceDataManager() :
-    PluginBase()
+    PluginBase(this)
 {
     modbusDevice = nullptr;
     lastRequest = nullptr;

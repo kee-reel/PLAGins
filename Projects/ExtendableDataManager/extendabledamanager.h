@@ -7,7 +7,8 @@
 #include <QVariant>
 #include <QPair>
 
-#include "../../Common/plugin_base.h"
+
+#include "../PluginLinker/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/iextendabledatamanager.h"
 #include "../../Interfaces/idatabase.h"
@@ -17,7 +18,7 @@
 
 //! \addtogroup ExtendableDataManager_imp
 //!  \{
-class ExtendableDataManager : public PluginBase, IExtendableDataManager
+class ExtendableDataManager : public QObject, public PluginBase, IExtendableDataManager
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "ExtendableDataManager" FILE "PluginMeta.json")

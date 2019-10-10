@@ -10,14 +10,15 @@
 #include <QTimer>
 #include <QDateTime>
 
-#include "../../Common/plugin_base.h"
+
+#include "../PluginLinker/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/icomportdatamanager.h"
 #include "serialporthandler.h"
 
 //! \addtogroup COMPortDataManager_imp
 //!  \{
-class COMPortDataManager : public PluginBase, ICOMPortDataManager
+class COMPortDataManager : public QObject, public PluginBase, ICOMPortDataManager
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")

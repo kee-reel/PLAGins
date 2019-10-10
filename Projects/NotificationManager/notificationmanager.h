@@ -13,14 +13,15 @@
     #include <QAndroidJniEnvironment>
 #endif
 
-#include "../../Common/plugin_base.h"
+
+#include "../PluginLinker/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/inotificationmanager.h"
 #include "qextendedtimer.h"
 
 //! \addtogroup NotificationManager_imp
 //! \{
-class NotificationManager : public PluginBase, INotificationManager
+class NotificationManager : public QObject, public PluginBase, INotificationManager
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")

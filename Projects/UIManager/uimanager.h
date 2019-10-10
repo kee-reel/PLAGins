@@ -6,76 +6,68 @@
 #include <QObject>
 #include <QWidget>
 #include <QList>
+#include <QMap>
 #include <QLayout>
+#include <QEnableSharedFromThis>
 
-#include "../../Common/plugin_base.h"
+#include "../Core/CoreServiceBase/coreservicebase.h"
 
-#include "../../Interfaces/iuimanager.h"
+#include "../../Interfaces/iuielement.h"
 #include "../../Interfaces/ipluginlinker.h"
-
-#include "uielement.h"
+#include "../../../Application/iapplication.h"
 
 //! \addtogroup UIManager_imp
 //!  \{
-class UIManager : public PluginBase, public IUIManager
+class UIManager : public QObject, public Service::CoreServiceBase
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
     Q_INTERFACES(
-        IPlugin
-        IUIManager
+        Service::ICoreService
     )
 
 public:
     UIManager();
     virtual ~UIManager() override;
 
-public slots:
-    void pop();
-    void push(QWidget *widget);
-    int count();
-    QWidget *getTop();
-
-signals:
-    void onPop();
-
     // QObject interface
 public:
     bool eventFilter(QObject *watched, QEvent *event) override;
 
-    // PluginBase interface
-protected:
-    virtual void onAllReferencesSet() override;
-
     // IUIManager interface
 public:
-    virtual const QWeakPointer<IUIElement> getRootElement() override;
-    virtual const QVector<QWeakPointer<IUIElement> > getChildElements() override;
+    bool registerUIElement(IUIElement *uiElement, QWeakPointer<QJsonObject> meta);
 
-private:
-    bool addRootItem(QWeakPointer<IPluginLinker::ILinkerItem> rootItem);
-    bool addChildItem(QWeakPointer<IPluginLinker::ILinkerItem> item);
-    bool removeChildItem(int elementId);
-    void setupElementsLinks();
-
-    bool validateElement(QWeakPointer<IUIElement> element);
-    bool validateElementId(int elementId);
-    int createElementIdForItem(QWeakPointer<IPluginLinker::ILinkerItem> item);
-    QWeakPointer<IUIElement> getElementById(int elementId);
+signals:
+    void onPop();
 
 private slots:
-    void onElementOpened(int elementId);
-    void onElementClosed(int elementId);
-    void onElementConnectionChanged(int elementId);
-    void onLinkageFinished();
+    void onOpenLink(IUIElement *self, QWeakPointer<IUIElementDescriptor> link);
+    void onCloseLink(IUIElement *self, QWeakPointer<IUIElementDescriptor> link);
+    void onCloseSelf(IUIElement *self);
+
+private:
+    struct UIElementHandler
+    {
+        IUIElement* m_element;
+        QWeakPointer<IUIElementDescriptor> m_elementDescr;
+    };
+
+private:
+    inline QSharedPointer<UIElementHandler> getActive()
+    {
+        return m_elementsMap[m_elementsStack.last()];
+    }
 
 private:
     IPluginLinker* m_pluginLinker;
-
     QWidget *m_parentWidget;
-    int m_rootElementId;
-    QMap<int, QSharedPointer<UIElement>> m_elementsMap;
-    QList<QWidget *> m_widgetStack;
+    uid_t m_lastGeneratedUID;
+    uid_t m_rootElementUID;
+
+    QList<uid_t> m_elementsStack;
+    QMap<uid_t, QSharedPointer<UIElementHandler>> m_elementsMap;
+    QMap<QString, QSharedPointer<QList<QWeakPointer<IUIElementDescriptor>>> > m_elementLinksByNameMap;
 };
 //!  \}
 #endif // UIMANAGER_H

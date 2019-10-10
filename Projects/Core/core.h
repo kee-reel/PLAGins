@@ -4,33 +4,52 @@
 #include <QObject>
 #include <QDebug>
 #include <QString>
+#include <typeindex>
 
 #include "../../../Application/icoreplugin.h"
+#include "../../Interfaces/Architecture/iplugin.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 
-#include "icoreservice.h"
-#include "coreservicesmanager.h"
+#include "simplelinker.h"
 
 
 //! addtogroup CorePlugin_imp
 //! {
-class Core : public QObject, public ICore
+class Core : public QObject, public ICore, public PluginBase, public IApplication
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "MASS.Module.CorePlugin" FILE "PluginMeta.json")
-    Q_INTERFACES(ICore)
+    Q_INTERFACES(
+            ICore
+            IPlugin
+            IApplication)
 
 public:
     Core();
     virtual ~Core() override;
 
-    // ICorePlugin interface
+    // ICore interface
 public:
     virtual void coreInit(IApplication *app) override;
     virtual bool coreFini() override;
 
+    // IPlugin interface
+public:
+    virtual bool pluginInit(uid_t uid, QWeakPointer<QJsonObject> metaInfoObject) override;
+    virtual QWeakPointer<IReferenceDescriptor> getDescriptor() override;
+    virtual QWeakPointer<IReferenceInstancesHandler> getInstancesHandler() override;
+    virtual bool pluginFini() override;
+    virtual QString getLastError() const override;
+
+    // IApplication interface
+public:
+    virtual QWidget *getParentWidget() override;
+    virtual QVector<QWeakPointer<IPluginHandler> > getPlugins() override;
+    virtual QWeakPointer<IPluginHandler> makePluginHandler(QString path) override;
+
  private:
     IApplication* m_app;
-    Service::CoreServicesManager* m_servicesManager;
+    Service::SimpleLinker* m_linker;
 };
 //! }
 #endif // COREPLUGIN_H

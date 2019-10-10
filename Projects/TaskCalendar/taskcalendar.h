@@ -5,7 +5,8 @@
 #include <QDebug>
 #include <QString>
 
-#include "../../Common/plugin_base.h"
+
+#include "../PluginLinker/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/itaskcalendar.h"
 #include "../../Interfaces/iextendabledatamanager.h"

@@ -7,7 +7,8 @@
 #include <QAbstractItemModel>
 #include <QDateTime>
 
-#include "../../Common/plugin_base.h"
+
+#include "../PluginLinker/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/idayplan.h"
 #include "../../Interfaces/iusertaskmanager.h"
@@ -15,7 +16,7 @@
 
 //! \addtogroup DayPlan_imp
 //! \{
-class DayPlan : public PluginBase, IDayPlan
+class DayPlan : public QObject, public PluginBase, IDayPlan
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")

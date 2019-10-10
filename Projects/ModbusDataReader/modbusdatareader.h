@@ -7,7 +7,8 @@
 #include <QTimer>
 #include <QDateTime>
 
-#include "../../Common/plugin_base.h"
+
+#include "../PluginLinker/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/imodbusdatareader.h"
 #include "../../Interfaces/imodbusdevicedatamanager.h"

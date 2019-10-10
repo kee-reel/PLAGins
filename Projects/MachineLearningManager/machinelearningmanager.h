@@ -6,7 +6,8 @@
 #include <QString>
 #include <QJsonObject>
 
-#include "../../Common/plugin_base.h"
+
+#include "../PluginLinker/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/iextendabledatamanager.h"
 #include "../../Interfaces/imachinelearningmanager.h"
@@ -17,7 +18,7 @@
 
 //! \addtogroup MachineLearningManager_imp
 //! \{
-class MachineLearningManager : public PluginBase, IMachineLearningManager
+class MachineLearningManager : public QObject, public PluginBase, IMachineLearningManager
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")

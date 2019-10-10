@@ -1,7 +1,7 @@
 #include "dayplan.h"
 
 DayPlan::DayPlan() :
-    PluginBase()
+    PluginBase(this)
 {
     taskTreeModel = nullptr;
     taskDataModel = nullptr;

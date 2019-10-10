@@ -2,33 +2,35 @@
 
 PluginLinker::PluginLinker() :
     QObject(nullptr),
-    Service::CoreServiceBase(this),
-    m_pluginUidCounter(0)
+    Service::CoreServiceBase(this,
+    {INTERFACE(Service::ICoreService), INTERFACE(IPluginLinker)},
+    {
+        {INTERFACE(IApplication), 1}
+    })
 {
 }
 
 PluginLinker::~PluginLinker()
 {
-}
-
-int PluginLinker::getCorePluginUID()
-{
-//    return m_PluginLinker.data()->getPluginUID();
-}
-
-QMap<int, QWeakPointer<IPluginLinker::ILinkerItem> > PluginLinker::getPluginsMap()
-{
-    QMap<int, QWeakPointer<IPluginLinker::ILinkerItem> > mapCopy;
-    for(auto iter = m_linkerItemsMap.begin(); iter != m_linkerItemsMap.end(); ++iter)
+    for(auto& iter : m_linkerItemsMap)
     {
-        mapCopy.insert(iter.key(), iter.value());
+        iter.data()->unload();
     }
-    return mapCopy;
 }
 
-void PluginLinker::onServiceManagerInitialized()
+bool PluginLinker::setReferences(Interface interface, QList<IReferenceDescriptorPtr> references)
 {
-    Service::CoreServiceBase::onServiceManagerInitialized();
+    START_ASSIGNMENT(interface, references, getRefereneces())
+        ASSIGN_SINGLE(IApplication, references, m_app)
+    END_ASSIGNMENT()
+
+    auto plugins = m_app->getPlugins();
+    for(auto& plugin : plugins)
+    {
+        addPlugin(plugin);
+    }
+    setupLinks();
+    return true;
 }
 
 bool PluginLinker::addCorePlugin(QWeakPointer<IPluginHandler> pluginHandler)
@@ -54,94 +56,65 @@ bool PluginLinker::addPlugin(QWeakPointer<IPluginHandler> pluginHandler)
     return true;
 }
 
-QSharedPointer<MetaInfo> PluginLinker::parseMetaInfo(const QJsonObject &metaInfoObject) const
+QSharedPointer<LinkerItemBase> PluginLinker::createLinkerItem(QWeakPointer<IPluginHandler> pluginHandler)
 {
-    QJsonObject metaInfo = metaInfoObject.value("MetaData").toObject();
-    // Check if all meta fields exists
-    QStringList metaFieldsNames;
-    metaFieldsNames << META_FIELD_INTERFACE <<
-                    META_FIELD_NAME <<
-                    META_FIELD_RELATED_PLUGIN_INTERFACES;
+    QSharedPointer<LinkerItemBase> linkerItemPtr;
 
-    for(QString metaFieldName : metaFieldsNames)
-    {
-        if(!metaInfo.contains(metaFieldName))
-        {
-//            log(SeverityType::WARNING, QString("PluginBase::parseMetaInfo: meta has no field '%1' but has fields:").arg(metaFieldName));
-            for(auto iter = metaInfo.begin(); iter != metaInfo.end(); ++iter)
-            {
-//                log(SeverityType::WARNING, QString("%1: %2").arg(iter.key()).arg(iter.value().toString()));
-            }
-            return nullptr;
-        }
-    }
+    qDebug() << "Load:" << pluginHandler.data()->getUID();
 
-    QSharedPointer<MetaInfo> newMetaInfo(new MetaInfo());
-
-    // Set module name
-    newMetaInfo->Name = metaInfo.value(META_FIELD_NAME).toString();
-    if(newMetaInfo->Name == "")
-    {
-//        log(SeverityType::CRITICAL, QString("PluginBase::parseMetaInfo: parse error: field %1 is empty.").arg(META_FIELD_NAME));
-        return nullptr;
-    }
-
-    // Set module type
-    newMetaInfo->InterfaceName = metaInfo.value(META_FIELD_INTERFACE).toString();
-    if(newMetaInfo->InterfaceName == "")
-    {
-//        log(SeverityType::WARNING, QString("PluginBase::parseMetaInfo: plugin %1 field %2 is empty; "
-//                                           "this item won't be referenced by other plugins.")
-//                                .arg(newMetaInfo->Name)
-//                                .arg(META_FIELD_INTERFACE));
-    }
-
-    // Set module parent name
-    QJsonArray array = metaInfo.value(META_FIELD_RELATED_PLUGIN_INTERFACES).toArray();
-    for(auto iter = array.begin(); iter != array.end(); ++iter)
-    {
-        newMetaInfo->RequiredInterfaces.append(iter->toString());
-    }
-
-    // Set module parent name
-    auto jsonValueAbout = metaInfo.value(META_FIELD_ABOUT);
-    newMetaInfo->About = jsonValueAbout.isNull() ? "" : jsonValueAbout.toString();
-
-    //    qDebug() << "PluginBase::parseMetaInfo: succesfuly parsed:" <<
-    //             META_FIELD_NAME << newMetaInfo->Name << endl <<
-    //             META_FIELD_INTERFACE << newMetaInfo->InterfaceName << endl <<
-    //             META_FIELD_RELATED_PLUGIN_INTERFACES << newMetaInfo->RelatedPluginNames << endl;
-    return newMetaInfo;
-}
-
-QSharedPointer<LinkerItem> PluginLinker::createLinkerItem(QWeakPointer<IPluginHandler> pluginHandler)
-{
     if(pluginHandler.isNull())
     {
+        qDebug() << "PluginLinker::createLinkerItem: given hander is empty" << pluginHandler.data()->getMeta();
 //        log(SeverityType::WARNING, "PluginLinker::createLinkerItem: given hander is empty");
-        return QWeakPointer<LinkerItem>();
+        return linkerItemPtr;
     }
 
-    auto jsonObject = pluginHandler.data()->getMeta();
-    auto metaInfo = parseMetaInfo(jsonObject);
-
-    if(metaInfo.isNull())
+    if(PluginLinkerItem::isPlugin(pluginHandler))
     {
+        qDebug() << QString("PluginLinker::createLinkerItem: load plugin") << pluginHandler.data()->getMeta();
 //        log(SeverityType::WARNING, QString("PluginLinker::createLinkerItem: can't load plugin '%1'").arg(m_metaInfo.Name));
-        return QWeakPointer<LinkerItem>();
+        linkerItemPtr.reset(new PluginLinkerItem(pluginHandler));
+    }
+    else if(ServiceLinkerItem::isService(pluginHandler))
+    {
+        qDebug() << QString("PluginLinker::createLinkerItem: load service") << pluginHandler.data()->getMeta();
+//        log(SeverityType::WARNING, QString("PluginLinker::createLinkerItem: can't load plugin '%1'").arg(m_metaInfo.Name));
+        linkerItemPtr.reset(new ServiceLinkerItem(pluginHandler));
+    }
+    else
+    {
+        qDebug() << QString("PluginLinker::createLinkerItem: load smth") << pluginHandler.data()->getMeta();
+        return linkerItemPtr;
     }
 
-    auto &&linkerItem = new LinkerItem(pluginHandler, metaInfo, m_pluginUidCounter);
-    auto linkerItemPtr = QSharedPointer<LinkerItem>(linkerItem);
-    m_linkerItemsMap.insert(linkerItemPtr->getPluginUID(), linkerItemPtr);
-    m_interfacesMap.insertMulti(metaInfo->InterfaceName, linkerItemPtr);
-    ++m_pluginUidCounter;
+    auto&& uid = linkerItemPtr->descr().data()->uid();
+    m_linkerItemsMap.insert(uid, linkerItemPtr);
+    m_rawLinkerItemsMap.insert(uid, linkerItemPtr);
+
+    auto&& interfaces = linkerItemPtr->descr().data()->interfaces();
+    for(auto& interface : interfaces)
+    {
+        auto& list = m_interfacesMap[interface];
+        auto& rawList = m_rawInterfacesMap[interface];
+
+        if(list.isNull())
+        {
+            list.reset(new QList<QWeakPointer<LinkerItemBase>>);
+            rawList.reset(new QList<QWeakPointer<ILinkerItem>>);
+        }
+
+        list->append(linkerItemPtr);
+        rawList->append(linkerItemPtr);
+
+    }
+
+    qDebug() << "Add" << linkerItemPtr->descr().data()->name();
 //    log(SeverityType::INFO, QString("Plugin '%1' loaded").arg(metaInfo.data()->Name));
     return linkerItemPtr;
 }
 
 template<class Type>
-Type *PluginLinker::castToPlugin(QObject *possiblePlugin) const
+Type *PluginLinker::castToInterface(QObject *possiblePlugin) const
 {
     Type *plugin = qobject_cast<Type *>(possiblePlugin);
 
@@ -156,32 +129,29 @@ Type *PluginLinker::castToPlugin(QObject *possiblePlugin) const
 bool PluginLinker::setupLinks()
 {
     bool isLinkageSucceded = true;
-    QStringList troubledPlugins;
-    // For all plugins.
-    for(auto iter = m_interfacesMap.begin(); iter != m_interfacesMap.end(); ++iter)
+    QList<uid_t> troubledPlugins;
+
+    for(auto& itemsIter : m_linkerItemsMap)
     {
-        auto &item = iter.value();
-        auto &referencesNames = item->getReferenceNamesList();
-        // For all references of plugin.
-        for(auto &referenceName : referencesNames)
+        auto references = itemsIter.data()->references();
+        auto name = itemsIter->descr().data()->name();
+        for(auto linksIter = references.begin(); linksIter != references.end(); ++linksIter)
         {
-            auto referenceIter = m_interfacesMap.find(referenceName);
-            if(referenceIter != m_interfacesMap.end())
+            auto&& interface = linksIter.key();
+            auto interfacesIter = m_interfacesMap.find(interface);
+            if(interfacesIter != m_interfacesMap.end())
             {
-                // For references with same interface.
-                do
+                qDebug() << "link:" << name << "to:" << interface;
+                for(auto& item : *interfacesIter.value().data())
                 {
-                    item->addReference(referenceIter.value());
-                    referenceIter.value()->addReferent(item);
-                    ++referenceIter;
+                    itemsIter.data()->addReference(interface, item);
                 }
-                while(referenceIter.key() == referenceName && referenceIter != m_interfacesMap.end());
             }
             else
             {
-                if(!troubledPlugins.contains(referenceName))
+                if(!troubledPlugins.contains(itemsIter->descr().data()->uid()))
                 {
-                    troubledPlugins.append(referenceName);
+                    troubledPlugins.append(itemsIter->descr().data()->uid());
                 }
                 isLinkageSucceded = false;
             }
@@ -191,31 +161,55 @@ bool PluginLinker::setupLinks()
     if(isLinkageSucceded)
     {
 //        log(SeverityType::INFO, "Linkage suceeded");
+        qDebug() << "Linkage suceeded";
     }
     else
     {
         //log(SeverityType::CRITICAL) << "Linkage failed, next referenced plugins not found:" << troubledPlugins;
-    }
-
-    for (auto iter = m_linkerItemsMap.begin(); iter != m_linkerItemsMap.end(); ++iter)
-    {
-        iter.value().data()->load();
+        qDebug() << "Linkage failed, next referenced plugins not found:" << troubledPlugins;
     }
 
     onLinkageFinished();
     return isLinkageSucceded;
 }
 
-bool PluginLinker::unloadPlugin(QWeakPointer<ILinkerItem> linkerItem)
+QWeakPointer<IPluginLinker::ILinkerItem> PluginLinker::loadNewPlugin(QString filename)
 {
-    auto uid = linkerItem.data()->getPluginUID();
+    auto handler = m_app->makePluginHandler(filename);
+    return createLinkerItem(handler);
+
+}
+
+bool PluginLinker::loadPlugin(uid_t uid)
+{
+    m_linkerItemsMap.find(uid).value()->load();
+    return true;
+}
+
+bool PluginLinker::unloadPlugin(uid_t uid)
+{
     auto pluginHandler = m_linkerItemsMap[uid];
     pluginHandler.data()->unload();
     m_linkerItemsMap.remove(uid);
 }
 
-bool PluginLinker::loadPlugin(QString filename)
+bool PluginLinker::linkPlugins(uid_t referentUID, QString interface, uid_t referenceUID)
 {
-//    auto handler = m_app->makePluginHandler(filename);
-//    return addPlugin(handler);
+    return true;
+}
+
+bool PluginLinker::unlinkPlugins(uid_t referentUID, QString interface, uid_t referenceUID)
+{
+    return true;
+}
+
+QWeakPointer<IPluginLinker::ILinkerItem> PluginLinker::getItemByUID(uid_t uid)
+{
+    return m_rawLinkerItemsMap.find(uid).value();
+}
+
+QWeakPointer<QList<QWeakPointer<IPluginLinker::ILinkerItem> > > PluginLinker::getItemsWithInterface(Interface interface)
+{
+    auto iter = m_rawInterfacesMap.find(interface);
+    return iter != m_rawInterfacesMap.end() ? iter.value() : nullptr;
 }

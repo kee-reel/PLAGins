@@ -1,7 +1,7 @@
 #include "pomodoromanager.h"
 
 PomodoroManager::PomodoroManager() :
-    PluginBase()
+    PluginBase(this)
 {
     myModel = nullptr;
     taskModel = nullptr;

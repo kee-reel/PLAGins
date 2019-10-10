@@ -10,10 +10,6 @@ class AspectAwareGridLayout : public QGridLayout
 public:
     explicit AspectAwareGridLayout(QWidget *parent = 0);
 
-signals:
-
-public slots:
-
     // QLayoutItem interface
 public:
     int heightForWidth(int) const override;

@@ -4,11 +4,14 @@
 #include <QMessageBox>
 
 GridMainMenuView::GridMainMenuView() :
-    PluginBase(),
-    m_uiManager(nullptr),
+    QWidget (nullptr),
+    PluginBase(this, {INTERFACE(IPlugin), INTERFACE(IUIElement)}, {}),
+    UIElementBase(this, this),
     m_uniqueIdCounter(0),
-    m_exitItem(nullptr)
+    m_exitItem(nullptr),
+    ui(new Ui::Form)
 {
+    ui->setupUi(this);
     layout = new AspectAwareGridLayout(this);
     ui->scrollAreaWidgetContents->setLayout(layout);
 #ifdef Q_OS_ANDROID
@@ -22,17 +25,22 @@ GridMainMenuView::~GridMainMenuView()
 
 }
 
+void GridMainMenuView::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
+    //    container->resize(size());
+}
+
 void GridMainMenuView::UniqueButtonPressed(UniquePushButton *button)
 {
     if(button == m_exitItem)
     {
-        close();
+        emit closeSelf(this);
     }
     else
     {
         auto menuItem = m_uiElements[button->getId()];
-        auto root = m_uiManager->getRootElement();
-        menuItem.data()->open();
+        emit openLink(this, menuItem);
     }
 }
 
@@ -58,44 +66,17 @@ int GridMainMenuView::getUniqueId()
     return ++m_uniqueIdCounter;
 }
 
-void GridMainMenuView::resizeEvent(QResizeEvent *event)
+void GridMainMenuView::installMenuElements()
 {
-    QWidget::resizeEvent(event);
-    //    container->resize(size());
-}
+    auto freeNodes = m_links["MenuElement"];
 
-void GridMainMenuView::onAllReferencesSet()
-{
-    if(m_isAllReferencesSet)
+    QList<QWeakPointer<IUIElementDescriptor>> menuItems;
+    menuItems.reserve(freeNodes.count());
+    for(const auto &item : freeNodes)
     {
-        for(const auto &reference : m_referencesMap)
-        {
-            if(!reference->getPluginMetaInfo().InterfaceName.compare("IUIMANAGER", Qt::CaseInsensitive))
-            {
-                m_uiManager = castPluginToInterface<IUIManager>(reference);
-                Q_ASSERT(m_uiManager);
-            }
-        }
+        qDebug() << item.data()->linkKey();
+        menuItems.append(item);
     }
-    PluginBase::onAllReferencesSet();
-}
-
-bool GridMainMenuView::open()
-{
-    auto rootItem = m_uiManager->getRootElement();
-    auto connectedElements = rootItem.data()->getConnectedElements();
-
-    QVector<QWeakPointer<IUIManager::IUIElement>> menuItems;
-    menuItems.reserve(connectedElements.size()+1);
-    for(const auto &item : connectedElements)
-    {
-        qDebug() << item.data()->getMeta().Name;
-        if(!item.data()->getElementWidget())
-        {
-            menuItems.append(item);
-        }
-    }
-    menuItems.append(rootItem);
 
     if(menuItems.count() != 0)
     {
@@ -107,10 +88,9 @@ bool GridMainMenuView::open()
 
         for(const auto &menuItem : menuItems)
         {
-            auto &&meta = menuItem.data()->getMeta();
             auto uniqueId = getUniqueId();
             m_uiElements.insert(uniqueId, menuItem);
-            UniquePushButton *uniqueButton = new UniquePushButton(uniqueId, FormatMenuItemName(meta.Name), this);
+            UniquePushButton *uniqueButton = new UniquePushButton(uniqueId, FormatMenuItemName(menuItem.data()->linkKey()), this);
             uniqueButton->setMinimumHeight(itemMinHeight);
             connect(uniqueButton, SIGNAL(OnMenuItemSelected(UniquePushButton *)), SLOT(UniqueButtonPressed(UniquePushButton *)));
             m_uniqueButtons.append(uniqueButton);
@@ -127,8 +107,6 @@ bool GridMainMenuView::open()
     m_uniqueButtons.append(exitItem);
     layout->addWidget(exitItem);
 #endif
-
-    return PluginBase::open();
 }
 
 void GridMainMenuView::closeEvent(QCloseEvent *event)

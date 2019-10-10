@@ -6,14 +6,15 @@
 #include <QString>
 #include <QAbstractItemModel>
 
-#include "../../Common/plugin_base.h"
+
+#include "../PluginLinker/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/iusertaskmanager.h"
 #include "../../Interfaces/iextendabledatamanager.h"
 
 //! \addtogroup UserTaskManager_imp
 //! \{
-class UserTaskManager : public PluginBase, IUserTaskManager
+class UserTaskManager : public QObject, public PluginBase, IUserTaskManager
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")

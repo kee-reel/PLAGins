@@ -9,7 +9,8 @@
 #include <QAbstractItemModel>
 #include <QResizeEvent>
 
-#include "../../Common/plugin_base.h"
+
+#include "../PluginLinker/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/itasksketchmanager.h"
 #include "paintwidget.h"

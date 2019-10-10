@@ -7,7 +7,8 @@
 #include <QDebug>
 #include <QStandardItemModel>
 
-#include "../../Common/plugin_base.h"
+
+#include "../PluginLinker/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/imachinelearningmanager.h"
 

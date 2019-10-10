@@ -6,7 +6,11 @@ QT += widgets charts serialport serialbus
 
 DEFINES += PLUGIN_BASE_QWIDGET
 
-include(../../Common/BuildInfo.pri)
+include(../../Common/common.pri)
+
+include(../../../Application/PluginBuildInfo.pri)
+
+include(../PluginLinker/PluginBase/PluginBase.pri)
 
 SOURCES += \
     experimentcontrolview.cpp

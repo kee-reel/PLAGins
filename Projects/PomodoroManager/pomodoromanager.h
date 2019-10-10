@@ -9,7 +9,8 @@
 #include <QTimer>
 #include <QVariant>
 
-#include "../../Common/plugin_base.h"
+
+#include "../PluginLinker/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/ipomodoromanager.h"
 #include "../../Interfaces/iextendabledatamanager.h"
@@ -18,7 +19,7 @@
 
 //! \addtogroup PomodoroManager_int
 //! \{
-class PomodoroManager : public PluginBase, IPomodoroManager
+class PomodoroManager : public QObject, public PluginBase, IPomodoroManager
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")

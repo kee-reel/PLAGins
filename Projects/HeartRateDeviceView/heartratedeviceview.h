@@ -5,7 +5,8 @@
 #include <QDebug>
 #include <QString>
 
-#include "../../Common/plugin_base.h"
+
+#include "../PluginLinker/PluginBase/plugin_base.h"
 #include "../../Interfaces/iheartratedevice.h"
 
 //! \addtogroup HeartRateDevice_imp

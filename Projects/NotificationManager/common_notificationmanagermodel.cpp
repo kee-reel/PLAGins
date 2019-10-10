@@ -3,7 +3,7 @@
 #include <QDebug>
 
 NotificationManager::NotificationManager() :
-    PluginBase()
+    PluginBase(this)
 {
     //    NotificationManagerModel::SetInstance(this);
 }

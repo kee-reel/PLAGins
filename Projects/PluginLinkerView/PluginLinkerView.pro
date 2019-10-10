@@ -1,21 +1,27 @@
 
 TARGET = PluginLinkerView
 TEMPLATE = lib
-QT += widgets
+QT += core widgets
 
 SOURCES += \
-    pluginlinkerview.cpp
+    pluginlinkerview.cpp \
+    ../UIManager/UIElementBase/uielementbase.cpp
 
 HEADERS += \
-    pluginlinkerview.h
+    ..\..\Interfaces/ipluginlinker.h \
+    pluginlinkerview.h \
+    ../UIManager/UIElementBase/uielementbase.h
 
-DEFINES += \
-    PLUGIN_BASE_QWIDGET
+include(../../Common/common.pri)
+
+include(../../../Application/PluginBuildInfo.pri)
+
+include(../PluginLinker/PluginBase/PluginBase.pri)
+
+#include(../UIManager/UIElementBase/UIElementBase.pri)
     
 DISTFILES += \
     PluginMeta.json
-
-include(../../Common/BuildInfo.pri)
 
 FORMS += \
     form.ui

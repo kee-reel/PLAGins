@@ -1,7 +1,7 @@
 #include "heartratedevice.h"
 
 HeartRateDevice::HeartRateDevice() :
-    PluginBase()
+    PluginBase(this)
 {
 }
 

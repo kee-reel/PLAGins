@@ -3,7 +3,7 @@
 #include <QDebug>
 
 ModbusDataReader::ModbusDataReader() :
-    PluginBase()
+    PluginBase(this)
 {
     myReferencedPlugin = nullptr;
     experimentState = false;

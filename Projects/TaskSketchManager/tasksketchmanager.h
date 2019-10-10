@@ -6,7 +6,8 @@
 #include <QString>
 #include <QAbstractItemModel>
 
-#include "../../Common/plugin_base.h"
+
+#include "../PluginLinker/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/itasksketchmanager.h"
 #include "../../Interfaces/iextendabledatamanager.h"
@@ -14,7 +15,7 @@
 
 //! \addtogroup TaskSketchManager_imp
 //! \{
-class TaskSketchManager : public PluginBase, ITaskSketchManager
+class TaskSketchManager : public QObject, public PluginBase, ITaskSketchManager
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
@@ -45,6 +46,9 @@ public:
 protected:
     virtual void onAllReferencesSet() override;
     virtual void onAllReferencesReady() override;
+
+signals:
+    virtual void onReady(IPlugin*) override;
 };
 //! \}
 #endif // TASKLISTMODEL_H
