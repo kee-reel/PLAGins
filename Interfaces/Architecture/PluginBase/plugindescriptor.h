@@ -1,13 +1,13 @@
 #ifndef PLUGINDESCRIPTOR_H
 #define PLUGINDESCRIPTOR_H
 
-#include "../ireferencedescriptor.h"
+#include "referenceinstanceshandler.h"
 
 class PluginDescriptor : public IReferenceDescriptor
 {
 public:
     static QSharedPointer<PluginDescriptor> make(uid_t uid, QObject* instance, QWeakPointer<QJsonObject> meta,
-                                                 QVector<Interface> interfaces, QVector<Interface> references)
+                                                 QVector<Interface> interfaces, const QSharedPointer<ReferenceInstancesHandler> &instances)
     {
         auto metaData = meta.data()->value("MetaData").toObject();
         auto section = metaData.value("iplugin").toObject();
@@ -43,9 +43,10 @@ public:
         }
 
         QStringList referencesNames;
-        for(auto &reference : references)
+        auto &requiredReferences = instances->requiredReferences();
+        for(auto iter = requiredReferences.keyBegin(); iter != requiredReferences.keyEnd(); ++iter)
         {
-            referencesNames << reference.name();
+            referencesNames << iter->name();
         }
 
         auto referencesJSONMap = section.value("references").toObject();

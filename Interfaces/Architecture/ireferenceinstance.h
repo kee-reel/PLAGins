@@ -9,13 +9,14 @@ public:
     virtual const IReferenceDescriptorPtr& descr() = 0;
     virtual bool reset(IReferenceDescriptorPtr descr = IReferenceDescriptorPtr()) = 0;
 };
+typedef QWeakPointer<IReferenceInstance> IReferenceInstancePtr;
 
-
-class IReferenceInstancesVariableList : QList<QSharedPointer<IReferenceInstance>>
+class IReferenceInstancesList : QList<IReferenceInstancePtr>
 {
 public:
     virtual bool append(IReferenceDescriptorPtr &&descriptor) = 0;
 };
+typedef QWeakPointer<IReferenceInstancesList> IReferenceInstancesListPtr;
 
 
 template <class T>
@@ -75,17 +76,21 @@ public:
 	return m_descr;
     }
 
+    T* instance()
+    {
+	return m_instance;
+    }
+
 private:
     IReferenceDescriptorPtr m_descr;
     T* m_instance;
 };
 
-
 template <class T>
-class ReferenceInstancesVariableList : public IReferenceInstancesVariableList
+class ReferenceInstancesList : public IReferenceInstancesList
 {
 public:
-    ReferenceInstancesVariableList()
+    ReferenceInstancesList()
     {
     }
 

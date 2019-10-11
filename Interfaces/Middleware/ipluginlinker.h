@@ -3,7 +3,7 @@
 
 #include <QtCore>
 
-#include "../../Interfaces/ireferencedescriptor.h"
+#include "../../Interfaces/Architecture/ireferencedescriptor.h"
 
 //!  \defgroup PluginLinker PluginLinker
 //!      \ingroup Plugins

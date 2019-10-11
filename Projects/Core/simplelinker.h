@@ -19,11 +19,11 @@ public:
 public:
     void init();
 
-    void addPlugin(QWeakPointer<IPluginHandler> plugin);
+    void addPlugin(IPluginHandlerPtr plugin);
     void removePlugin(IReferenceDescriptorPtr descr);
 
 private:
-    typedef QPair<QWeakPointer<IPluginHandler>, ReferenceInstance<IPlugin>> LoadedPluginPair;
+    typedef QPair<IPluginHandlerPtr, ReferenceInstance<IPlugin>> LoadedPluginPair;
 
 
 private:

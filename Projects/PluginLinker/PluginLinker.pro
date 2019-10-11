@@ -11,7 +11,6 @@ QT += core widgets
 SOURCES += \
     linkeritembase.cpp \
     pluginlinkeritem.cpp \
-    servicelinkeritem.cpp \
     pluginlinker.cpp
 
 HEADERS += \
@@ -20,7 +19,6 @@ HEADERS += \
     ../../../Application/icoreplugin.h \
     linkeritembase.h \
     pluginlinkeritem.h \
-    servicelinkeritem.h \
     pluginlinker.h
 
 DEFINES += PLUGIN_BASE_QOBJECT

@@ -10,7 +10,7 @@
 #include <QMap>
 #include <QHash>
 
-#include "../../Interfaces/ipluginlinker.h"
+#include "../../Interfaces/Middleware/ipluginlinker.h"
 #include "../../../Application/ipluginhandler.h"
 
 
@@ -18,7 +18,7 @@ class LinkerItemBase : public QObject, public IPluginLinker::ILinkerItem
 {
     Q_OBJECT
 public:
-    LinkerItemBase(QWeakPointer<IPluginHandler> pluginHandler);
+    LinkerItemBase(IPluginHandlerPtr pluginHandler);
     virtual ~LinkerItemBase() override;
 
     // ILinkerItem interface
@@ -31,6 +31,8 @@ public:
     virtual bool isLoaded() override;
 
 public:
+    virtual const QMap<Interface, int>& references() = 0;
+
     virtual bool load();
     virtual bool unload();
 
@@ -56,7 +58,7 @@ protected:
 protected:
     uid_t m_uid;
     IReferenceDescriptorPtr m_descriptor;
-    QWeakPointer<IPluginHandler> m_pluginHandler;
+    IPluginHandlerPtr m_pluginHandler;
     QSharedPointer<QMap< Interface, QList<QWeakPointer<IPluginLinker::ILinkerItem>> >> m_references;
     QSharedPointer<QMap< Interface, QList<QWeakPointer<IPluginLinker::ILinkerItem>> >> m_referents;
 };

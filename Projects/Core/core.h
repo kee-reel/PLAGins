@@ -33,19 +33,11 @@ public:
     virtual void coreInit(IApplication *app) override;
     virtual bool coreFini() override;
 
-    // IPlugin interface
-public:
-    virtual bool pluginInit(uid_t uid, QWeakPointer<QJsonObject> metaInfoObject) override;
-    virtual QWeakPointer<IReferenceDescriptor> getDescriptor() override;
-    virtual QWeakPointer<IReferenceInstancesHandler> getInstancesHandler() override;
-    virtual bool pluginFini() override;
-    virtual QString getLastError() const override;
-
     // IApplication interface
 public:
     virtual QWidget *getParentWidget() override;
-    virtual QVector<QWeakPointer<IPluginHandler> > getPlugins() override;
-    virtual QWeakPointer<IPluginHandler> makePluginHandler(QString path) override;
+    virtual QVector<IPluginHandlerPtr > getPlugins() override;
+    virtual IPluginHandlerPtr makePluginHandler(QString path) override;
 
  private:
     IApplication* m_app;

@@ -10,8 +10,8 @@ class ReferenceInstancesHandler : public QObject, public IReferenceInstancesHand
     Q_OBJECT
 
 public:
-    ReferenceInstancesHandler(QMap<Interface, QList<QSharedPointer<IReferenceInstance> > > instances,
-                              QMap<Interface, QSharedPointer<IReferenceInstancesVariableList> > instancesLists) :
+    ReferenceInstancesHandler(QMap<Interface, QList<IReferenceInstancePtr > > instances,
+                              QMap<Interface, IReferenceInstancesListPtr > instancesLists) :
         QObject(),
         m_instances(instances),
         m_instancesList(instancesLists)
@@ -60,7 +60,7 @@ public:
                 {
                     for(auto &instance : instances)
                     {
-                        instance.reset();
+                        instance.data()->reset();
                     }
                     return false;
                 }
@@ -72,7 +72,7 @@ public:
             instancesList.clear();
             for(auto &ref : references)
             {
-                if(!instancesList->append(std::move(ref)))
+                if(!instancesList.data()->append(std::move(ref)))
                 {
                     instancesList.clear();
                     return false;
@@ -105,8 +105,8 @@ signals:
 private:
     QMap<Interface, int> m_interfaces;
     QMap<Interface, QList<IReferenceDescriptorPtr>> m_references;
-    QMap<Interface, QList<QSharedPointer<IReferenceInstance> > > m_instances;
-    QMap<Interface, QSharedPointer<IReferenceInstancesVariableList> > m_instancesList;
+    QMap<Interface, QList<IReferenceInstancePtr>> m_instances;
+    QMap<Interface, IReferenceInstancesListPtr> m_instancesList;
     bool m_isAllSet;
     State m_state;
 };

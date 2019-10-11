@@ -2,12 +2,10 @@
 
 PluginLinker::PluginLinker() :
     QObject(nullptr),
-    Service::CoreServiceBase(this,
-    {INTERFACE(Service::ICoreService), INTERFACE(IPluginLinker)},
-    {
-        {INTERFACE(IApplication), 1}
-    })
+    PluginBase(this, {INTERFACE(IPlugin), INTERFACE(IPluginLinker)}),
+    m_app(new ReferenceInstance<IApplication>())
 {
+    referencesInit({ {INTERFACE(IApplication), {m_app}} }, {});
 }
 
 PluginLinker::~PluginLinker()
@@ -18,22 +16,18 @@ PluginLinker::~PluginLinker()
     }
 }
 
-bool PluginLinker::setReferences(Interface interface, QList<IReferenceDescriptorPtr> references)
-{
-    START_ASSIGNMENT(interface, references, getRefereneces())
-        ASSIGN_SINGLE(IApplication, references, m_app)
-    END_ASSIGNMENT()
+//bool PluginLinker::setReferences(Interface interface, QList<IReferenceDescriptorPtr> references)
+//{
+//    auto plugins = m_app->getPlugins();
+//    for(auto& plugin : plugins)
+//    {
+//        addPlugin(plugin);
+//    }
+//    setupLinks();
+//    return true;
+//}
 
-    auto plugins = m_app->getPlugins();
-    for(auto& plugin : plugins)
-    {
-        addPlugin(plugin);
-    }
-    setupLinks();
-    return true;
-}
-
-bool PluginLinker::addCorePlugin(QWeakPointer<IPluginHandler> pluginHandler)
+bool PluginLinker::addCorePlugin(IPluginHandlerPtr pluginHandler)
 {
     auto linkerItem = createLinkerItem(pluginHandler);
     if(linkerItem.isNull())
@@ -44,7 +38,7 @@ bool PluginLinker::addCorePlugin(QWeakPointer<IPluginHandler> pluginHandler)
     return true;
 }
 
-bool PluginLinker::addPlugin(QWeakPointer<IPluginHandler> pluginHandler)
+bool PluginLinker::addPlugin(IPluginHandlerPtr pluginHandler)
 {
     auto linkerItem = createLinkerItem(pluginHandler);
     if(linkerItem.isNull())
@@ -56,7 +50,7 @@ bool PluginLinker::addPlugin(QWeakPointer<IPluginHandler> pluginHandler)
     return true;
 }
 
-QSharedPointer<LinkerItemBase> PluginLinker::createLinkerItem(QWeakPointer<IPluginHandler> pluginHandler)
+QSharedPointer<LinkerItemBase> PluginLinker::createLinkerItem(IPluginHandlerPtr pluginHandler)
 {
     QSharedPointer<LinkerItemBase> linkerItemPtr;
 
@@ -74,12 +68,6 @@ QSharedPointer<LinkerItemBase> PluginLinker::createLinkerItem(QWeakPointer<IPlug
         qDebug() << QString("PluginLinker::createLinkerItem: load plugin") << pluginHandler.data()->getMeta();
 //        log(SeverityType::WARNING, QString("PluginLinker::createLinkerItem: can't load plugin '%1'").arg(m_metaInfo.Name));
         linkerItemPtr.reset(new PluginLinkerItem(pluginHandler));
-    }
-    else if(ServiceLinkerItem::isService(pluginHandler))
-    {
-        qDebug() << QString("PluginLinker::createLinkerItem: load service") << pluginHandler.data()->getMeta();
-//        log(SeverityType::WARNING, QString("PluginLinker::createLinkerItem: can't load plugin '%1'").arg(m_metaInfo.Name));
-        linkerItemPtr.reset(new ServiceLinkerItem(pluginHandler));
     }
     else
     {
@@ -175,7 +163,7 @@ bool PluginLinker::setupLinks()
 
 QWeakPointer<IPluginLinker::ILinkerItem> PluginLinker::loadNewPlugin(QString filename)
 {
-    auto handler = m_app->makePluginHandler(filename);
+    auto handler = m_app->instance()->makePluginHandler(filename);
     return createLinkerItem(handler);
 
 }

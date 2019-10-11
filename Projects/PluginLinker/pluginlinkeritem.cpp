@@ -6,7 +6,7 @@ const QMap<QString, QStringList> META_INFO_STRUCTURE = {
     {"info", {"name", "about"}},
 };
 
-PluginLinkerItem::PluginLinkerItem(QWeakPointer<IPluginHandler> pluginHandler) :
+PluginLinkerItem::PluginLinkerItem(IPluginHandlerPtr pluginHandler) :
     LinkerItemBase (pluginHandler)
 {
     if(pluginHandler.data()->getInstance() == nullptr)
@@ -20,12 +20,12 @@ PluginLinkerItem::~PluginLinkerItem()
 
 }
 
-const references_map_t& PluginLinkerItem::references()
+const QMap<Interface, int> &PluginLinkerItem::references()
 {
-    return m_pluginInstance->getRefereneces();
+    return m_pluginInstance->getInstancesHandler().data()->requiredReferences();
 }
 
-bool PluginLinkerItem::isPlugin(QWeakPointer<IPluginHandler> pluginHandler)
+bool PluginLinkerItem::isPlugin(IPluginHandlerPtr pluginHandler)
 {
     auto metaInfoObject = pluginHandler.data()->getMeta();
     QJsonObject metaInfo = metaInfoObject.data()->value("MetaData").toObject();
@@ -54,15 +54,22 @@ QString PluginLinkerItem::initItem(QObject* object)
         return QString("can't cast plugin to IPlugin interface.");
     }
 
-    m_descriptor = instance->pluginInit(m_uid, m_pluginHandler.data()->getMeta());
+    if(!instance->pluginInit(m_uid, m_pluginHandler.data()->getMeta()))
+    {
+        instance->pluginFini();
+        return "Can't load";
+    }
 
+    m_descriptor = instance->getDescriptor();
     if(m_descriptor.isNull())
     {
-        return QString("internal plugin error: %1").arg(instance->getLastError());
+//        return QString("internal plugin error: %1").arg(instance->getLastError());
+        return QString("internal plugin error");
     }
     else
     {
         m_pluginInstance.reset(m_descriptor);
+        const auto &handler = m_pluginInstance->getInstancesHandler();
         for(auto iter = m_references->begin(); iter != m_references->end(); ++iter)
         {
             QList<IReferenceDescriptorPtr> refs;
@@ -70,7 +77,7 @@ QString PluginLinkerItem::initItem(QObject* object)
             {
                 refs.append(refIter->data()->descr());
             }
-            m_pluginInstance->setReferences(iter.key(), refs);
+            handler.data()->setReferences(iter.key(), refs);
         }
         return QString();
     }
@@ -78,11 +85,7 @@ QString PluginLinkerItem::initItem(QObject* object)
 
 QString PluginLinkerItem::finiItem()
 {
-    for(auto iter = m_references->begin(); iter != m_references->end(); ++iter)
-    {
-        m_pluginInstance->removeReferences(iter.key());
-    }
-
+    m_pluginInstance->pluginFini();
     m_pluginInstance.reset();
     return QString();
 }

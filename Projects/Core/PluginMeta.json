@@ -1,6 +1,6 @@
 {
     "isCorePlugin": true,
-    "service": {
+    "iplugin": {
         "name": "Applicaton",
         "about": "App",
         "interfaces": ["IApplication"]

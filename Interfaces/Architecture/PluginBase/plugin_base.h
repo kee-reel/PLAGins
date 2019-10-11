@@ -24,7 +24,7 @@ enum SeverityType
 class PluginBase : public IPlugin
 {
 public:
-    explicit PluginBase(QObject *object, QVector<Interface> interfaces, QMap<Interface, QList<QSharedPointer<IReferenceInstance> > > instances, QMap<Interface, QSharedPointer<IReferenceInstancesVariableList> > instancesList);
+    explicit PluginBase(QObject *object, QVector<Interface> interfaces);
 
     virtual ~PluginBase()
     {
@@ -34,21 +34,12 @@ public:
     // IPlugin interface
 public:
     virtual bool pluginInit(uid_t uid, QWeakPointer<QJsonObject> meta) override;
-    virtual QWeakPointer<IReferenceDescriptor> getDescriptor() override;
+    virtual IReferenceDescriptorPtr getDescriptor() override;
     virtual QWeakPointer<IReferenceInstancesHandler> getInstancesHandler() override;
     virtual bool pluginFini() override;
 
-    virtual QString getLastError() const override;
-
 protected:
-    void log(SeverityType severityType, QString msg) const;
-    void raiseError(QString errorMessage);
-
-    void checkAllReferencesSet();
-    void checkAllReferencesReady();
-
-    virtual void onAllReferencesSet(bool state);
-    virtual void onAllReferencesReady(bool state);
+    void referencesInit(QMap<Interface, QList<IReferenceInstancePtr> > instances, QMap<Interface, IReferenceInstancesListPtr> instancesList);
 
     template<class T>
     T *castPluginToInterface(QObject *possiblePlugin)
@@ -71,16 +62,7 @@ private:
     QObject* m_object;
     QVector<Interface> m_interfaces;
     QSharedPointer<PluginDescriptor> m_descr;
-    QMap<Interface, QList<QSharedPointer<IReferenceInstance> > > m_instances;
-    QMap<Interface, QSharedPointer<IReferenceInstancesVariableList> > m_instancesList;
-    QVector<Interface> m_instancesInterfaces;
-
-    QString m_lastErrorString;
-    SeverityType m_logSeverityType;
-
-    bool m_isInited;
-    bool m_isAllReferencesSet;
-    bool m_isAllReferencesReady;
+    QSharedPointer<ReferenceInstancesHandler> m_instancesHandler;
 };
 #endif // PLUGINBASE_H
 

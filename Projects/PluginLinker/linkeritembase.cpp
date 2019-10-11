@@ -1,6 +1,6 @@
 #include "linkeritembase.h"
 
-LinkerItemBase::LinkerItemBase(QWeakPointer<IPluginHandler> pluginHandler):
+LinkerItemBase::LinkerItemBase(IPluginHandlerPtr pluginHandler):
     QObject (nullptr),
     m_uid(pluginHandler.data()->getUID()),
     m_pluginHandler(pluginHandler),

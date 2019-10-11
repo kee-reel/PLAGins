@@ -12,14 +12,14 @@
 
 #include "linkeritembase.h"
 
-#include "../../Interfaces/icoreservice.h"
+#include "../../Interfaces//icoreservice.h"
 
 
 class ServiceLinkerItem : public LinkerItemBase
 {
     Q_OBJECT
 public:
-    ServiceLinkerItem(QWeakPointer<IPluginHandler> pluginHandler);
+    ServiceLinkerItem(IPluginHandlerPtr pluginHandler);
     virtual ~ServiceLinkerItem() override;
 
     // ILinkerItem interface
@@ -27,7 +27,7 @@ public:
     virtual const references_map_t& references() override;
 
 public:
-    static bool isService(QWeakPointer<IPluginHandler> pluginHandler);
+    static bool isService(IPluginHandlerPtr pluginHandler);
 
 protected:
     virtual QString initItem(QObject* object) override;

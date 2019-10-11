@@ -16,9 +16,6 @@ public:
     virtual IReferenceDescriptorPtr getDescriptor() = 0;
     virtual QWeakPointer<IReferenceInstancesHandler> getInstancesHandler() = 0;
     virtual bool pluginFini() = 0;
-
-    //! \brief Gets last error message from plugin.
-    virtual QString getLastError() const = 0;
 };
 Q_DECLARE_INTERFACE(IPlugin, "IPlugin")
 #endif // IPLUGIN_H

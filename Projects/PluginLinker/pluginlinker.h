@@ -11,32 +11,27 @@
 #include <QHash>
 
 #include "../../../Application/iapplication.h"
-#include "../../Interfaces/ipluginlinker.h"
+#include "../../Interfaces/Middleware/ipluginlinker.h"
 
 #include "../../../Application/ipluginhandler.h"
-#include "../Core/CoreServiceBase/coreservicebase.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 
 #include "pluginlinkeritem.h"
-#include "servicelinkeritem.h"
 
 //! \ingroup MainMenuPlugin_imp
 //! @{
-class PluginLinker : public QObject, public Service::CoreServiceBase, public IPluginLinker
+class PluginLinker : public QObject, public PluginBase, public IPluginLinker
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
     Q_INTERFACES(
-        Service::ICoreService
+        IPlugin
         IPluginLinker
     )
 
 public:
     PluginLinker();
     virtual ~PluginLinker() override;
-
-    // ICoreService interface
-public:
-    virtual bool setReferences(Interface interface, QList<IReferenceDescriptorPtr> references) override;
 
     // IPluginLinker interface
 public:
@@ -55,13 +50,13 @@ public slots:
     void onServiceManagerInitialized();
 
 private:
-    bool addCorePlugin(QWeakPointer<IPluginHandler> pluginHandler);
-    bool addPlugin(QWeakPointer<IPluginHandler> pluginHandler);
+    bool addCorePlugin(IPluginHandlerPtr pluginHandler);
+    bool addPlugin(IPluginHandlerPtr pluginHandler);
     bool setupLinks();
 
     template<class Type>
     Type *castToInterface(QObject *possiblePlugin) const;
-    QSharedPointer<LinkerItemBase> createLinkerItem(QWeakPointer<IPluginHandler>);
+    QSharedPointer<LinkerItemBase> createLinkerItem(IPluginHandlerPtr);
 
 private:
     QMap<Interface, QSharedPointer< QList<QWeakPointer<LinkerItemBase>> > > m_interfacesMap;
@@ -71,7 +66,7 @@ private:
     QMap<uid_t, QSharedPointer<ILinkerItem>> m_rawLinkerItemsMap;
 
 private:
-    ReferenceInstance<IApplication> m_app;
+    QSharedPointer<ReferenceInstance<IApplication>> m_app;
 };
 //! @}
 #endif // PLUGINLINKER_H

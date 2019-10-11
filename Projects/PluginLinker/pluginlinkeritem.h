@@ -12,26 +12,28 @@
 
 #include "linkeritembase.h"
 
-#include "PluginBase/iplugin.h"
+#include "../../Interfaces/Architecture/iplugin.h"
+#include "../../Interfaces/Architecture/ireferenceinstance.h"
+#include "../../Interfaces/Architecture/ireferenceinstanceshandler.h"
 
 
 class PluginLinkerItem : public LinkerItemBase
 {
     Q_OBJECT
 public:
-    PluginLinkerItem(QWeakPointer<IPluginHandler> pluginHandler);
+    PluginLinkerItem(IPluginHandlerPtr pluginHandler);
     virtual ~PluginLinkerItem() override;
 
     // ILinkerItem interface
 public:
-    virtual const references_map_t& references() override;
+    virtual const QMap<Interface, int>& references() override;
 
 protected:
     virtual QString initItem(QObject *object) override;
     virtual QString finiItem() override;
 
 public:
-    static bool isPlugin(QWeakPointer<IPluginHandler> pluginHandler);
+    static bool isPlugin(IPluginHandlerPtr pluginHandler);
 
 private:
     ReferenceInstance<IPlugin> m_pluginInstance;

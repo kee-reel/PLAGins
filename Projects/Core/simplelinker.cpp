@@ -13,7 +13,7 @@ SimpleLinker::~SimpleLinker()
 {
 }
 
-void SimpleLinker::addPlugin(QWeakPointer<IPluginHandler> pluginHandler)
+void SimpleLinker::addPlugin(IPluginHandlerPtr pluginHandler)
 {
     auto&& metaData = pluginHandler.data()->getMeta().data()->value("MetaData").toObject();
     if(!metaData.contains("service"))

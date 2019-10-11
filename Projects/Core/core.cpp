@@ -4,8 +4,9 @@
 
 Core::Core() :
     QObject(nullptr),
-    PluginBase(this, {INTERFACE(IApplication)}, {}, {})
+    PluginBase(this, {INTERFACE(IApplication)})
 {
+    referencesInit({}, {});
 }
 
 Core::~Core()
@@ -28,12 +29,12 @@ QWidget *Core::getParentWidget()
     return m_app->getParentWidget();
 }
 
-QVector<QWeakPointer<IPluginHandler> > Core::getPlugins()
+QVector<IPluginHandlerPtr > Core::getPlugins()
 {
     return m_app->getPlugins();
 }
 
-QWeakPointer<IPluginHandler> Core::makePluginHandler(QString path)
+IPluginHandlerPtr Core::makePluginHandler(QString path)
 {
     return m_app->makePluginHandler(path);
 }
