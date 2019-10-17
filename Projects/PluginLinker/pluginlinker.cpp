@@ -2,10 +2,13 @@
 
 PluginLinker::PluginLinker() :
     QObject(nullptr),
-    PluginBase(this, {INTERFACE(IPlugin), INTERFACE(IPluginLinker)}),
-    m_app(new ReferenceInstance<IApplication>())
+    PluginBase(this,
 {
-    referencesInit({ {INTERFACE(IApplication), {m_app}} }, {});
+    INTERFACE(IPlugin), INTERFACE(IPluginLinker)
+}),
+m_app(new ReferenceInstance<IApplication>())
+{
+    referencesInit({ {INTERFACE(IApplication), {m_app}} }, { });
 }
 
 PluginLinker::~PluginLinker()
@@ -16,16 +19,18 @@ PluginLinker::~PluginLinker()
     }
 }
 
-//bool PluginLinker::setReferences(Interface interface, QList<IReferenceDescriptorPtr> references)
-//{
-//    auto plugins = m_app->getPlugins();
-//    for(auto& plugin : plugins)
-//    {
-//        addPlugin(plugin);
-//    }
-//    setupLinks();
-//    return true;
-//}
+void PluginLinker::onReadyStateChanged(bool isReady)
+{
+    if(!isReady)
+    {
+        return;
+    }
+    const auto &plugins = m_app->instance()->getPlugins();
+    for(auto plugin : plugins)
+    {
+        addPlugin(plugin);
+    }
+}
 
 bool PluginLinker::addCorePlugin(IPluginHandlerPtr pluginHandler)
 {

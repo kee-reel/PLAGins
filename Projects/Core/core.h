@@ -20,9 +20,9 @@ class Core : public QObject, public ICore, public PluginBase, public IApplicatio
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "MASS.Module.CorePlugin" FILE "PluginMeta.json")
     Q_INTERFACES(
-            ICore
-            IPlugin
-            IApplication)
+        ICore
+        IPlugin
+        IApplication)
 
 public:
     Core();
@@ -30,18 +30,22 @@ public:
 
     // ICore interface
 public:
-    virtual void coreInit(IApplication *app) override;
+    virtual void coreInit(QWeakPointer<IApplication> app) override;
     virtual bool coreFini() override;
+
+    // PluginBase interface
+public:
+    virtual void onReadyStateChanged(bool isReady) override;
 
     // IApplication interface
 public:
     virtual QWidget *getParentWidget() override;
-    virtual QVector<IPluginHandlerPtr > getPlugins() override;
+    virtual const QVector<IPluginHandlerPtr> &getPlugins() override;
     virtual IPluginHandlerPtr makePluginHandler(QString path) override;
 
- private:
-    IApplication* m_app;
-    Service::SimpleLinker* m_linker;
+private:
+    QWeakPointer<IApplication> m_app;
+    QSharedPointer<SimpleLinker> m_linker;
 };
 //! }
 #endif // COREPLUGIN_H

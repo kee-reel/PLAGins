@@ -34,51 +34,51 @@ public:
 	reset(descr);
     }
 
-    virtual bool reset(IReferenceDescriptorPtr descr = IReferenceDescriptorPtr()) override
-    {
-	if(descr.isNull())
+	virtual bool reset(IReferenceDescriptorPtr descr = IReferenceDescriptorPtr()) override
 	{
-	    m_descr.clear();
-	    m_instance = nullptr;
-	    return true;
+		if(descr.isNull())
+		{
+			m_descr.clear();
+			m_instance = nullptr;
+			return true;
+		}
+		else
+		{
+			T* instancePtr = qobject_cast<T*>(descr.data()->object());
+			if(instancePtr)
+			{
+				m_descr = descr;
+				m_instance = instancePtr;
+				return true;
+			}
+			else
+			{
+				qDebug() << "Can't cast object";
+				reset();
+				return false;
+			}
+		}
 	}
-	else
-	{
-	    T* instancePtr = qobject_cast<T*>(descr.data()->object());
-	    if(instancePtr)
-	    {
-		m_descr = descr;
-		m_instance = instancePtr;
-		return true;
-	    }
-	    else
-	    {
-		qDebug() << "Can't cast object";
-		reset();
-		return false;
-	    }
-	}
-    }
 
     T* operator->()
     {
-	assert(!m_descr.isNull());
-	return m_instance;
+		assert(!m_descr.isNull());
+		return m_instance;
     }
 
     bool isNull()
     {
-	return m_descr.isNull();
+		return m_descr.isNull();
     }
 
     const IReferenceDescriptorPtr& descr() override
     {
-	return m_descr;
+		return m_descr;
     }
 
     T* instance()
     {
-	return m_instance;
+		return m_instance;
     }
 
 private:

@@ -1,7 +1,12 @@
 {
-    "service": {
-        "name": "PluginLinker",
-        "about": "Linker",
-        "interfaces": ["IPluginLinker"]
+    "iplugin": {
+		"interfaces": ["IPluginLinker"],
+		"references": {
+			"IApplication": 1
+		},
+		"info": {
+			"name": "PluginLinker",
+			"about": "View plugin for plugin with interface IPluginLinker. Allows to load new plugins, unload existing plugins, read about plugin (this text)."
+		}
     }
 }

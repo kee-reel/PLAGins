@@ -33,6 +33,10 @@ public:
     PluginLinker();
     virtual ~PluginLinker() override;
 
+    // PluginBase interface
+public:
+    virtual void onReadyStateChanged(bool isReady) override;
+
     // IPluginLinker interface
 public:
     virtual QWeakPointer<ILinkerItem> loadNewPlugin(QString filename) override;
@@ -67,6 +71,7 @@ private:
 
 private:
     QSharedPointer<ReferenceInstance<IApplication>> m_app;
+    QSharedPointer<ReferenceInstancesList<IPlugin>> m_plugins;
 };
 //! @}
 #endif // PLUGINLINKER_H

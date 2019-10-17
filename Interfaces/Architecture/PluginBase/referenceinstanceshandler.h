@@ -14,7 +14,8 @@ public:
                               QMap<Interface, IReferenceInstancesListPtr > instancesLists) :
         QObject(),
         m_instances(instances),
-        m_instancesList(instancesLists)
+        m_instancesList(instancesLists),
+        m_state(State::SETTING_REFS)
     {
         for(auto iter = m_instances.begin(); iter != m_instances.end(); ++iter)
         {
@@ -25,6 +26,7 @@ public:
             Q_ASSERT(!m_interfaces.contains(iter.key()));
             m_interfaces[iter.key()] = 0;
         }
+        checkReferencesSet();
     }
 
     // IReferenceInstancesHandler interface
@@ -33,10 +35,12 @@ public:
     {
         return m_interfaces;
     }
+
     virtual const QMap<Interface, QList<IReferenceDescriptorPtr> > &references() override
     {
         return m_references;
     }
+
     virtual bool setReferences(Interface interface, QList<IReferenceDescriptorPtr> references) override
     {
         auto iter = m_interfaces.find(interface);
@@ -64,6 +68,7 @@ public:
                     }
                     return false;
                 }
+                m_references[interface].append(references[i]);
             }
         }
         else
@@ -77,10 +82,14 @@ public:
                     instancesList.clear();
                     return false;
                 }
+                m_references[interface].append(ref);
             }
         }
+
+        checkReferencesSet();
         return true;
     }
+
     virtual bool transitToReadyState() override
     {
         if(m_state != State::WAITING)
@@ -88,12 +97,15 @@ public:
             return false;
         }
         m_state = State::READY;
+        emit onStateChanged(m_state);
         return true;
     }
+
     virtual State state() override
     {
         return m_state;
     }
+
     virtual QObject *object() override
     {
         return this;
@@ -101,6 +113,25 @@ public:
 
 signals:
     virtual void onStateChanged(State stage) override;
+
+private:
+    void checkReferencesSet()
+    {
+        bool isSet = true;
+        for(auto iter = m_interfaces.begin(); iter != m_interfaces.end(); ++iter)
+        {
+            if(m_references[iter.key()].size() != iter.value())
+            {
+                isSet = false;
+                break;
+            }
+        }
+        if(isSet && m_state == State::SETTING_REFS)
+        {
+            m_state = State::WAITING;
+            emit onStateChanged(m_state);
+        }
+    }
 
 private:
     QMap<Interface, int> m_interfaces;

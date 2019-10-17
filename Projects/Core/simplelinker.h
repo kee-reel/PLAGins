@@ -6,14 +6,11 @@
 #include "../../Interfaces/Architecture/ireferenceinstance.h"
 #include "../../Interfaces/Architecture/ireferenceinstanceshandler.h"
 
-namespace Service
-{
-
 class SimpleLinker : public QObject
 {
     Q_OBJECT
 public:
-    SimpleLinker(QObject* parent, IApplication* app);
+    SimpleLinker(QObject* parent, QWeakPointer<IApplication> app);
     virtual ~SimpleLinker() override;
 
 public:
@@ -27,10 +24,8 @@ private:
 
 
 private:
-    IApplication* m_app;
+    QWeakPointer<IApplication> m_app;
     QMap<Interface, QList<QWeakPointer<LoadedPluginPair>>> m_pluginsInterfaces;
     QList<QSharedPointer<LoadedPluginPair>> m_plugins;
 };
-
-}
 #endif // SERVICESMANAGER_H
