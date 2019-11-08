@@ -6,41 +6,38 @@
 class IReferenceInstance
 {
 public:
-    virtual const IReferenceDescriptorPtr& descr() = 0;
-    virtual bool reset(IReferenceDescriptorPtr descr = IReferenceDescriptorPtr()) = 0;
+	virtual const IReferenceDescriptorPtr& descr() = 0;
+	virtual bool setInstance(IReferenceDescriptorPtr descr) = 0;
+	virtual void clearInstance() = 0;
+	virtual bool isSet() = 0;
 };
 typedef QWeakPointer<IReferenceInstance> IReferenceInstancePtr;
 
-class IReferenceInstancesList : QList<IReferenceInstancePtr>
+class IReferenceInstancesList
 {
 public:
-    virtual bool append(IReferenceDescriptorPtr &&descriptor) = 0;
+	virtual bool append(IReferenceDescriptorPtr &&descriptor) = 0;
+	virtual void clear() = 0;
+	virtual int limit() = 0;
 };
 typedef QWeakPointer<IReferenceInstancesList> IReferenceInstancesListPtr;
-
 
 template <class T>
 class ReferenceInstance : public IReferenceInstance
 {
-public:
-    ReferenceInstance() :
-	m_instance(nullptr)
-    {
-    }
-
-    ReferenceInstance(IReferenceDescriptorPtr& descr) :
-	m_instance(nullptr)
-    {
-	reset(descr);
-    }
-
-	virtual bool reset(IReferenceDescriptorPtr descr = IReferenceDescriptorPtr()) override
+public:	
+	ReferenceInstance() :
+		m_instance(nullptr)
 	{
-		if(descr.isNull())
+	}
+	
+	virtual bool setInstance(IReferenceDescriptorPtr descr) override
+	{
+		bool isValid = true;
+		if(descr.isNull() || isSet())
 		{
-			m_descr.clear();
-			m_instance = nullptr;
-			return true;
+			isValid = false;
+			qDebug() << "Can't set instance: description is empty";
 		}
 		else
 		{
@@ -49,61 +46,96 @@ public:
 			{
 				m_descr = descr;
 				m_instance = instancePtr;
-				return true;
+				name = descr.data()->name();
 			}
 			else
 			{
-				qDebug() << "Can't cast object";
-				reset();
-				return false;
+				isValid = false;
+				qDebug() << "Can't set instance: can't cast to object";
 			}
 		}
+		return isValid;
 	}
-
-    T* operator->()
-    {
-		assert(!m_descr.isNull());
-		return m_instance;
-    }
-
-    bool isNull()
-    {
-		return m_descr.isNull();
-    }
-
-    const IReferenceDescriptorPtr& descr() override
-    {
+	
+	virtual void clearInstance() override
+	{
+		m_descr.clear();
+		m_instance = nullptr;
+		name = "";
+	}
+	
+	virtual bool isSet() override
+	{
+		return !m_descr.isNull();
+	}
+	
+	const IReferenceDescriptorPtr& descr() override
+	{
 		return m_descr;
-    }
-
-    T* instance()
-    {
-		return m_instance;
-    }
-
+	}
+	
+	T* instance()
+	{
+		if(isSet())
+			return m_instance;
+		else
+			assert(false);
+	}
+	
 private:
-    IReferenceDescriptorPtr m_descr;
-    T* m_instance;
+	IReferenceDescriptorPtr m_descr;
+	T* m_instance;
+	QString name;
 };
 
-template <class T>
-class ReferenceInstancesList : public IReferenceInstancesList
+template<class T>
+class ReferenceInstancePtr : public QSharedPointer<ReferenceInstance<T>>
 {
 public:
-    ReferenceInstancesList()
-    {
-    }
+	ReferenceInstancePtr() : QSharedPointer<ReferenceInstance<T>>(new ReferenceInstance<T>()) 
+	{}
+};
 
-    // IReferenceInstancesVariableList interface
+
+template <class T>
+class ReferenceInstancesList : public IReferenceInstancesList, public QList<ReferenceInstancePtr<T>>
+{
 public:
-    virtual bool append(IReferenceDescriptorPtr &&descriptor) override
-    {
-	QSharedPointer<ReferenceInstance<T>> instance(new ReferenceInstance<T>());
-	auto isValid = instance.data()->reset(descriptor);
-	if(isValid)
+	ReferenceInstancesList(int limit=0) : 
+		QList<ReferenceInstancePtr<T>>(),
+		m_limit(limit)
 	{
-	    append(instance);
+		
 	}
-	return isValid;
-    }
+
+	// IReferenceInstancesVariableList interface
+public:
+	virtual bool append(IReferenceDescriptorPtr &&descriptor) override
+	{
+		assert(m_limit == 0 || this->size() != m_limit);
+		ReferenceInstancePtr<T> instance;
+		if(instance->setInstance(descriptor))
+		{
+			QList<ReferenceInstancePtr<T>>::append(instance);
+			return true;
+		}
+		return false;
+	}
+	
+	virtual void clear() override
+	{
+		QList<ReferenceInstancePtr<T>>::clear();
+	}
+	
+	virtual int limit() override
+	{
+		return m_limit;
+	}
+private:
+	int m_limit;
+};
+
+template<class T>
+class ReferenceInstancesListPtr : public QSharedPointer<ReferenceInstancesList<T>>
+{
 };

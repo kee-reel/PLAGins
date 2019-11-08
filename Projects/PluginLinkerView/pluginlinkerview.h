@@ -5,7 +5,7 @@
 #include <QWidget>
 #include <QStringListModel>
 
-#include "../PluginLinker/PluginBase/plugin_base.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 #include "../UIManager/UIElementBase/uielementbase.h"
 #include "../../Interfaces/ipluginlinker.h"
 

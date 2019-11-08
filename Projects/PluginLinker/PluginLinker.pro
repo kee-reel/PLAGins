@@ -21,8 +21,6 @@ HEADERS += \
     pluginlinkeritem.h \
     pluginlinker.h
 
-DEFINES += PLUGIN_BASE_QOBJECT
-
 include(../../Common/common.pri)
 
 include(../../../Application/PluginBuildInfo.pri)

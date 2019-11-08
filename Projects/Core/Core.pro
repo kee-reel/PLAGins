@@ -6,12 +6,10 @@ QT += core widgets
 SOURCES += \
     core.cpp \
     simplelinker.cpp
+    
 HEADERS += \
     core.h \
     simplelinker.h
-
-DEFINES += \
-    PLUGIN_BASE_QOBJECT
     
 DISTFILES += \
     PluginMeta.json

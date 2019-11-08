@@ -1,8 +1,13 @@
 {
-    "Interface": "ITaskCalendar",
-    "Name": "TaskCalendar",
-    "RelatedPluginInterfaces": [
-        "IExtendableDataManager",
-        "IUserTaskManager"
-    ]
+    "iplugin": {
+		"interfaces": ["ITaskCalendar"],
+		"references": {
+			"IExtendableDataManager": 1,
+			"IUserTaskManager": 1
+		},
+		"info": {
+			"name": "TaskCalendar",
+			"about": "Adds date to tasks"
+		}
+	}
 }

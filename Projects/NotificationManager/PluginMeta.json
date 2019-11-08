@@ -1,8 +1,10 @@
 {
-    "Type": "MODELPLUGIN",
-    "Interface": "INotificationManager",
-    "Name": "NotificationManagerModel",
-    "RelatedPluginInterfaces": [
-        "IPluginLinker"
-    ]
+    "iplugin": {
+		"interfaces": ["INotificationManager"],
+		"references": {},
+		"info": {
+			"name": "NotificationManager",
+			"about": "Send notification to user"
+		}
+	}
 }

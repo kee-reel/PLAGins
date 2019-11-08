@@ -10,7 +10,7 @@
 #include <QResizeEvent>
 
 
-#include "../PluginLinker/PluginBase/plugin_base.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 #include "../../Interfaces/iusertaskmanager.h"
 
 #include "designproxymodel.h"

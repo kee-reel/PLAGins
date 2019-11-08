@@ -1,7 +1,12 @@
 {
-    "Interface": "IExtendableDataManager",
-    "Name": "ExtendableDataManager",
-    "RelatedPluginInterfaces": [
-        "IDataBase"
-    ]
+"iplugin": {
+		"interfaces": ["IExtendableDataManager"],
+		"references": {
+			"IDataBase": 1
+		},
+		"info": {
+			"name": "ExtendableDataManager",
+			"about": "Provides abstract interface to work with BD"
+		}
+	}
 }

@@ -1,22 +1,22 @@
 #include "uniquepushbutton.h"
 
-UniquePushButton::UniquePushButton(int id, QString name, QWidget *parent) : QPushButton(parent)
+UniquePushButton::UniquePushButton(uid_t id, QString name, QWidget *parent) : QPushButton(parent)
 {
-    this->m_id = id;
-    setText(name);
-    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    setFocusPolicy(Qt::NoFocus);
+	this->m_id = id;
+	setText(name);
+	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+	setFocusPolicy(Qt::NoFocus);
 }
 
-int UniquePushButton::getId()
+uid_t UniquePushButton::getId()
 {
-    return m_id;
+	return m_id;
 }
 
 void UniquePushButton::mouseReleaseEvent(QMouseEvent *event)
 {
-    emit OnMenuItemSelected(this);
-    QPushButton::mouseReleaseEvent(event);
+	emit OnMenuItemSelected(this);
+	QPushButton::mouseReleaseEvent(event);
 }
 
 //void MenuItem::resizeEvent(QResizeEvent *event)

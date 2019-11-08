@@ -2,16 +2,16 @@ TARGET = UserTaskManager
 TEMPLATE = lib
 QT += widgets
 
-DEFINES += PLUGIN_BASE_QOBJECT
-
 include(../../Common/common.pri)
 
 include(../../../Application/PluginBuildInfo.pri)
 
-include(../PluginLinker/PluginBase/PluginBase.pri)
+include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 
 HEADERS += \
-    usertaskmanager.h
+    usertaskmanager.h \
+    ../../Interfaces/Middleware/iextendabledatamanager.h \
+    ../../Interfaces/Utility/iusertaskmanager.h 
 
 SOURCES += \
     usertaskmanager.cpp

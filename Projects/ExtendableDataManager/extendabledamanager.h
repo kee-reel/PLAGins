@@ -8,10 +8,10 @@
 #include <QPair>
 
 
-#include "../PluginLinker/PluginBase/plugin_base.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 
-#include "../../Interfaces/iextendabledatamanager.h"
-#include "../../Interfaces/idatabase.h"
+#include "../../Interfaces/Middleware/iextendabledatamanager.h"
+#include "../../Interfaces/Middleware/idatabase.h"
 
 #include "tablehandler.h"
 #include "extendableitemmodel.h"
@@ -20,49 +20,48 @@
 //!  \{
 class ExtendableDataManager : public QObject, public PluginBase, IExtendableDataManager
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "ExtendableDataManager" FILE "PluginMeta.json")
-    Q_INTERFACES(
-        IPlugin
-        IExtendableDataManager
-    )
+	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "ExtendableDataManager" FILE "PluginMeta.json")
+	Q_INTERFACES(
+	    IPlugin
+	    IExtendableDataManager
+	)
 
 public:
-    ExtendableDataManager();
-    virtual ~ExtendableDataManager() override;
+	ExtendableDataManager();
+	virtual ~ExtendableDataManager() override;
 
-
-    // PluginBase interface
+	// PluginBase interface
 public:
-    virtual void onAllReferencesSet() override;
+	virtual void onReferencesSet() override;
 
-    // IExtendableDataManagerPlugin interface
+	// IExtendableDataManagerPlugin interface
 public:
-    bool RegisterExtentionFieldEditor(QString relation, QString field, QWidget *widget) override;
-    QWidget *GetExtentionFieldEditor(QString relation, QString field) override;
-    QList<ManagerDataItem> GetDataList(QString treeName) override;
-    ManagerDataItem GetDataItem(QString treeName, int id) override;
-    QAbstractItemModel *GetDataModel(QString treeName) override;
-    QAbstractItemModel *GetDataModel(QVector<QPair<QString, QString> > dataModelFields) override;
-    QMap<QString, QVariant::Type> GetTableHeader(QString treeName) override;
-    bool AddExtention(QString mainName, QString extentionName, QMap<QString, QVariant::Type> fields, QVector<QVariant> defaultData) override;
-    bool DeleteExtention(QString mainName, QString extentionName) override;
-    bool SetActiveExtention(QString mainName, QString extentionName) override;
-    int AddItem(QString treeName, ManagerDataItem task) override;
-    bool UpdateItem(QString treeName, ManagerDataItem task) override;
-    bool DeleteItem(QString treeName, int id) override;
+	bool RegisterExtentionFieldEditor(QString relation, QString field, QWidget *widget) override;
+	QWidget *GetExtentionFieldEditor(QString relation, QString field) override;
+	QList<ManagerDataItem> GetDataList(QString treeName) override;
+	ManagerDataItem GetDataItem(QString treeName, int id) override;
+	QAbstractItemModel *GetDataModel(QString treeName) override;
+	QAbstractItemModel *GetDataModel(QVector<QPair<QString, QString> > dataModelFields) override;
+	QMap<QString, QVariant::Type> GetTableHeader(QString treeName) override;
+	bool AddExtention(QString mainName, QString extentionName, QMap<QString, QVariant::Type> fields, QVector<QVariant> defaultData) override;
+	bool DeleteExtention(QString mainName, QString extentionName) override;
+	bool SetActiveExtention(QString mainName, QString extentionName) override;
+	int AddItem(QString treeName, ManagerDataItem task) override;
+	bool UpdateItem(QString treeName, ManagerDataItem task) override;
+	bool DeleteItem(QString treeName, int id) override;
 
-    void SetupDataTypeEditors(QString tableName);
+	void SetupDataTypeEditors(QString tableName);
 
 private:
-    QString lastError;
-    IDataBase* dataSource;
+	QString lastError;
+	ReferenceInstancePtr<IDataBase> m_dataSource;
 
-    QMap<QString, QMap<QString, QWidget*> > dataTypeEditorsMap;
+	QMap<QString, QMap<QString, QWidget*> > dataTypeEditorsMap;
 
-    QHash<QString, TableHandler*> tableHandlers;
-    void SetupTable(QString &tableName);
-    QAbstractItemModel *CreateProxy(QVector<QPair<QString, QString> > &dataModelFields);
+	QHash<QString, TableHandler*> tableHandlers;
+	void SetupTable(QString &tableName);
+	QAbstractItemModel *CreateProxy(QVector<QPair<QString, QString> > &dataModelFields);
 };
 //!  \}
 #endif // TASKDBTOOLPLUGIN_H

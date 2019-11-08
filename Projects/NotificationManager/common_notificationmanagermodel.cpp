@@ -3,21 +3,14 @@
 #include <QDebug>
 
 NotificationManager::NotificationManager() :
-    PluginBase(this)
+	PluginBase(this,
 {
-    //    NotificationManagerModel::SetInstance(this);
+	INTERFACE(INotificationManager)
+})
+{
+	referencesInit();
 }
 
 NotificationManager::~NotificationManager()
 {
-}
-
-void NotificationManager::onAllReferencesSet()
-{
-    PluginBase::onAllReferencesSet();
-}
-
-void NotificationManager::onAllReferencesReady()
-{
-    PluginBase::onAllReferencesReady();
 }

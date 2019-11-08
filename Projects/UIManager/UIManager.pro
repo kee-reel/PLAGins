@@ -3,12 +3,16 @@ TARGET = UIManager
 TEMPLATE = lib
 QT += core widgets
 
+include(../../Common/common.pri)
+
+include(../../../Application/PluginBuildInfo.pri)
+
+include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
+
 SOURCES += \
     uimanager.cpp
 
 HEADERS += \
-    ../../Interfaces/iuielement.h \
-    ../../Interfaces/ipluginlinker.h \
     uimanager.h
 
 DEFINES += \
@@ -16,9 +20,3 @@ DEFINES += \
     
 DISTFILES += \
     PluginMeta.json
-
-include(../../Common/common.pri)
-
-include(../../../Application/PluginBuildInfo.pri)
-
-include(../Core/CoreServiceBase/CoreServiceBase.pri)

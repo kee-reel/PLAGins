@@ -3,26 +3,23 @@ TARGET = GridMainMenuView
 TEMPLATE = lib
 QT += core widgets
 
+include(../../Common/common.pri)
+
+include(../../../Application/PluginBuildInfo.pri)
+
+include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
+
+include(../../Interfaces/Architecture/UIElementBase/UIElementBase.pri)
+
 HEADERS += \
-    ../../Interfaces/iuimanager.h \
-    ../UIManager/UIElementBase/uielementbase.h \
-    ../UIManager/UIElementBase/uielementdescriptor.h \
     gridmainmenuview.h \
     aspectawaregridlayout.h \
     uniquepushbutton.h
 
 SOURCES += \
-    ../UIManager/UIElementBase/uielementbase.cpp \
-    ../UIManager/UIElementBase/uielementdescriptor.cpp \
     gridmainmenuview.cpp \
     aspectawaregridlayout.cpp \
     uniquepushbutton.cpp
-
-include(../../Common/common.pri)
-
-include(../../../Application/PluginBuildInfo.pri)
-
-include(../PluginLinker/PluginBase/PluginBase.pri)
 
 DISTFILES += \
     PluginMeta.json \

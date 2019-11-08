@@ -7,15 +7,13 @@ TARGET = DataBase
 TEMPLATE = lib
 QT += core sql
 
-DEFINES += PLUGIN_BASE_QOBJECT
+
 
 include(../../Common/common.pri)
 
 include(../../../Application/PluginBuildInfo.pri)
 
-include(../RootPluginLinker/PluginBase/PluginBase.pri)
-
-include(../CorePlugin/ServiceBase/ServiceBase.pri)
+include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 
 SOURCES += \
     database.cpp

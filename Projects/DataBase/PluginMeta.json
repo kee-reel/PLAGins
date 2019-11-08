@@ -1,10 +1,10 @@
 {
-    "service": {
-        "interfaces": ["IDataBase"]
-    },
-    "Interface": "IDataBase",
-    "Name": "DataBasePlugin",
-    "RelatedPluginInterfaces": [
-        ""
-    ]
+    "iplugin": {
+		"interfaces": ["IDataBase"],
+		"references": {},
+		"info": {
+			"name": "DataBase",
+			"about": "Connect to DB."
+		}
+    }
 }

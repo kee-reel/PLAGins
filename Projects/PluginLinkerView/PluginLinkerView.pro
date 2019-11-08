@@ -16,7 +16,7 @@ include(../../Common/common.pri)
 
 include(../../../Application/PluginBuildInfo.pri)
 
-include(../PluginLinker/PluginBase/PluginBase.pri)
+include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 
 #include(../UIManager/UIElementBase/UIElementBase.pri)
     

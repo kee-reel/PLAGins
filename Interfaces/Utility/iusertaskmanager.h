@@ -17,10 +17,8 @@
 class IUserTaskManager
 {
 public:
-    virtual QAbstractItemModel* GetTreeModel() = 0;
+	virtual QAbstractItemModel* GetTreeModel() = 0;
 
-signals:
-    void OpenTaskEdit(int id);
 };
 //!  \}
 Q_DECLARE_INTERFACE(IUserTaskManager, "IUserTaskManager v0.1")

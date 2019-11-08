@@ -1,13 +1,20 @@
 #include "tasksketchmanager.h"
 
 TaskSketchManager::TaskSketchManager() :
-    QObject(nullptr),
-    PluginBase(this)
+	QObject(nullptr),
+	PluginBase(this,
 {
-    tableName = "iTaskSketchManager";
-    coreRelationName = "iTaskSketchManager";
-    myModel = nullptr;
-    dataManager = nullptr;
+	INTERFACE(ITaskSketchManager)
+})
+{
+	referencesInit(
+	{
+		{INTERFACE(IExtendableDataManager), m_dataManager},
+		{INTERFACE(IUserTaskManager), m_myModel}
+	});
+
+	tableName = "iTaskSketchManager";
+	coreRelationName = "iTaskSketchManager";
 }
 
 TaskSketchManager::~TaskSketchManager()
@@ -16,70 +23,53 @@ TaskSketchManager::~TaskSketchManager()
 
 QAbstractItemModel *TaskSketchManager::GetModel()
 {
-    return taskModel;
+	return taskModel;
 }
 
 QAbstractItemModel *TaskSketchManager::GetInternalModel()
 {
-    return sketchItemModel;
+	return sketchItemModel;
 }
 
 void TaskSketchManager::ConvertSketchToTask(int sketchId)
 {
-    QModelIndex modelIndex = sketchItemModel->index(sketchId, 0);
-    QMap<int, QVariant> map = sketchItemModel->itemData(modelIndex);
+	QModelIndex modelIndex = sketchItemModel->index(sketchId, 0);
+	QMap<int, QVariant> map = sketchItemModel->itemData(modelIndex);
 
-    if(!map.contains(Qt::UserRole))
-    {
-        qCritical() << "Can't resolve data model!";
-        return;
-    }
+	if(!map.contains(Qt::UserRole))
+	{
+		qCritical() << "Can't resolve data model!";
+		return;
+	}
 
-    //    QMap<QString, QVariant> dataMap = map[Qt::UserRole].toMap();
-    //    QList<QVariant> data = dataMap[coreRelationName].toList();
-    taskModel->insertRows(taskModel->rowCount(), 1);
-    modelIndex = taskModel->index(taskModel->rowCount()-1, 0);
-    //    dataManager->SetActiveRelation(tableName, coreRelationName);
-    taskModel->setItemData(modelIndex, map);
-    //emit ConvertTaskToSketch(map[0].toInt());
+	//    QMap<QString, QVariant> dataMap = map[Qt::UserRole].toMap();
+	//    QList<QVariant> data = dataMap[coreRelationName].toList();
+	taskModel->insertRows(taskModel->rowCount(), 1);
+	modelIndex = taskModel->index(taskModel->rowCount()-1, 0);
+	//    dataManager->SetActiveRelation(tableName, coreRelationName);
+	taskModel->setItemData(modelIndex, map);
+	//emit ConvertTaskToSketch(map[0].toInt());
 }
 
 void TaskSketchManager::LinkEditorWidget(QWidget *widget)
 {
-    dataManager->RegisterExtentionFieldEditor(tableName, "sketch", widget);
+	m_dataManager->instance()->RegisterExtentionFieldEditor(tableName, "sketch", widget);
 }
 
-void TaskSketchManager::onAllReferencesSet()
+void TaskSketchManager::onReferencesSet()
 {
-    for(auto iter = m_referencesMap.begin(); iter != m_referencesMap.end(); ++iter)
-    {
-        auto&& interfaceName = iter.key();
-        auto&& plugin = iter.value();
-        if(!QString::compare(interfaceName, "IExtendableDataManager", Qt::CaseInsensitive))
-        {
-            dataManager = castPluginToInterface<IExtendableDataManager>(interfaceName, plugin);
-        }
-        else if(!QString::compare(interfaceName, "IUserTaskManager", Qt::CaseInsensitive))
-        {
-            myModel = castPluginToInterface<IUserTaskManager>(interfaceName, plugin);
-        }
-    }
-    PluginBase::onAllReferencesSet();
+	QMap<QString, QVariant::Type> newRelationStruct =
+	{
+		{"sketch",  QVariant::ByteArray}
+	};
+	QVector<QVariant> defaultData;
+	defaultData << QByteArray();
+	m_dataManager->instance()->AddExtention(tableName, coreRelationName, newRelationStruct, defaultData);
+	m_dataManager->instance()->AddExtention("IUserTaskManager", coreRelationName, newRelationStruct, defaultData);
 }
 
-void TaskSketchManager::onAllReferencesReady()
+void TaskSketchManager::onReady()
 {
-    QMap<QString, QVariant::Type> newRelationStruct =
-    {
-        {"sketch",  QVariant::ByteArray},
-    };
-    QVector<QVariant> defaultData;
-    defaultData << QByteArray();
-    dataManager->AddExtention(tableName, coreRelationName, newRelationStruct, defaultData);
-    dataManager->AddExtention("IUserTaskManager", coreRelationName, newRelationStruct, defaultData);
-
-    sketchItemModel = dataManager->GetDataModel(tableName);
-    taskModel = dataManager->GetDataModel("IUserTaskManager");
-
-    PluginBase::onAllReferencesReady();
+	sketchItemModel = m_dataManager->instance()->GetDataModel(tableName);
+	taskModel = m_dataManager->instance()->GetDataModel("IUserTaskManager");
 }

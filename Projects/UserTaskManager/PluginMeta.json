@@ -1,8 +1,12 @@
 {
-    "Interface": "IUserTaskManager",
-    "Name": "UserTaskManager",
-    "RelatedPluginInterfaces": [
-        "IExtendableDataManager",
-        "IPluginLinker"
-    ]
+"iplugin": {
+		"interfaces": ["IUserTaskManager"],
+		"references": {
+			"IExtendableDataManager": 1
+		},
+		"info": {
+			"name": "UserTaskManager",
+			"about": "Core plugin of user task management"
+		}
+	}
 }

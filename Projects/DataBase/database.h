@@ -6,45 +6,47 @@
 #include <QDebug>
 #include <QList>
 
-#include "../RootPluginLinker/PluginBase/plugin_base.h"
-#include "../CorePlugin/ServiceBase/coreservicebase.h"
-#include "../../Interfaces/idatabase.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
+#include "../../Interfaces/Middleware/idatabase.h"
 
 #define CONNECTION_FAILED -1
 
 //! \addtogroup DataBase_imp
 //! \{
-class DataBase : public QObject, public PluginBase, public Service::CoreServiceBase, public IDataBase
+class DataBase : public QObject, public PluginBase, public IDataBase
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "TimeKeeper.DBModule.Test" FILE "PluginMeta.json")
-    Q_INTERFACES(
-        IPlugin
-        ICoreService
-        IDataBase
-    )
+	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "TimeKeeper.DBModule.Test" FILE "PluginMeta.json")
+	Q_INTERFACES(
+	    IPlugin
+	    IDataBase
+	)
 
 public:
-    DataBase();
-    virtual ~DataBase() override;
+	DataBase();
+	virtual ~DataBase() override;
 
-    // IDataBase interface
+	// PluginBase interface
 public:
-    QSqlQuery ExecuteQuery(QString &query) override;
-    QSqlQuery ExecuteQuery(QString &query, QList<QString> *valuePlaceholders, QList<QVariant> *values) override;
-    void SetPassword(QString m_password) override;
+	virtual void onReady() override;
+
+	// IDataBase interface
+public:
+	QSqlQuery ExecuteQuery(QString &query) override;
+	QSqlQuery ExecuteQuery(QString &query, QList<QString> *valuePlaceholders, QList<QVariant> *values) override;
+	void SetPassword(QString m_password) override;
 
 private:
-    bool Setup();
-    bool ConnectWithDriver(QString driverName);
+	bool Setup();
+	bool ConnectWithDriver(QString driverName);
 
 private:
-    //! \brief possibleDriverNames
-    //! Stores possible database drivers in list by it's priority.
-    QList<QString> m_possibleDriverNames;
-    QString m_password;
-    QString m_connectionName;
-    QSqlDatabase m_dbconn;
+	//! \brief possibleDriverNames
+	//! Stores possible database drivers in list by it's priority.
+	QList<QString> m_possibleDriverNames;
+	QString m_password;
+	QString m_connectionName;
+	QSqlDatabase m_dbconn;
 };
 //! \}
 #endif // DATABASEMANAGERMODULE_H

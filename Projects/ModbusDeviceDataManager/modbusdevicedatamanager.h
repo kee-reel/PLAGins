@@ -10,7 +10,7 @@
 #include <QtGui>
 
 
-#include "../PluginLinker/PluginBase/plugin_base.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/imodbusdevicedatamanager.h"
 #include "../../Interfaces/icomportdatamanager.h"

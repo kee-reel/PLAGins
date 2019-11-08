@@ -6,7 +6,7 @@
 #include <QString>
 
 
-#include "../PluginLinker/PluginBase/plugin_base.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/ifuzzylogicmanager.h"
 

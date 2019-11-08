@@ -1,10 +1,13 @@
 {
-    "pluginLinker": {
-        "interface": "ITaskSketchManager",
-        "references": ["IExtendableDataManager", "IUserTaskManager", "IPluginLinker"],
-        "info": {
-            "name": "TaskSketchManager",
-            "about": "View plugin for plugin with interface IPluginLinker. Allows to load new plugins, unload existing plugins, read about plugin (this text)."
-        }
-    }
+    "iplugin": {
+		"interfaces": ["ITaskSketchManager"],
+		"references": {
+			"IExtendableDataManager": 1,
+			"IUserTaskManager": 1
+		},
+		"info": {
+			"name": "TaskSketchManager",
+			"about": "Adds sketches to tasks"
+		}
+	}
 }

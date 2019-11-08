@@ -7,22 +7,20 @@
 #include <QVariant>
 #include <QDebug>
 
-#include "../../Interfaces/iusertaskmanager.h"
-
 class RawImageDelegate
 {
 public:
-    RawImageDelegate();
+	RawImageDelegate();
 
-    // ITaskRelationDelegate interface
+	// ITaskRelationDelegate interface
 public:
-    void SetValue(QVariant value);
-    QVariant GetValue();
-    QWidget *GetWidget();
+	void SetValue(QVariant value);
+	QVariant GetValue();
+	QWidget *GetWidget();
 
 private:
-    QByteArray GetRawData();
-    QImage image;
+	QByteArray GetRawData();
+	QImage image;
 };
 
 #endif // RAWIMAGEDELEGATE_H

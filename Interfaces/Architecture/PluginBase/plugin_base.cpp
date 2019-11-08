@@ -1,22 +1,35 @@
 #include "plugin_base.h"
 
-#include <QWidget>
-
 PluginBase::PluginBase(QObject *object, QVector<Interface> interfaces) :
-	m_object(object),
-	m_interfaces(interfaces)
+	m_object(object)
 {
+	auto interface = INTERFACE(IPlugin);
+	if(!interfaces.contains(interface))
+	{
+		interfaces.append(interface);
+	}
+	m_interfaces = interfaces;
 }
 
-void PluginBase::referencesInit(QMap<Interface, QList<IReferenceInstancePtr> > instances, QMap<Interface, IReferenceInstancesListPtr> instancesList)
+void PluginBase::referencesInit(QMap<Interface, IReferenceInstancePtr> instances, QMap<Interface, IReferenceInstancesListPtr> instancesList)
 {
-	m_instancesHandler.reset(new ReferenceInstancesHandler(instances, instancesList));
+	m_instancesHandler.reset(new ReferencesHandler(instances, instancesList));
 	m_pluginBaseSignal.reset(new PluginBaseSignal(this, m_instancesHandler));
 }
 
 bool PluginBase::pluginInit(uid_t uid, QWeakPointer<QJsonObject> meta)
 {
-	m_descr = PluginDescriptor::make(uid, m_object, meta, m_interfaces, m_instancesHandler);
+	assert(m_descr.isNull());
+	m_descr.reset(PluginDescriptor::make(uid, m_object, meta, m_interfaces, m_instancesHandler));
+	if(m_descr.isNull())
+	{
+		qDebug() << "PluginBase::pluginInit: can't initialize plugin" << m_object->objectName();
+	}
+	return !m_descr.isNull();
+}
+
+bool PluginBase::isInited()
+{
 	return !m_descr.isNull();
 }
 
@@ -25,7 +38,7 @@ IReferenceDescriptorPtr PluginBase::getDescriptor()
 	return m_descr;
 }
 
-QWeakPointer<IReferenceInstancesHandler> PluginBase::getInstancesHandler()
+QWeakPointer<IPluginReferencesHandler> PluginBase::getInstancesHandler()
 {
 	return m_instancesHandler;
 }
@@ -36,26 +49,28 @@ bool PluginBase::pluginFini()
 	return true;
 }
 
-void PluginBase::onStateChanged(IReferenceInstancesHandler::State state)
+void PluginBase::onStateChanged(IPluginReferencesHandler::State state)
 {
 	switch (state)
 	{
-	case IReferenceInstancesHandler::State::SETTING_REFS:
-		onReadyStateChanged(false);
+	case IPluginReferencesHandler::State::SETTING_REFS:
 		break;
-	case IReferenceInstancesHandler::State::READY:
-		onReadyStateChanged(true);
+	case IPluginReferencesHandler::State::WAITING:
+		onReferencesSet();
+		break;
+	case IPluginReferencesHandler::State::READY:
+		onReady();
 		break;
 	}
 }
 
-PluginBaseSignal::PluginBaseSignal(PluginBase *instance, QWeakPointer<ReferenceInstancesHandler> handler) :
+PluginBaseSignal::PluginBaseSignal(PluginBase *instance, QWeakPointer<ReferencesHandler> handler) :
 	QObject(), m_instance(instance), m_handler(handler)
 {
-	connect(m_handler.data(), &ReferenceInstancesHandler::onStateChanged, this, &PluginBaseSignal::onStateChanged);
+	connect(m_handler.data(), &ReferencesHandler::onStateChanged, this, &PluginBaseSignal::onStateChanged);
 }
 
-void PluginBaseSignal::onStateChanged(IReferenceInstancesHandler::State state)
+void PluginBaseSignal::onStateChanged(IPluginReferencesHandler::State state)
 {
 	m_instance->onStateChanged(state);
 }

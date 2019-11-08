@@ -2,13 +2,11 @@
 #define PLUGINBASE_H
 
 #include <QtCore>
-#include <QObject>
 #include <QJsonObject>
-#include <QMap>
 
 #include "../iplugin.h"
 #include "plugindescriptor.h"
-#include "referenceinstanceshandler.h"
+#include "referenceshandler.h"
 
 enum SeverityType
 {
@@ -37,7 +35,7 @@ public:
 	}
 
 protected:
-	void referencesInit(QMap<Interface, QList<IReferenceInstancePtr> > instances, QMap<Interface, IReferenceInstancesListPtr> instancesList);
+	void referencesInit(QMap<Interface, IReferenceInstancePtr> instances = {}, QMap<Interface, IReferenceInstancesListPtr> instancesList = {});
 
 	template<class T>
 	T *castPluginToInterface(QObject *possiblePlugin)
@@ -59,21 +57,23 @@ protected:
 	// IPlugin interface
 public:
 	virtual bool pluginInit(uid_t uid, QWeakPointer<QJsonObject> meta) override;
+	virtual bool isInited() override;
 	virtual IReferenceDescriptorPtr getDescriptor() override;
-	virtual QWeakPointer<IReferenceInstancesHandler> getInstancesHandler() override;
+	virtual QWeakPointer<IPluginReferencesHandler> getInstancesHandler() override;
 	virtual bool pluginFini() override;
 
 public:
-	virtual void onReadyStateChanged(bool isReady) {}
+	virtual void onReferencesSet() {}
+	virtual void onReady() {}
 
 private:
-	void onStateChanged(IReferenceInstancesHandler::State state);
+	void onStateChanged(IPluginReferencesHandler::State state);
 
 private:
 	QObject* m_object;
 	QVector<Interface> m_interfaces;
 	QSharedPointer<PluginDescriptor> m_descr;
-	QSharedPointer<ReferenceInstancesHandler> m_instancesHandler;
+	QSharedPointer<ReferencesHandler> m_instancesHandler;
 	QSharedPointer<PluginBaseSignal> m_pluginBaseSignal;
 	bool m_isReady;
 };
@@ -83,14 +83,14 @@ class PluginBaseSignal : public QObject
 {
 	Q_OBJECT
 public:
-	PluginBaseSignal(PluginBase* instance, QWeakPointer<ReferenceInstancesHandler> handler);
+	PluginBaseSignal(PluginBase* instance, QWeakPointer<ReferencesHandler> handler);
 
 public slots:
-	void onStateChanged(IReferenceInstancesHandler::State state);
+	void onStateChanged(IPluginReferencesHandler::State state);
 
 public:
 	PluginBase* m_instance;
-	QWeakPointer<ReferenceInstancesHandler> m_handler;
+	QWeakPointer<ReferencesHandler> m_handler;
 };
 #endif // PLUGINBASE_H
 

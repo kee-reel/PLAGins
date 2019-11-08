@@ -7,7 +7,7 @@
 #include <QJsonObject>
 
 
-#include "../PluginLinker/PluginBase/plugin_base.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/iextendabledatamanager.h"
 #include "../../Interfaces/imachinelearningmanager.h"

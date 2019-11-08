@@ -6,42 +6,39 @@
 #include <QString>
 
 
-#include "../PluginLinker/PluginBase/plugin_base.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 
-#include "../../Interfaces/itaskcalendar.h"
-#include "../../Interfaces/iextendabledatamanager.h"
-#include "../../Interfaces/iusertaskmanager.h"
+#include "../../Interfaces/Utility/itaskcalendar.h"
+#include "../../Interfaces/Middleware/iextendabledatamanager.h"
+#include "../../Interfaces/Utility/iusertaskmanager.h"
 
 //! \addtogroup TaskCalendar_imp
 //!  \{
-class TaskCalendar :
-        public PluginBase,
-        public ITaskCalendar
+class TaskCalendar : public QObject, public PluginBase, public ITaskCalendar
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
-    Q_INTERFACES(
-        IPlugin
-        ITaskCalendar
-    )
+	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
+	Q_INTERFACES(
+	    IPlugin
+	    ITaskCalendar
+	)
 
 public:
-    TaskCalendar();
-    virtual ~TaskCalendar() override;
+	TaskCalendar();
+	virtual ~TaskCalendar() override;
 
-    // PluginBase interface
+	// PluginBase interface
 public:
-    virtual void onAllReferencesSet() override;
-    virtual void onAllReferencesReady() override;
+	virtual void onReferencesSet() override;
 
-    // ITaskCalendar interface
+	// ITaskCalendar interface
 public:
-    virtual void LinkEditorWidget(QWidget *) override;
+	virtual void LinkEditorWidget(QWidget *) override;
 
 private:
-    IExtendableDataManager *dataManager;
-    IUserTaskManager *taskTree;
-    QWidget* customDataWidget;
+	ReferenceInstancePtr<IExtendableDataManager> m_dataManager;
+	ReferenceInstancePtr<IUserTaskManager> m_taskTree;
+	QWidget* customDataWidget;
 };
 //!  \}
 #endif // TASKCALENDAR_H

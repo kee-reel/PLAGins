@@ -26,14 +26,13 @@ void SimpleLinker::addPlugin(IPluginHandlerPtr pluginHandler)
 			return;
 		}
 
+		QSharedPointer<LoadedPluginPair> handler(new LoadedPluginPair(pluginHandler, ReferenceInstancePtr<IPlugin>()));
 		auto descr = plugin->getDescriptor();
-		ReferenceInstance<IPlugin> instance;
-		if(!instance.reset(descr))
+		if(!handler->second->setInstance(descr))
 		{
 			return;
 		}
 
-		QSharedPointer<LoadedPluginPair> handler(new LoadedPluginPair(pluginHandler, instance));
 		m_plugins.append(handler);
 		for(auto& interface : descr.data()->interfaces())
 		{
@@ -68,15 +67,15 @@ void SimpleLinker::init()
 
 	for(auto& pluginPair : m_plugins)
 	{
-		qDebug() << "Plugin" << pluginPair->second.descr().data()->name();
-		auto instancesHandler = pluginPair->second->getInstancesHandler();
+		auto instancesHandler = pluginPair->second->instance()->getInstancesHandler();
 		auto &&requiredReferences = instancesHandler.data()->requiredReferences();
+//		qDebug() << "Referent" << pluginPair->second.data()->descr().data()->name();
 		for (auto referenceIter = requiredReferences.begin(); referenceIter != requiredReferences.end(); ++referenceIter)
 		{
 			auto pluginsIter = m_pluginsInterfaces.find(referenceIter.key());
 			if(pluginsIter != m_pluginsInterfaces.end())
 			{
-				qDebug() << "Reference" << pluginsIter.key().name();
+//				qDebug() << "Reference" << pluginsIter.key().name();
 				QList<IReferenceDescriptorPtr> list;
 				auto referencesCount = referenceIter.value();
 				auto &&pluginsList = pluginsIter.value();
@@ -84,14 +83,14 @@ void SimpleLinker::init()
 				{
 					for(auto& plugin : pluginsList)
 					{
-						list.append(plugin.data()->second.descr());
+						list.append(plugin.data()->second->descr());
 					}
 				}
 				else
 				{
 					for(auto i = 0; i < referencesCount; ++i)
 					{
-						list.append(pluginsList[i].data()->second.descr());
+						list.append(pluginsList[i].data()->second->descr());
 					}
 				}
 				if(!instancesHandler.data()->setReferences(referenceIter.key(), list))
@@ -104,8 +103,7 @@ void SimpleLinker::init()
 
 	for(auto& pluginPair : m_plugins)
 	{
-		qDebug() << "Plugin" << pluginPair->second.descr().data()->name();
-		auto instancesHandler = pluginPair->second->getInstancesHandler();
+		auto instancesHandler = pluginPair->second->instance()->getInstancesHandler();
 		instancesHandler.data()->transitToReadyState();
 	}
 }

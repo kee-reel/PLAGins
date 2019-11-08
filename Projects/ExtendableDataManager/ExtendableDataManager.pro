@@ -7,13 +7,13 @@ TARGET = ExtendableDataManagerPlugin
 TEMPLATE = lib
 QT += core sql widgets
 
-DEFINES += PLUGIN_BASE_QOBJECT
+
 
 include(../../Common/common.pri)
 
 include(../../../Application/PluginBuildInfo.pri)
 
-include(../PluginLinker/PluginBase/PluginBase.pri)
+include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 
 SOURCES += \
     tablehandler.cpp \
@@ -22,8 +22,8 @@ SOURCES += \
     extendabledatamanager.cpp
 
 HEADERS += \
-    ../../Interfaces/iDataBase.h \
-    ../../Interfaces/iextendabledatamanager.h \
+    ../../Interfaces/Middleware/idatabase.h \
+    ../../Interfaces/Middleware/iextendabledatamanager.h \
     tablehandler.h \
     extendableitemmodel.h \
     item.h \

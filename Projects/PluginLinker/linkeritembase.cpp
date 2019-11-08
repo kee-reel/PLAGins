@@ -23,8 +23,9 @@ bool LinkerItemBase::load()
 {
 	if(!m_pluginHandler.data()->load())
 	{
+		auto pluginName = descr().isNull() ? "Unknown" : descr().data()->name();
 		qCritical() << QString("Can't load plugin [%1]: error: %2.")
-		            .arg(descr().data()->name())
+		            .arg(pluginName)
 		            .arg(m_pluginHandler.data()->getLastError());
 		return false;
 	}
@@ -34,7 +35,7 @@ bool LinkerItemBase::load()
 	if(errMsg.isEmpty())
 	{
 		emit onLoadedStateChanged(m_uid, true);
-		qDebug() << "Plugin" << descr().data()->name() << "loaded";
+//		qDebug() << "Plugin" << descr().data()->name() << "loaded";
 		return true;
 	}
 	else
@@ -72,7 +73,7 @@ bool LinkerItemBase::unload()
 	bool unloadResult = m_pluginHandler.data()->unload();
 	if(unloadResult)
 	{
-		qDebug() << "Plugin" << descr().data()->name() << "unloaded";
+		// qDebug() << "Plugin" << descr().data()->name() << "unloaded";
 		emit onLoadedStateChanged(m_uid, false);
 	}
 	else

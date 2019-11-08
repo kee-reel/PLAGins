@@ -1,55 +1,38 @@
 #include "usertaskmanager.h"
 
-UserTaskManager::UserTaskManager()
+UserTaskManager::UserTaskManager() :
+	PluginBase(this,
 {
-    tableName = "iUserTaskManager";
-    relationName = "iUserTaskManager";
-    dataManager = nullptr;
-    treeModel = nullptr;
+	INTERFACE(IUserTaskManager)
+})
+{
+	referencesInit({{INTERFACE(IExtendableDataManager), m_dataManager}}, {});
+	tableName = "iUserTaskManager";
+	relationName = "iUserTaskManager";
+	treeModel = nullptr;
 }
 
 UserTaskManager::~UserTaskManager()
 {
 }
 
-void UserTaskManager::onAllReferencesSet()
+void UserTaskManager::onReferencesSet()
 {
-    for(auto iter = m_referencesMap.begin(); iter != m_referencesMap.end(); ++iter)
-    {
-        auto&& interfaceName = iter.key();
-        auto&& plugin = iter.value();
-        if(!QString::compare(interfaceName, "IExtendableDataManager", Qt::CaseInsensitive))
-        {
-            auto instance = plugin->getObject();
-            dataManager = qobject_cast<IExtendableDataManager*>(instance);
-        }
-    }
-    PluginBase::onAllReferencesSet();
+	QMap<QString, QVariant::Type> newRelationStruct =
+	{
+		{"name", QVariant::String}
+	};
+	QVector<QVariant> defaultData;
+	defaultData << "New task";
+	m_dataManager->instance()->AddExtention(tableName, relationName, newRelationStruct, defaultData);
+}
+
+void UserTaskManager::onReady()
+{
+	treeModel = m_dataManager->instance()->GetDataModel(tableName);
 }
 
 QAbstractItemModel* UserTaskManager::GetTreeModel()
 {
-    return treeModel;
-}
-
-void UserTaskManager::onAllReferencesReady()
-{
-    QMap<QString, QVariant::Type> newRelationStruct =
-    {
-        {"name",        QVariant::String},
-    };
-    QVector<QVariant> defaultData;
-    defaultData << "New task";
-    dataManager->AddExtention(tableName, relationName, newRelationStruct, defaultData);
-
-    treeModel = dataManager->GetDataModel(tableName);
-
-    PluginBase::onAllReferencesReady();
-}
-
-
-bool UserTaskManager::open()
-{
-    dataManager->SetActiveExtention(tableName, relationName);
-    PluginBase::open();
+	return treeModel;
 }

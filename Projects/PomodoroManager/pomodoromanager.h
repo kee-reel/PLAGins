@@ -10,61 +10,61 @@
 #include <QVariant>
 
 
-#include "../PluginLinker/PluginBase/plugin_base.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 
-#include "../../Interfaces/ipomodoromanager.h"
-#include "../../Interfaces/iextendabledatamanager.h"
-#include "../../Interfaces/iusertaskmanager.h"
-#include "../../Interfaces/inotificationmanager.h"
+#include "../../Interfaces/Utility/ipomodoromanager.h"
+#include "../../Interfaces/Middleware/iextendabledatamanager.h"
+#include "../../Interfaces/Utility/iusertaskmanager.h"
+#include "../../Interfaces/Middleware/inotificationmanager.h"
 
 //! \addtogroup PomodoroManager_int
 //! \{
-class PomodoroManager : public QObject, public PluginBase, IPomodoroManager
+class PomodoroManager : public QObject, public PluginBase, public IPomodoroManager
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
-    Q_INTERFACES(IPlugin IPomodoroManager)
+	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
+	Q_INTERFACES(IPlugin IPomodoroManager)
 
 public:
-    PomodoroManager();
-    virtual ~PomodoroManager() override;
+	PomodoroManager();
+	virtual ~PomodoroManager() override;
 
-    // PluginBase interface
+	// PluginBase interface
 public:
-    virtual void onAllReferencesSet() override;
-    virtual void onAllReferencesReady() override;
-
-private:
-    // Native part
-    IExtendableDataManager *dataManager;
-    IUserTaskManager *myModel;
-    INotificationManager *notificationManager;
-    QAbstractItemModel *taskModel;
-
-    // Unique part
-    QString tableName;
-    QString coreRelationName;
-
-    WorkSetup workSetup;
-    QModelIndex currentTask;
-    QModelIndex finishedPomodoros;
-    QTimer periodsTimer;
-    int notificationTimerId;
+	virtual void onReferencesSet() override;
+	virtual void onReady() override;
 
 private slots:
-    void OnTimerEnded(int timerId);
+	void OnTimerEnded(int timerId);
 
-    // IPomodoroManager interface
+	// IPomodoroManager interface
 public:
-    QAbstractItemModel *GetTaskModel() override;
-    void SetActiveProject(QModelIndex index) override;
-    QModelIndex* GetActiveProject() override;
-    WorkSetup GetWorkSetup() override;
+	QAbstractItemModel *GetTaskModel() override;
+	void SetActiveProject(QModelIndex index) override;
+	QModelIndex* GetActiveProject() override;
+	WorkSetup GetWorkSetup() override;
+
 public slots:
-    void StartPomodoro() override;
+	void StartPomodoro() override;
+
 signals:
-    void OnPomodoroFinished();
-    void RestFinished();
+	void OnPomodoroFinished();
+	void RestFinished();
+
+private:
+	ReferenceInstancePtr<IExtendableDataManager> m_dataManager;
+	ReferenceInstancePtr<IUserTaskManager> m_myModel;
+	ReferenceInstancePtr<INotificationManager> m_notificationManager;
+	QAbstractItemModel *taskModel;
+
+	QString tableName;
+	QString coreRelationName;
+
+	WorkSetup workSetup;
+	QModelIndex currentTask;
+	QModelIndex finishedPomodoros;
+	QTimer periodsTimer;
+	int notificationTimerId;
 };
 //! \}
 #endif // TASKLISTMODEL_H

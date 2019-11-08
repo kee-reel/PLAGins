@@ -6,21 +6,21 @@
 
 class UniquePushButton : public QPushButton
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    explicit UniquePushButton(int m_id, QString name, QWidget *parent = nullptr);
+	explicit UniquePushButton(uid_t id, QString name, QWidget *parent = nullptr);
 
-    int getId();
+	uid_t getId();
 
 private:
-    int m_id;
+	uid_t m_id;
 
 signals:
-    void OnMenuItemSelected(UniquePushButton *);
+	void OnMenuItemSelected(UniquePushButton *);
 
 protected:
-    void mouseReleaseEvent(QMouseEvent *event) override;
-    //    void resizeEvent(QResizeEvent *event) override;
+	void mouseReleaseEvent(QMouseEvent *event) override;
+	//    void resizeEvent(QResizeEvent *event) override;
 };
 
 #endif // MENUITEM_H

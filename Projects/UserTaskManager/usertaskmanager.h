@@ -7,49 +7,45 @@
 #include <QAbstractItemModel>
 
 
-#include "../PluginLinker/PluginBase/plugin_base.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 
-#include "../../Interfaces/iusertaskmanager.h"
-#include "../../Interfaces/iextendabledatamanager.h"
+#include "../../Interfaces/Utility/iusertaskmanager.h"
+#include "../../Interfaces/Middleware/iextendabledatamanager.h"
 
 //! \addtogroup UserTaskManager_imp
 //! \{
-class UserTaskManager : public QObject, public PluginBase, IUserTaskManager
+class UserTaskManager : public QObject, public PluginBase, public IUserTaskManager
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
-    Q_INTERFACES(
-        IPlugin
-        IUserTaskManager
-    )
+	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
+	Q_INTERFACES(
+	    IPlugin
+	    IUserTaskManager
+	)
 
 public:
-    UserTaskManager();
-    ~UserTaskManager();
+	UserTaskManager();
+	virtual ~UserTaskManager() override;
 
-    // PluginBase interface
+	// PluginBase interface
 protected:
-    virtual void onAllReferencesSet() override;
-    virtual void onAllReferencesReady() override;
+	virtual void onReferencesSet() override;
+	virtual void onReady() override;
 
-    // IUserTaskManager interface
+	// IUserTaskManager interface
 public:
-    QAbstractItemModel *GetTreeModel();
+	virtual QAbstractItemModel *GetTreeModel() override;
+
 signals:
-    void OpenTaskEdit(int id);
+	void OpenTaskEdit(int id);
 
 private:
-    void SetupModel();
+	void SetupModel();
 
-    QString tableName;
-    QString relationName;
-    IExtendableDataManager* dataManager;
-    QAbstractItemModel *treeModel;
-
-
-    // IPlugin interface
-public:
-    virtual bool open() override;
+	QString tableName;
+	QString relationName;
+	ReferenceInstancePtr<IExtendableDataManager> m_dataManager;
+	QAbstractItemModel *treeModel;
 };
 //! \}
 #endif // TASKLISTMODEL_H

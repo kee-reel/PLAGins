@@ -8,7 +8,7 @@
 #include <QDateTime>
 
 
-#include "../PluginLinker/PluginBase/plugin_base.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 
 #include "../../Interfaces/idayplan.h"
 #include "../../Interfaces/iusertaskmanager.h"

@@ -14,29 +14,29 @@
 
 #include "../../Interfaces/Architecture/iplugin.h"
 #include "../../Interfaces/Architecture/ireferenceinstance.h"
-#include "../../Interfaces/Architecture/ireferenceinstanceshandler.h"
+#include "../../Interfaces/Architecture/ireferenceshandler.h"
 
 
 class PluginLinkerItem : public LinkerItemBase
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    PluginLinkerItem(IPluginHandlerPtr pluginHandler);
-    virtual ~PluginLinkerItem() override;
+	PluginLinkerItem(IPluginHandlerPtr pluginHandler);
+	virtual ~PluginLinkerItem() override;
 
-    // ILinkerItem interface
+	// ILinkerItem interface
 public:
-    virtual const QMap<Interface, int>& references() override;
+	virtual const QMap<Interface, int>& references() override;
 
 protected:
-    virtual QString initItem(QObject *object) override;
-    virtual QString finiItem() override;
+	virtual QString initItem(QObject *object) override;
+	virtual QString finiItem() override;
 
 public:
-    static bool isPlugin(IPluginHandlerPtr pluginHandler);
+	static bool isPlugin(IPluginHandlerPtr pluginHandler);
 
 private:
-    ReferenceInstance<IPlugin> m_pluginInstance;
+	ReferenceInstancePtr<IPlugin> m_pluginInstance;
 };
 
 #endif // PLUGINLINKERITEM_H

@@ -1,10 +1,14 @@
 {
-    "Interface": "IPomodoroManager",
-    "Name": "PomodoroManager",
-    "RelatedPluginInterfaces": [
-        "IUserTaskManager",
-        "IExtendableDataManager",
-        "IPluginLinker",
-        "INotificationManager"
-    ]
+    "iplugin": {
+		"interfaces": ["IPomodoroManager"],
+		"references": {
+			"IExtendableDataManager": 1,
+			"IUserTaskManager": 1,
+			"INotificationManager": 1
+		},
+		"info": {
+			"name": "PomodoroManager",
+			"about": "Manage pomodoros for tasks"
+		}
+	}
 }

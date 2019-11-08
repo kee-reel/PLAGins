@@ -1,8 +1,8 @@
 HEADERS += \
-    $$PWD/iplugin.h \
+    $$PWD/../iplugin.h \
     $$PWD/plugin_base.h \
     $$PWD/plugindescriptor.h \
-    $$PWD/referenceinstanceshandler.h
+    $$PWD/referenceshandler.h
 
 SOURCES += \
     $$PWD/plugin_base.cpp

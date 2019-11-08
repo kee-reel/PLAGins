@@ -10,7 +10,6 @@ const QMap<QString, QStringList> META_INFO_STRUCTURE =
 PluginLinkerItem::PluginLinkerItem(IPluginHandlerPtr pluginHandler) :
 	LinkerItemBase (pluginHandler)
 {
-	load();
 }
 
 PluginLinkerItem::~PluginLinkerItem()
@@ -20,7 +19,7 @@ PluginLinkerItem::~PluginLinkerItem()
 
 const QMap<Interface, int> &PluginLinkerItem::references()
 {
-	return m_pluginInstance->getInstancesHandler().data()->requiredReferences();
+	return m_pluginInstance->instance()->getInstancesHandler().data()->requiredReferences();
 }
 
 bool PluginLinkerItem::isPlugin(IPluginHandlerPtr pluginHandler)
@@ -32,10 +31,10 @@ bool PluginLinkerItem::isPlugin(IPluginHandlerPtr pluginHandler)
 	{
 		if(!metaInfo.contains(iter.key()))
 		{
-//            log(SeverityType::WARNING, QString("PluginBase::parseMetaInfo: meta has no field '%1' but has fields:").arg(metaFieldName));
-			for(auto iter = metaInfo.begin(); iter != metaInfo.end(); ++iter)
+			qDebug() << QString("PluginBase::parseMetaInfo: meta has no field '%1' but has fields:").arg(iter.key());
+			for(auto allFieldsIter = metaInfo.begin(); allFieldsIter != metaInfo.end(); ++allFieldsIter)
 			{
-//                log(SeverityType::WARNING, QString("%1: %2").arg(iter.key()).arg(iter.value().toString()));
+				qDebug() << QString("%1: %2").arg(allFieldsIter.key()).arg(allFieldsIter.value().toString());
 			}
 			return false;
 		}
@@ -52,13 +51,14 @@ QString PluginLinkerItem::initItem(QObject* object)
 		return QString("can't cast plugin to IPlugin interface.");
 	}
 
-	if(!instance->pluginInit(m_uid, m_pluginHandler.data()->getMeta()))
+	if(!instance->isInited() && !instance->pluginInit(m_uid, m_pluginHandler.data()->getMeta()))
 	{
 		instance->pluginFini();
 		return "Can't load";
 	}
 
 	m_descriptor = instance->getDescriptor();
+
 	if(m_descriptor.isNull())
 	{
 //        return QString("internal plugin error: %1").arg(instance->getLastError());
@@ -66,8 +66,8 @@ QString PluginLinkerItem::initItem(QObject* object)
 	}
 	else
 	{
-		m_pluginInstance.reset(m_descriptor);
-		const auto &handler = m_pluginInstance->getInstancesHandler();
+		m_pluginInstance->setInstance(m_descriptor);
+		const auto &handler = m_pluginInstance->instance()->getInstancesHandler();
 		for(auto iter = m_references->begin(); iter != m_references->end(); ++iter)
 		{
 			QList<IReferenceDescriptorPtr> refs;
@@ -83,7 +83,7 @@ QString PluginLinkerItem::initItem(QObject* object)
 
 QString PluginLinkerItem::finiItem()
 {
-	m_pluginInstance->pluginFini();
+	m_pluginInstance->instance()->pluginFini();
 	m_pluginInstance.reset();
 	return QString();
 }

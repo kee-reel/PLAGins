@@ -7,13 +7,13 @@ TARGET = TaskSketchManager
 TEMPLATE = lib
 QT += widgets
 
-DEFINES += PLUGIN_BASE_QOBJECT
+
 
 include(../../Common/common.pri)
 
 include(../../../Application/PluginBuildInfo.pri)
 
-include(../PluginLinker/PluginBase/PluginBase.pri)
+include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 
 SOURCES += \
     rawimagedelegate.cpp \

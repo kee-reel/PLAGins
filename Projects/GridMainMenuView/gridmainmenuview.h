@@ -9,9 +9,8 @@
 #include <QSpacerItem>
 #include <QScroller>
 
-#include "../../Interfaces/iuielement.h"
-#include "../PluginLinker/PluginBase/plugin_base.h"
-#include "../UIManager/UIElementBase/uielementbase.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
+#include "../../Interfaces/Architecture/UIElementBase/uielementbase.h"
 
 #include "uniquepushbutton.h"
 #include "aspectawaregridlayout.h"
@@ -26,54 +25,57 @@ class Form;
 //!  \{
 class GridMainMenuView : public QWidget, public PluginBase, public UIElementBase
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
-    Q_INTERFACES(
-        IPlugin
-        IUIElement
-    )
+	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
+	Q_INTERFACES(
+	    IPlugin
+	    IUIElement
+	)
 
 public:
-    explicit GridMainMenuView();
-    virtual ~GridMainMenuView() override;
+	explicit GridMainMenuView();
+	virtual ~GridMainMenuView() override;
 
-    // QWidget interface
-    void closeEvent(QCloseEvent *event);
+signals:
+	void lolKek();
+
+	// PluginBase interface
+public:
+	virtual void onReady() override;
+
+	// QWidget interface
+	void closeEvent(QCloseEvent *event) override;
 protected:
-    void resizeEvent(QResizeEvent *event) override;
+	void resizeEvent(QResizeEvent *event) override;
 
 private:
-    enum PredefinedIndices
-    {
-        EXIT = -1,
-        ADD_ITEM = -2
-    };
+	enum PredefinedIndices
+	{
+		EXIT = -1,
+		ADD_ITEM = -2
+	};
 
 private slots:
-    void UniqueButtonPressed(UniquePushButton *button);
-    QString FormatMenuItemName(QString name);
+	void UniqueButtonPressed(UniquePushButton *button);
+	QString FormatMenuItemName(QString name);
 
 private:
-    int getUniqueId();
-    void installMenuElements();
+	void installMenuElements();
 
 signals:
-    virtual void openLink(IUIElement* self, QWeakPointer<IUIElementDescriptor> link) override;
-    virtual void closeLink(IUIElement* self, QWeakPointer<IUIElementDescriptor> link) override;
-    virtual void closeSelf(IUIElement* self) override;
-
-signals:
-    virtual void onReadyStateChanged(uid_t selfUID, bool readyState) override;
+	void openLink(IUIElement *self, QString linkName, uid_t referenceUID);
+	void closeLink(IUIElement *self, QString linkName, uid_t referenceUID);
+	void closeSelf(IUIElement *self);
 
 protected:
-    QSharedPointer<Ui::Form> ui;
+	QSharedPointer<Ui::Form> ui;
 
 private:
-    QLayout *layout;
-    QMap<int, QWeakPointer<IUIElementDescriptor>> m_uiElements;
-    int m_uniqueIdCounter;
-    QVector<UniquePushButton *> m_uniqueButtons;
-    UniquePushButton *m_exitItem;
+	QLayout *layout;
+	ReferenceInstancesListPtr<IUIElement> m_elements;
+	int m_uniqueIdCounter;
+	QVector<UniquePushButton *> m_uniqueButtons;
+	UniquePushButton *m_exitItem;
 };
 //!  \}
 #endif // GRIDMAINMENUVIEW_H

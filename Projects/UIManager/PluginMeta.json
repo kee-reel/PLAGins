@@ -1,5 +1,14 @@
 {
-    "service": {
-        "interfaces": ["IUIManager"]
-    }
+    "iplugin": {
+		"interfaces": [],
+		"references": {
+			"IApplication": 1,
+			"IPluginLinker": 1,
+			"IUIElement": 0
+		},
+		"info": {
+			"name": "UIManager",
+			"about": "Controls UI elements"
+		}
+	}
 }

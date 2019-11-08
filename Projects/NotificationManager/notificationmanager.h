@@ -9,64 +9,59 @@
 #include <QDebug>
 
 #ifdef Q_OS_ANDROID
-    #include <QtAndroid>
-    #include <QAndroidJniEnvironment>
+#include <QtAndroid>
+#include <QAndroidJniEnvironment>
 #endif
 
 
-#include "../PluginLinker/PluginBase/plugin_base.h"
+#include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 
-#include "../../Interfaces/inotificationmanager.h"
+#include "../../Interfaces/Middleware/inotificationmanager.h"
 #include "qextendedtimer.h"
 
 //! \addtogroup NotificationManager_imp
 //! \{
 class NotificationManager : public QObject, public PluginBase, INotificationManager
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
-    Q_INTERFACES(
-        IPlugin
-        INotificationManager
-    )
+	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
+	Q_INTERFACES(
+	    IPlugin
+	    INotificationManager
+	)
 
 public:
-    NotificationManager();
-    virtual ~NotificationManager() override;
+	NotificationManager();
+	virtual ~NotificationManager() override;
 
-    // PluginBase interface
+	// INOTIFICATIONMANAGER interface
 public:
-    virtual void onAllReferencesSet() override;
-    virtual void onAllReferencesReady() override;
-
-    // INOTIFICATIONMANAGER interface
-public:
-    void ShowNotification(QString title, QString message, int id = 0) override;
-    void CancelNotification(int id) override;
-    void ShowToast(const QString &message, INotificationManager::Duration duration = LONG) override;
-    void PlanApplicationWakeup(TimeType timePlan, QDateTime secs) override;
-    int SetAlarm(TimeType type, QDateTime time) override;
-    int SetRepeatingAlarm(TimeType type, QDateTime triggerTime, QDateTime interval) override;
-    void SetAlarmedNotification(TimeType type, QDateTime time, QString title, QString message, int id) override;
-    void SetAlarmedToast(TimeType type, QDateTime time, const QString &message, INotificationManager::Duration duration) override;
-    void CancelAlarm() override;
+	void ShowNotification(QString title, QString message, int id = 0) override;
+	void CancelNotification(int id) override;
+	void ShowToast(const QString &message, INotificationManager::Duration duration = LONG) override;
+	void PlanApplicationWakeup(TimeType timePlan, QDateTime secs) override;
+	int SetAlarm(TimeType type, QDateTime time) override;
+	int SetRepeatingAlarm(TimeType type, QDateTime triggerTime, QDateTime interval) override;
+	void SetAlarmedNotification(TimeType type, QDateTime time, QString title, QString message, int id) override;
+	void SetAlarmedToast(TimeType type, QDateTime time, const QString &message, INotificationManager::Duration duration) override;
+	void CancelAlarm() override;
 
 #ifdef Q_OS_ANDROID
 public:
-    void OnAndroidAlarmRecieved(JNIEnv */*env*/, jobject /*obj*/);
+	void OnAndroidAlarmRecieved(JNIEnv */*env*/, jobject /*obj*/);
 private:
-    void RegisterNativeMethods();
-    QTimer delayedCallbackTimer;
+	void RegisterNativeMethods();
+	QTimer delayedCallbackTimer;
 private slots:
-    void CheckTimerTimeout();
+	void CheckTimerTimeout();
 #endif
 
 signals:
-    void OnTimerTimeout(int);
+	void OnTimerTimeout(int);
 
 private:
-    QWidget *referenceWidget;
-    QMap<QExtendedTimer*, int> timersDictionary;
+	QWidget *referenceWidget;
+	QMap<QExtendedTimer*, int> timersDictionary;
 };
 
 //!  \}
