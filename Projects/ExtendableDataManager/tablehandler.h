@@ -21,52 +21,53 @@ public:
 	{
 		{QVariant::Int,        "INTEGER"},
 		{QVariant::String,     "VARCHAR"},
-		{QVariant::DateTime,   "VARCHAR"},
+		{QVariant::DateTime,   "INTEGER"},
 		{QVariant::ByteArray,  "BLOB"}
 	};
-
-	TableHandler(IDataBase *dataSource, IExtendableDataManager *dataManager, QString tableName = "");
+	
+	TableHandler(ReferenceInstancePtr<IDataBase> dataSource, 
+				 IExtendableDataManager *dataManager, QString tableName = "");
 	~TableHandler();
-
+	
 	inline QString TableName()
 	{
 		return tableName;
 	}
 	bool HasRelation(QString relation);
-
+	
 	bool CreateTable();
 	bool SetRelation(QString relationName, TableStructMap fields, QVector<QVariant> defaultData);
 	void SetActiveRelation(QString relationName);
 	void SetDataTypeEditor(QString dataChunk, QString fieldName, QWidget *widget);
 	bool DeleteRelation(QString relationName);
-
+	
 	int AddItem(ManagerDataItem item);
 	bool UpdateItem(ManagerDataItem item);
 	bool DeleteItem(int id);
-
+	
 	QList<ManagerDataItem> GetData();
 	ManagerDataItem GetItem(int id);
 	QAbstractItemModel *GetModel();
 	TableStructMap GetHeader();
 	QVector<QVariant> GetRelationDefaultData(QString relationName);
-
-
+	
+	
 private:
-	IDataBase *dataSource;
+	ReferenceInstancePtr<IDataBase> dataSource;
 	IExtendableDataManager *dataManager;
 	ExtendableItemModel *itemModel;
 	QString tableName;
 	bool isCreated;
-
+	
 	TableStructMap wholeTableStruct;
 	TableStructMap coreTableStruct;
 	QMap<QString, TableStructMap> relationTablesStructs;
 	QMap<QString, QVector<QVariant>> relationsDefaultData;
-
+	
 	QString GetInsertValuesString(TableStructMap &tableStruct, int id, QVector<QVariant> &itemData);
 	QString GetUpdateValuesString(TableStructMap &tableStruct, int id);
 	QString GetUpdateValuesString(TableStructMap &tableStruct, int id, QVector<QVariant> &itemData);
-
+	
 	bool IsDataSourceExists();
 	bool IsTableExists(QString tableName);
 	bool IsTableHasRightStructure(QString tableName, TableStructMap &tableStruct);

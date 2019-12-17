@@ -8,7 +8,7 @@ NotificationManager::NotificationManager() :
 	INTERFACE(INotificationManager)
 })
 {
-	referencesInit();
+	initPluginBase();
 }
 
 NotificationManager::~NotificationManager()

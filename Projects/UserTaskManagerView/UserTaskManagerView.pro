@@ -7,13 +7,13 @@ TARGET = UserTaskManagerView
 TEMPLATE = lib
 QT += widgets
 
-DEFINES += PLUGIN_BASE_QWIDGET
-
 include(../../Common/common.pri)
 
 include(../../../Application/PluginBuildInfo.pri)
 
 include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
+
+include(../../Interfaces/Architecture/UIElementBase/UIElementBase.pri)
 
 SOURCES += \
     addform.cpp \

@@ -52,7 +52,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../ARNeuralNetworkView/res.qrc">
+        <iconset resource="res.qrc">
          <normaloff>:/Res/ic_delete_black_24dp.png</normaloff>:/Res/ic_delete_black_24dp.png</iconset>
        </property>
        <property name="iconSize">
@@ -78,7 +78,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../PomodoroView/res.qrc">
+        <iconset resource="res.qrc">
          <normaloff>:/Res/sketch_to_task_24dp.png</normaloff>:/Res/sketch_to_task_24dp.png</iconset>
        </property>
        <property name="iconSize">
@@ -111,7 +111,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../ARNeuralNetworkView/res.qrc">
+        <iconset resource="res.qrc">
          <normaloff>:/Res/ic_cancel_black_24dp.png</normaloff>:/Res/ic_cancel_black_24dp.png</iconset>
        </property>
        <property name="iconSize">
@@ -130,8 +130,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../ARNeuralNetworkView/res.qrc"/>
-  <include location="../PomodoroView/res.qrc"/>
+  <include location="res.qrc"/>
  </resources>
  <connections/>
 </ui>

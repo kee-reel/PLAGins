@@ -15,6 +15,8 @@ include(../../../Application/PluginBuildInfo.pri)
 
 include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 
+include(../../Interfaces/Architecture/UIElementBase/UIElementBase.pri)
+
 SOURCES += \
     galleryform.cpp \
     paintwidget.cpp \

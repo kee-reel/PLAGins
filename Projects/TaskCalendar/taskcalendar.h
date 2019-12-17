@@ -29,7 +29,7 @@ public:
 
 	// PluginBase interface
 public:
-	virtual void onReferencesSet() override;
+	virtual void onPluginReferencesSet() override;
 
 	// ITaskCalendar interface
 public:

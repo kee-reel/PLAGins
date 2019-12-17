@@ -49,9 +49,7 @@ public:
 #ifdef Q_OS_ANDROID
 public:
 	void OnAndroidAlarmRecieved(JNIEnv */*env*/, jobject /*obj*/);
-private:
-	void RegisterNativeMethods();
-	QTimer delayedCallbackTimer;
+
 private slots:
 	void CheckTimerTimeout();
 #endif
@@ -61,6 +59,7 @@ signals:
 
 private:
 	QWidget *referenceWidget;
+	QTimer delayedCallbackTimer;
 	QMap<QExtendedTimer*, int> timersDictionary;
 };
 

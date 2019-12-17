@@ -83,6 +83,9 @@ bool MyTreeView::eventFilter(QObject *obj, QEvent *event)
             "}                                                                                                 "
             );
         break;
+        
+		default:
+			break;
     }
     // standard event processing
     return QTreeView::eventFilter(obj, event); // Parent being MyClass parent type, maybe QDialog or QWidget

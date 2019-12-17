@@ -1,7 +1,12 @@
 {
-    "Interface": "",
-    "Name": "UserTaskManagerView",
-    "RelatedPluginInterfaces": [
-        "IUserTaskManager"
-    ]
+    "iplugin": {
+		"interfaces": ["IUIElement"],
+		"references": {
+			"IUserTaskManager": 1
+		},
+		"info": {
+			"name": "UserTaskManagerView",
+			"about": "View plugin for plugin with interface IPluginLinker. Allows to load new plugins, unload existing plugins, read about plugin (this text)."
+		}
+    }
 }

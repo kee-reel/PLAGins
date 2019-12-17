@@ -34,13 +34,13 @@ public:
 
 	// PluginBase interface
 public:
-	virtual void onReady() override;
+	virtual void onPluginReady() override;
 
 	// IApplication interface
 public:
 	virtual QWidget *getParentWidget() override;
 	virtual const QVector<IPluginHandlerPtr> &getPlugins() override;
-	virtual IPluginHandlerPtr makePluginHandler(QString path) override;
+	virtual IPluginHandlerPtr makePluginHandler(const QString &path) override;
 
 private:
 	QWeakPointer<IApplication> m_app;

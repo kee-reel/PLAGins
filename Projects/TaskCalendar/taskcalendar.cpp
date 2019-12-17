@@ -6,7 +6,7 @@ TaskCalendar::TaskCalendar() :
 	INTERFACE(ITaskCalendar)
 })
 {
-	referencesInit(
+	initPluginBase(
 	{
 		{INTERFACE(IExtendableDataManager), m_dataManager},
 		{INTERFACE(IUserTaskManager), m_taskTree}
@@ -17,7 +17,7 @@ TaskCalendar::~TaskCalendar()
 {
 }
 
-void TaskCalendar::onReferencesSet()
+void TaskCalendar::onPluginReferencesSet()
 {
 	QMap<QString, QVariant::Type> newRelationStruct =
 	{
@@ -30,4 +30,5 @@ void TaskCalendar::onReferencesSet()
 
 void TaskCalendar::LinkEditorWidget(QWidget *widget)
 {
+	Q_UNUSED(widget)
 }

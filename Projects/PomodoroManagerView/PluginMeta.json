@@ -1,7 +1,12 @@
 {
-    "Interface": "",
-    "Name": "PomodoroManagerView",
-    "RelatedPluginInterfaces": [
-        "IPomodoroManager"
-    ]
+	"iplugin": {
+		"interfaces": ["IUIElement"],
+		"references": {
+			"IPomodoroManager": 1
+		},
+		"info": {
+			"name": "PomodoroManagerView",
+			"about": "View plugin for plugin with interface IPluginLinker. Allows to load new plugins, unload existing plugins, read about plugin (this text)."
+		}
+	}
 }

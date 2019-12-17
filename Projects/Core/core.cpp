@@ -9,7 +9,7 @@ Core::Core() :
 	INTERFACE(IApplication)
 })
 {
-	referencesInit();
+	initPluginBase();
 }
 
 Core::~Core()
@@ -25,9 +25,10 @@ void Core::coreInit(QWeakPointer<IApplication> app)
 
 bool Core::coreFini()
 {
+	return true;
 }
 
-void Core::onReady()
+void Core::onPluginReady()
 {
 }
 
@@ -41,7 +42,7 @@ const QVector<IPluginHandlerPtr> &Core::getPlugins()
 	return m_app.data()->getPlugins();
 }
 
-IPluginHandlerPtr Core::makePluginHandler(QString path)
+IPluginHandlerPtr Core::makePluginHandler(const QString &path)
 {
 	return m_app.data()->makePluginHandler(path);
 }

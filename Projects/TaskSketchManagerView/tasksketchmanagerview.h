@@ -11,50 +11,59 @@
 
 
 #include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
+#include "../../Interfaces/Architecture/UIElementBase/uielementbase.h"
 
-#include "../../Interfaces/itasksketchmanager.h"
+#include "../../Interfaces/Utility/itasksketchmanager.h"
 #include "paintwidget.h"
 #include "galleryform.h"
 
+namespace Ui
+{
+class Form;
+}
+
+
 //! \addtogroup TaskSketchManager_dep
 //!  \{
-class TaskSketchManagerView : public PluginBase
+class TaskSketchManagerView : public QWidget, public PluginBase, public UIElementBase
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
-    Q_INTERFACES(IPlugin)
-
+	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
+	Q_INTERFACES(IPlugin IUIElement)
+	
 public:
-    TaskSketchManagerView(QWidget *parent = nullptr);
-    virtual ~TaskSketchManagerView() override;
+	TaskSketchManagerView();
+	virtual ~TaskSketchManagerView() override;
+	
+	// PluginBase interface
+private:
+	virtual void onPluginInited() override;
+	virtual void onPluginReferencesSet() override;
 
 private:
-    ITaskSketchManager *myModel;
-    PaintWidget *paintWidgetTypeEditor;
-
-    QAbstractItemModel *sketchModel;
-    QAbstractItemModel *taskModel;
-    GalleryForm *galleryForm;
-
-    QString imageFormat;
-
-    virtual void resizeEvent(QResizeEvent *event) override;
-
+	virtual void resizeEvent(QResizeEvent *event) override;
+	
 signals:
-    void OnItemConvert(int index);
-
+	void OnItemConvert(int index);
+	
 private slots:
-    void OnItemDelete(int index);
-    void OnItemConvertSlot(int index);
-    void on_buttonClear_clicked();
-    void on_buttonSave_clicked();
-    void on_buttonOpenGallery_clicked();
-    void on_buttonClose_clicked();
-
-    // PluginBase interface
-protected:
-    virtual void onAllReferencesSet() override;
-    virtual void onAllReferencesReady() override;
+	void OnItemDelete(int index);
+	void OnItemConvertSlot(int index);
+	void buttonClear_clicked();
+	void buttonSave_clicked();
+	void buttonOpenGallery_clicked();
+	void buttonClose_clicked();
+	
+private:
+	QSharedPointer<Ui::Form> ui;
+	ReferenceInstancePtr<ITaskSketchManager> myModel;
+	PaintWidget *paintWidgetTypeEditor;
+	
+	QAbstractItemModel *sketchModel;
+	QAbstractItemModel *taskModel;
+	GalleryForm *galleryForm;
+	
+	QString imageFormat;
 };
 //!  \}
 #endif // TASKSKETCHVIEW_H

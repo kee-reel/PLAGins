@@ -28,7 +28,7 @@ public:
 
 	// PluginBase interface
 public:
-	virtual void onReady() override;
+	virtual void onPluginReady() override;
 
 	// IDataBase interface
 public:

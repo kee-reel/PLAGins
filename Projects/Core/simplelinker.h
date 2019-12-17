@@ -3,8 +3,7 @@
 
 #include "../../../Application/iapplication.h"
 #include "../../Interfaces/Architecture/iplugin.h"
-#include "../../Interfaces/Architecture/ireferenceinstance.h"
-#include "../../Interfaces/Architecture/ireferenceshandler.h"
+#include "../../Interfaces/Architecture/referenceinstance.h"
 
 class SimpleLinker : public QObject
 {
@@ -21,7 +20,6 @@ public:
 
 private:
 	typedef QPair<IPluginHandlerPtr, ReferenceInstancePtr<IPlugin>> LoadedPluginPair;
-
 
 private:
 	QWeakPointer<IApplication> m_app;

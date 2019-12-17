@@ -13,8 +13,7 @@
 #include "linkeritembase.h"
 
 #include "../../Interfaces/Architecture/iplugin.h"
-#include "../../Interfaces/Architecture/ireferenceinstance.h"
-#include "../../Interfaces/Architecture/ireferenceshandler.h"
+#include "../../Interfaces/Architecture/referenceinstance.h"
 
 
 class PluginLinkerItem : public LinkerItemBase
@@ -32,11 +31,16 @@ protected:
 	virtual QString initItem(QObject *object) override;
 	virtual QString finiItem() override;
 
+private slots:
+	void connectionsChanged(uid_t selfUID, uid_t itemUID, bool isAdded);
+
 public:
 	static bool isPlugin(IPluginHandlerPtr pluginHandler);
+	void setupReferences();
 
 private:
 	ReferenceInstancePtr<IPlugin> m_pluginInstance;
+
 };
 
 #endif // PLUGINLINKERITEM_H

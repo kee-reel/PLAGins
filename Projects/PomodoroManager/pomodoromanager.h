@@ -31,8 +31,8 @@ public:
 
 	// PluginBase interface
 public:
-	virtual void onReferencesSet() override;
-	virtual void onReady() override;
+	virtual void onPluginReferencesSet() override;
+	virtual void onPluginReady() override;
 
 private slots:
 	void OnTimerEnded(int timerId);

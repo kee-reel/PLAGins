@@ -10,6 +10,7 @@ const QMap<QString, QStringList> META_INFO_STRUCTURE =
 PluginLinkerItem::PluginLinkerItem(IPluginHandlerPtr pluginHandler) :
 	LinkerItemBase (pluginHandler)
 {
+	connect(this, &LinkerItemBase::onReferencesChanged, this, &PluginLinkerItem::connectionsChanged);
 }
 
 PluginLinkerItem::~PluginLinkerItem()
@@ -67,17 +68,22 @@ QString PluginLinkerItem::initItem(QObject* object)
 	else
 	{
 		m_pluginInstance->setInstance(m_descriptor);
-		const auto &handler = m_pluginInstance->instance()->getInstancesHandler();
-		for(auto iter = m_references->begin(); iter != m_references->end(); ++iter)
-		{
-			QList<IReferenceDescriptorPtr> refs;
-			for (auto refIter = iter.value().begin(); refIter != iter.value().end(); ++refIter)
-			{
-				refs.append(refIter->data()->descr());
-			}
-			handler.data()->setReferences(iter.key(), refs);
-		}
+		setupReferences();
 		return QString();
+	}
+}
+
+void PluginLinkerItem::setupReferences()
+{
+	const auto &handler = m_pluginInstance->instance()->getInstancesHandler();
+	for(auto iter = m_references->begin(); iter != m_references->end(); ++iter)
+	{
+		QList<IReferenceDescriptorPtr> refs;
+		for (auto refIter = iter.value().begin(); refIter != iter.value().end(); ++refIter)
+		{
+			refs.append(refIter->data()->descr());
+		}
+		handler.data()->setReferences(iter.key(), refs);
 	}
 }
 
@@ -86,4 +92,12 @@ QString PluginLinkerItem::finiItem()
 	m_pluginInstance->instance()->pluginFini();
 	m_pluginInstance.reset();
 	return QString();
+}
+
+void PluginLinkerItem::connectionsChanged(uid_t selfUID, uid_t itemUID, bool isAdded)
+{
+	if(m_pluginInstance->isSet())
+	{
+		setupReferences();
+	}
 }

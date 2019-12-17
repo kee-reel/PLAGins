@@ -69,7 +69,7 @@ void SimpleLinker::init()
 	{
 		auto instancesHandler = pluginPair->second->instance()->getInstancesHandler();
 		auto &&requiredReferences = instancesHandler.data()->requiredReferences();
-//		qDebug() << "Referent" << pluginPair->second.data()->descr().data()->name();
+//		qDebug() << "Referent" << pluginPair->second.data()->descr().data()->name() << "require" << requiredReferences;
 		for (auto referenceIter = requiredReferences.begin(); referenceIter != requiredReferences.end(); ++referenceIter)
 		{
 			auto pluginsIter = m_pluginsInterfaces.find(referenceIter.key());

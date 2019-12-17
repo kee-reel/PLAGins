@@ -35,11 +35,12 @@ public:
 
 	// PluginBase interface
 public:
-	virtual void onReferencesSet() override;
+	virtual void onPluginReferencesSet() override;
 
 	// IPluginLinker interface
 public:
-	virtual QWeakPointer<ILinkerItem> loadNewPlugin(QString filename) override;
+	virtual QWeakPointer<ILinkerItem> addPlugin(QString filename) override;
+	virtual bool removePlugin(QWeakPointer<ILinkerItem> linkerItem) override;
 	virtual bool loadPlugin(uid_t uid) override;
 	virtual bool unloadPlugin(uid_t uid) override;
 	virtual bool linkPlugins(uid_t referentUID, QString interface, uid_t referenceUID) override;
@@ -50,19 +51,17 @@ public:
 signals:
 	void onLinkageFinished();
 
-public slots:
-	void onServiceManagerInitialized();
-
 private:
-	bool addCorePlugin(IPluginHandlerPtr pluginHandler);
-	bool addPlugin(IPluginHandlerPtr pluginHandler);
-	bool setupLinks();
+	bool addPluginHandler(IPluginHandlerPtr pluginHandler);
 
 	template<class Type>
 	Type *castToInterface(QObject *possiblePlugin) const;
 	QSharedPointer<LinkerItemBase> createLinkerItem(IPluginHandlerPtr);
+	bool setupItemLinks(QSharedPointer<LinkerItemBase> &item);
 
 private:
+	QMap<Interface, QSharedPointer< QList<QWeakPointer<LinkerItemBase>> > > m_referencedInterfaces;
+
 	QMap<Interface, QSharedPointer< QList<QWeakPointer<LinkerItemBase>> > > m_interfacesMap;
 	QMap<uid_t, QSharedPointer<LinkerItemBase>> m_linkerItemsMap;
 

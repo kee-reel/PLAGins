@@ -1,13 +1,10 @@
 #include "extendabledamanager.h"
 
 ExtendableDataManager::ExtendableDataManager() :
-	PluginBase(this,
+	QObject(),
+	PluginBase(this, {INTERFACE(IExtendableDataManager)})
 {
-	INTERFACE(IExtendableDataManager)
-})
-{
-	referencesInit(
-	{
+	initPluginBase({
 		{INTERFACE(IDataBase), m_dataSource}
 	});
 }
@@ -15,7 +12,7 @@ ExtendableDataManager::ExtendableDataManager() :
 ExtendableDataManager::~ExtendableDataManager()
 {
 	QHash<QString, TableHandler*>::Iterator tablesIter = tableHandlers.begin();
-
+	
 	while(tablesIter != tableHandlers.end())
 	{
 		delete tablesIter.value();
@@ -23,7 +20,7 @@ ExtendableDataManager::~ExtendableDataManager()
 	}
 }
 
-void ExtendableDataManager::onReferencesSet()
+void ExtendableDataManager::onPluginReferencesSet()
 {
 	m_dataSource->instance()->SetPassword("rqCZB63Fr7tmTB");
 }
@@ -31,14 +28,14 @@ void ExtendableDataManager::onReferencesSet()
 bool ExtendableDataManager::RegisterExtentionFieldEditor(QString relation, QString field, QWidget *widget)
 {
 	QVariant value = widget->property("value");
-
+	
 	if(widget == nullptr || !value.isValid())
 		return false;
-
+	
 	relation = relation.toLower();
 	field = field.toLower();
 	dataTypeEditorsMap[relation].insert(field, widget);
-
+	
 	foreach (auto table, tableHandlers)
 	{
 		if(table->HasRelation(relation))
@@ -51,16 +48,16 @@ QWidget *ExtendableDataManager::GetExtentionFieldEditor(QString relation, QStrin
 {
 	if(dataTypeEditorsMap.contains(relation) && dataTypeEditorsMap[relation].contains(field))
 		return dataTypeEditorsMap[relation].value(field);
-
+	
 	return nullptr;
 }
 
 void ExtendableDataManager::SetupTable(QString &tableName)
 {
 	tableName = tableName.toLower();
-
+	
 	if(!tableHandlers.contains(tableName))
-		tableHandlers[tableName] = new TableHandler(m_dataSource->instance(), this, tableName);
+		tableHandlers[tableName] = new TableHandler(m_dataSource, this, tableName);
 }
 
 QList<ExtendableDataManager::ManagerDataItem> ExtendableDataManager::GetDataList(QString tableName)
@@ -78,27 +75,27 @@ IExtendableDataManager::ManagerDataItem ExtendableDataManager::GetDataItem(QStri
 void ExtendableDataManager::SetupDataTypeEditors(QString tableName)
 {
 	auto relationIter = dataTypeEditorsMap.begin();
-
+	
 	while(relationIter != dataTypeEditorsMap.end())
 	{
 		auto tablesIter = tableHandlers.begin();
-
+		
 		while(tablesIter != tableHandlers.end())
 		{
 			if(tablesIter.value()->HasRelation(relationIter.key()))
 			{
 				auto fieldIter = relationIter.value().begin();
-
+				
 				while(fieldIter != relationIter.value().end())
 				{
 					tableHandlers[tableName]->SetDataTypeEditor(relationIter.key(), fieldIter.key(), fieldIter.value());
 					++fieldIter;
 				}
 			}
-
+			
 			++tablesIter;
 		}
-
+		
 		++relationIter;
 	}
 }
@@ -114,41 +111,25 @@ QAbstractItemModel *ExtendableDataManager::GetDataModel(QString tableName)
 QAbstractItemModel *ExtendableDataManager::GetDataModel(QVector<QPair<QString, QString> > dataModelFields)
 {
 	auto iter = dataModelFields.begin();
-
+	
 	while(iter != dataModelFields.end())
 	{
 		auto tableName = iter->first;
-
+		
 		if(!tableHandlers.contains(tableName))
 		{
 			SetupTable(tableName);
 			SetupDataTypeEditors(tableName);
 		}
-
+		
 		++iter;
 	}
-
-	return CreateProxy(dataModelFields);
-}
-
-QAbstractItemModel * ExtendableDataManager::CreateProxy(QVector<QPair<QString, QString> > &dataModelFields)
-{
-	auto iter = dataModelFields.begin();
-
-	while(iter != dataModelFields.end())
-	{
-		auto tableName = iter->first;
-
-		if(!tableHandlers.contains(tableName))
-		{
-			SetupTable(tableName);
-			SetupDataTypeEditors(tableName);
-		}
-
-		++iter;
-	}
-
-	//    QAbstractItemModel *itemModel = tableHandlers[tableName]->GetModel();
+	
+	Q_ASSERT(false);
+	// TODO: Work here required.
+	auto tableName = dataModelFields.first();
+	QAbstractItemModel *itemModel = tableHandlers[tableName.first]->GetModel();
+	return itemModel;
 }
 
 QMap<QString, QVariant::Type> ExtendableDataManager::GetTableHeader(QString tableName)
@@ -158,7 +139,7 @@ QMap<QString, QVariant::Type> ExtendableDataManager::GetTableHeader(QString tabl
 }
 
 bool ExtendableDataManager::AddExtention(QString tableName, QString extentionName,
-        QMap<QString, QVariant::Type> fields, QVector<QVariant> defaultData)
+										 QMap<QString, QVariant::Type> fields, QVector<QVariant> defaultData)
 {
 	SetupTable(tableName);
 	return tableHandlers[tableName]->SetRelation(extentionName, fields, defaultData);

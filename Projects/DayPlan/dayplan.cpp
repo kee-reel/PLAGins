@@ -1,73 +1,48 @@
 #include "dayplan.h"
 
 DayPlan::DayPlan() :
-    PluginBase(this)
+	QObject(),
+	PluginBase(this, {INTERFACE(IDayPlan)})
 {
-    taskTreeModel = nullptr;
-    taskDataModel = nullptr;
-    dateDataModel = nullptr;
-    dataManager = nullptr;
-    tableName = "IUserTaskManager";
-    relationName = "IDayPlan";
+	initPluginBase({
+		{INTERFACE(IUserTaskManager), taskTreeModel},
+		{INTERFACE(IExtendableDataManager), dataManager}
+	});
+	taskDataModel = nullptr;
+	dateDataModel = nullptr;
+	tableName = "IUserTaskManager";
+	relationName = "IDayPlan";
 }
 
 DayPlan::~DayPlan()
 {
 }
 
-void DayPlan::onAllReferencesSet()
+void DayPlan::onPluginReady()
 {
-    for(auto iter = m_referencesMap.begin(); iter != m_referencesMap.end(); ++iter)
-    {
-        auto&& interfaceName = iter.key();
-        auto&& plugin = iter.value();
-        if(!QString::compare(interfaceName, "IUserTaskManager", Qt::CaseInsensitive))
-        {
-            auto instance = plugin->getObject();
-            taskTreeModel = qobject_cast<IUserTaskManager*>(instance);
-        }
-        else if(!QString::compare(interfaceName, "IExtendableDataManager", Qt::CaseInsensitive))
-        {
-            auto instance = plugin->getObject();
-            dataManager = qobject_cast<IExtendableDataManager*>(instance);
-        }
-    }
-    PluginBase::onAllReferencesSet();
-}
-
-void DayPlan::onAllReferencesReady()
-{
-    QMap<QString, QVariant::Type> newRelationStruct = {
-        {"Date",        QVariant::String},
-    };
-    QVector<QVariant> defaultData;
-    defaultData << QDateTime::currentDateTime().toString(Qt::ISODate);
-    dataManager->AddExtention(tableName, relationName, newRelationStruct, defaultData);
-    dataManager->AddExtention(relationName, relationName, newRelationStruct, defaultData);
-
-    taskDataModel = dataManager->GetDataModel(tableName);
-    dateDataModel = dataManager->GetDataModel(relationName);
-
-    PluginBase::onAllReferencesReady();
-}
-
-bool DayPlan::open()
-{
-    dataManager->SetActiveExtention(tableName, relationName);
-    return PluginBase::open();
+	QMap<QString, QVariant::Type> newRelationStruct = {
+		{"Date", QVariant::String},
+	};
+	QVector<QVariant> defaultData;
+	defaultData << QDateTime::currentDateTime().toString(Qt::ISODate);
+	dataManager->instance()->AddExtention(tableName, relationName, newRelationStruct, defaultData);
+	dataManager->instance()->AddExtention(relationName, relationName, newRelationStruct, defaultData);
+	
+	taskDataModel = dataManager->instance()->GetDataModel(tableName);
+	dateDataModel = dataManager->instance()->GetDataModel(relationName);
 }
 
 QAbstractItemModel *DayPlan::GetTaskModel()
 {
-    return taskDataModel;
+	return taskDataModel;
 }
 
 QAbstractItemModel *DayPlan::GetDateModel()
 {
-    return dateDataModel;
+	return dateDataModel;
 }
 
 void DayPlan::SetDataTypeEditor(QWidget *widget)
 {
-    dataManager->RegisterExtentionFieldEditor(relationName, "datetime", widget);
+	dataManager->instance()->RegisterExtentionFieldEditor(relationName, "datetime", widget);
 }

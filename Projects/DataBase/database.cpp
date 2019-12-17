@@ -8,15 +8,14 @@ DataBase::DataBase() :
 })
 {
 	m_possibleDriverNames<< "SQLITECIPHER"<< "QSQLITE";
-	referencesInit();
+	initPluginBase();
 }
 
 DataBase::~DataBase()
 {
-	m_dbconn.close();
 }
 
-void DataBase::onReady()
+void DataBase::onPluginReady()
 {
 	Setup();
 }

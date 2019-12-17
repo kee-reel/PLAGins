@@ -1,7 +1,7 @@
 #include "extendableitemmodel.h"
 
 ExtendableItemModel::ExtendableItemModel(QString tableName,
-        IExtendableDataManager* dataManager,
+        IExtendableDataManager *dataManager,
         QObject *parent)
 {
 	this->tableName = tableName;
@@ -72,6 +72,7 @@ void ExtendableItemModel::LoadData()
 
 bool ExtendableItemModel::AttachRelation(QString relationName, TableStructMap fields, QVector<QVariant> defaultData)
 {
+	relationName = relationName.toLower();
 	defaultTask.SetChunkData(relationName, defaultData);
 	auto list = fields.keys();
 	QVector<QVariant> varList;
@@ -91,7 +92,7 @@ bool ExtendableItemModel::AttachRelation(QString relationName, TableStructMap fi
 
 void ExtendableItemModel::SetActiveRelation(QString relationName)
 {
-	qDebug() << "===SetActiveRelation===" << relationName;
+	relationName = relationName.toLower();
 	QList<Item*> keys = internalList.values();
 
 	for(int i = 0; i < keys.count(); ++i)
@@ -113,7 +114,7 @@ void ExtendableItemModel::SetDataTypeEditor(QString dataChunk, QString fieldName
 	for(int i = 0; i < chunkHeader.length(); ++i)
 	{
 		if(chunkHeader[i] == fieldName)
-			data[i] = QVariant::fromValue((void*)widget);
+			data[i] = QVariant::fromValue(static_cast<void*>(widget));
 	}
 
 	dataTypeEditors.SetChunkData(dataChunk, data);
@@ -142,19 +143,17 @@ QVariant ExtendableItemModel::data(const QModelIndex &index, int role) const
 	//        break;
 	default:
 		return QVariant();
-		break;
 	}
 }
 
 QMap<QString, QVariant> ExtendableItemModel::ConvertToHeadedMap(QMap<QString, QVariant> headerMap, QMap<QString, QVariant> valuesMap) const
 {
 	QMap<QString, QVariant> chunksMap;
-	auto valuesNamesIter = headerMap.begin();
 	auto valuesIter = valuesMap.begin();
-
-	while(valuesNamesIter != headerMap.end() || valuesIter != valuesMap.end())
+	while(valuesIter != valuesMap.end())
 	{
-		QString chunkName = valuesNamesIter.key();
+		QString chunkName = valuesIter.key();
+		auto valuesNamesIter = headerMap.find(chunkName);
 		QList<QVariant> valuesNamesList = valuesNamesIter.value().toList();
 		QList<QVariant> valuesList = valuesIter.value().toList();
 
@@ -172,7 +171,6 @@ QMap<QString, QVariant> ExtendableItemModel::ConvertToHeadedMap(QMap<QString, QV
 			qWarning() << "Chunk" << chunkName << "is corrupted";
 		}
 
-		++valuesNamesIter;
 		++valuesIter;
 	}
 
@@ -613,7 +611,7 @@ bool ExtendableItemModel::UpdateItem(Item *task)
 		return false;
 	}
 
-	dataManager->UpdateItem(tableName, *task);
+	return dataManager->UpdateItem(tableName, *task);
 }
 
 bool ExtendableItemModel::UpdateItemsPosition(Item *parent, int from)
@@ -653,6 +651,7 @@ bool ExtendableItemModel::DeleteItem(Item *task)
 
 	task->DetachFromParent();
 	DeleteFromManagerRecursive(task);
+	return true;
 }
 
 //IExtendableDataManager::ManagerDataItem ExtendableItemModel::ConvertToManagerItem(Item* item)

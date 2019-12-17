@@ -7,7 +7,7 @@ TaskSketchManager::TaskSketchManager() :
 	INTERFACE(ITaskSketchManager)
 })
 {
-	referencesInit(
+	initPluginBase(
 	{
 		{INTERFACE(IExtendableDataManager), m_dataManager},
 		{INTERFACE(IUserTaskManager), m_myModel}
@@ -56,7 +56,7 @@ void TaskSketchManager::LinkEditorWidget(QWidget *widget)
 	m_dataManager->instance()->RegisterExtentionFieldEditor(tableName, "sketch", widget);
 }
 
-void TaskSketchManager::onReferencesSet()
+void TaskSketchManager::onPluginReferencesSet()
 {
 	QMap<QString, QVariant::Type> newRelationStruct =
 	{
@@ -66,10 +66,10 @@ void TaskSketchManager::onReferencesSet()
 	defaultData << QByteArray();
 	m_dataManager->instance()->AddExtention(tableName, coreRelationName, newRelationStruct, defaultData);
 	m_dataManager->instance()->AddExtention("IUserTaskManager", coreRelationName, newRelationStruct, defaultData);
+	sketchItemModel = m_dataManager->instance()->GetDataModel(tableName);
 }
 
-void TaskSketchManager::onReady()
+void TaskSketchManager::onPluginReady()
 {
-	sketchItemModel = m_dataManager->instance()->GetDataModel(tableName);
 	taskModel = m_dataManager->instance()->GetDataModel("IUserTaskManager");
 }

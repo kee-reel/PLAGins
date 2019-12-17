@@ -43,9 +43,9 @@ public:
     virtual bool loadAllConnected();
 
 signals:
-    virtual void onLoadedStateChanged(uid_t selfUID, bool isLoaded) override;
-    virtual void onReferencesChanged(uid_t selfUID, uid_t itemUID, bool isAdded) override;
-    virtual void onReferentsChanged(uid_t selfUID, uid_t itemUID, bool isAdded) override;
+    void onLoadedStateChanged(uid_t selfUID, bool isLoaded);
+    void onReferencesChanged(uid_t selfUID, uid_t itemUID, bool isAdded);
+    void onReferentsChanged(uid_t selfUID, uid_t itemUID, bool isAdded);
 
 private slots:
     void onReferenceLoadedStateChanged(uid_t uid, bool isLoaded);

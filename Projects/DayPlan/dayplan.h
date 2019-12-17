@@ -10,13 +10,13 @@
 
 #include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 
-#include "../../Interfaces/idayplan.h"
-#include "../../Interfaces/iusertaskmanager.h"
-#include "../../Interfaces/iextendabledatamanager.h"
+#include "../../Interfaces/Utility/idayplan.h"
+#include "../../Interfaces/Utility/iusertaskmanager.h"
+#include "../../Interfaces/Middleware/iextendabledatamanager.h"
 
 //! \addtogroup DayPlan_imp
 //! \{
-class DayPlan : public QObject, public PluginBase, IDayPlan
+class DayPlan : public QObject, public PluginBase, public IDayPlan
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
@@ -29,27 +29,22 @@ public:
     DayPlan();
     virtual ~DayPlan() override;
 
-    // IPlugin interface
-public:
-    virtual bool open() override;
-
     // PluginBase interface
 public:
-    virtual void onAllReferencesSet() override;
-    virtual void onAllReferencesReady() override;
-
-private:
-    IUserTaskManager *taskTreeModel;
-    IExtendableDataManager *dataManager;
-    QString tableName, relationName;
-    QAbstractItemModel *taskDataModel;
-    QAbstractItemModel *dateDataModel;
+	virtual void onPluginReady() override;
 
     // IDayPlan interface
 public:
     QAbstractItemModel *GetTaskModel() override;
     QAbstractItemModel *GetDateModel() override;
     void SetDataTypeEditor(QWidget *widget) override;
+
+private:
+    ReferenceInstancePtr<IUserTaskManager> taskTreeModel;
+    ReferenceInstancePtr<IExtendableDataManager> dataManager;
+    QString tableName, relationName;
+    QAbstractItemModel *taskDataModel;
+    QAbstractItemModel *dateDataModel;
 };
 //! \}
 #endif // DayPlan_H

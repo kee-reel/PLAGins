@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QSpacerItem>
 #include <QScroller>
+#include <QQuickWidget>
 
 #include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 #include "../../Interfaces/Architecture/UIElementBase/uielementbase.h"
@@ -15,15 +16,19 @@
 #include "uniquepushbutton.h"
 #include "aspectawaregridlayout.h"
 
+#include "backend.h"
+
 
 namespace Ui
 {
 class Form;
 }
 
+class QQuickWidget;
+
 //! \addtogroup UIManager_dep
 //!  \{
-class GridMainMenuView : public QWidget, public PluginBase, public UIElementBase
+class GridMainMenuView : public QQuickWidget, public PluginBase, public UIElementBase
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
@@ -34,26 +39,23 @@ class GridMainMenuView : public QWidget, public PluginBase, public UIElementBase
 
 public:
 	explicit GridMainMenuView();
-	virtual ~GridMainMenuView() override;
-
-signals:
-	void lolKek();
+	~GridMainMenuView() override;
 
 	// PluginBase interface
 public:
-	virtual void onReady() override;
+	virtual void onPluginInited() override;
+	
+	// UIElementBase interface
+public:
+	void onUIElementReferencesListUpdated(QString link) override;
 
 	// QWidget interface
 	void closeEvent(QCloseEvent *event) override;
 protected:
 	void resizeEvent(QResizeEvent *event) override;
-
-private:
-	enum PredefinedIndices
-	{
-		EXIT = -1,
-		ADD_ITEM = -2
-	};
+	
+protected:
+	QSharedPointer<Ui::Form> ui;
 
 private slots:
 	void UniqueButtonPressed(UniquePushButton *button);
@@ -62,20 +64,13 @@ private slots:
 private:
 	void installMenuElements();
 
-signals:
-	void openLink(IUIElement *self, QString linkName, uid_t referenceUID);
-	void closeLink(IUIElement *self, QString linkName, uid_t referenceUID);
-	void closeSelf(IUIElement *self);
-
-protected:
-	QSharedPointer<Ui::Form> ui;
-
 private:
 	QLayout *layout;
 	ReferenceInstancesListPtr<IUIElement> m_elements;
-	int m_uniqueIdCounter;
-	QVector<UniquePushButton *> m_uniqueButtons;
-	UniquePushButton *m_exitItem;
+	QMap<uid_t, UniquePushButton *> m_uniqueButtons;
+	QSharedPointer<UniquePushButton> m_exitItem;
+	QSharedPointer<UniquePushButton> m_addItem;
+	QSharedPointer<QObject> m_backEnd;
 };
 //!  \}
 #endif // GRIDMAINMENUVIEW_H

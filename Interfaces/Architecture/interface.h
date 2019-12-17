@@ -1,4 +1,4 @@
-#pragma once
+	#pragma once
 
 #include <QtCore>
 #include <typeindex>
@@ -41,17 +41,17 @@ public:
 	
 	friend bool operator<(const Interface& key1, const Interface& key2)
 	{
-		return key1.m_typeHash < key2.m_typeHash;
+		return key1.m_name < key2.m_name;
 	}
 	
 	friend bool operator==(const Interface& key1, const Interface& key2)
 	{
-		return key1.m_typeHash == key2.m_typeHash;
+		return key1.m_name == key2.m_name;
 	}
 	
 	friend QDebug operator<<(QDebug &debug, const Interface &instance)
 	{
-		debug << QString("%1 (%2)").arg(instance.m_name).arg(instance.m_versionId);
+		debug << QString("%1 (%2:%3)\n").arg(instance.m_name).arg(instance.m_versionId).arg(instance.m_typeHash);
 		return debug;
 	}
 	

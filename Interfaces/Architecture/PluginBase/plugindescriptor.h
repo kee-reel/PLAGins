@@ -1,13 +1,13 @@
 #ifndef PLUGINDESCRIPTOR_H
 #define PLUGINDESCRIPTOR_H
 
-#include "referenceshandler.h"
+#include "../../Architecture/ireferenceshandler.h"
 
 class PluginDescriptor : public IReferenceDescriptor
 {
 public:
 	static PluginDescriptor* make(uid_t uid, QObject* instance, QWeakPointer<QJsonObject> meta,
-	                              QVector<Interface> interfaces, const QSharedPointer<ReferencesHandler> &instances)
+	                              QVector<Interface> interfaces, const QSharedPointer<IReferencesHandler<Interface>> &instances)
 	{
 		auto metaData = meta.data()->value("MetaData").toObject();
 		auto section = metaData.value("iplugin").toObject();

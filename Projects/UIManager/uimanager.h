@@ -30,21 +30,25 @@ public:
 
 	// PluginBase interface
 public:
-	virtual void onReady() override;
+	virtual void onPluginReferencesListUpdated(Interface interface) override;
 
 signals:
 	void onPop();
 
 private slots:
-	void onOpenLink(IUIElement *self, QString linkName, uid_t referenceUID);
-	void onCloseLink(IUIElement *self, QString linkName, uid_t referenceUID);
-	void onCloseSelf(IUIElement *self);
+	void onOpenLink(uid_t selfUID, uid_t referenceUID);
+	void onCloseLink(uid_t selfUID, uid_t referenceUID);
+	void onCloseSelf(uid_t selfUID);
 
 private:
 	bool registerUIElement(ReferenceInstancePtr<IUIElement>& uiElement);
-	inline ReferenceInstancePtr<IUIElement>& getActive()
+	inline uid_t getActiveElementUID()
 	{
-		return m_elementsMap[m_elementsStack.last()];
+		return m_elementsStack.last();
+	}
+	inline ReferenceInstancePtr<IUIElement>& getActiveElement()
+	{
+		return m_elementsMap[getActiveElementUID()];
 	}
 
 private:

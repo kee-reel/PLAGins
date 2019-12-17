@@ -5,19 +5,55 @@
 #include <QJsonObject>
 
 #include "../iplugin.h"
+#include "../referenceshandler.h"
 #include "plugindescriptor.h"
-#include "referenceshandler.h"
 
-enum SeverityType
+class PluginReferencesHandler : public QObject, public ReferencesHandler<Interface>
 {
-	INFO,
-	DEBUG,
-	WARNING,
-	CRITICAL,
-	FATAL
+	Q_OBJECT
+public:
+	PluginReferencesHandler(const QMap<Interface, IReferenceInstancePtr > &instances, const QMap<Interface, IReferenceInstancesListPtr > &instancesLists) :
+		ReferencesHandler<Interface>(instances, instancesLists)
+	{
+		checkReferencesUpdate();
+	}
+	
+Q_SIGNALS:
+	void onStateChanged(ReferencesHandlerState state);
+	void onReferencesListUpdated(Interface interface);
+	
+	// ReferencesHandler interface
+protected:
+	void setState(ReferencesHandlerState state) override
+	{
+		if(m_state != state)
+		{
+			m_state = state;
+			Q_EMIT onStateChanged(state);
+		}	
+	}
+	
+	void referencesListUpdated(Interface identifier) override
+	{
+		emit onReferencesListUpdated(identifier);
+	}
 };
 
-class PluginBaseSignal;
+class PluginBase;
+class PluginBaseSignal : public QObject
+{
+	Q_OBJECT
+public:
+	PluginBaseSignal(PluginBase* instance, QWeakPointer<PluginReferencesHandler> handler);
+	
+public slots:
+	void onStateChanged(ReferencesHandlerState state);
+	void onReferencesListUpdated(const Interface &interface);
+	
+public:
+	PluginBase* m_instance;
+	QWeakPointer<PluginReferencesHandler> m_handler;
+};
 
 //! \brief This interface provides basic methods for all plugins.
 class PluginBase : public IPlugin
@@ -25,18 +61,14 @@ class PluginBase : public IPlugin
 	friend class PluginBaseSignal;
 public:
 	explicit PluginBase(QObject *object, QVector<Interface> interfaces);
-
+	
 	virtual ~PluginBase()
 	{
-		if(!m_descr.isNull())
-		{
-			qDebug() << "Plugin" << m_descr->name() << "unloaded";
-		}
 	}
-
+	
 protected:
-	void referencesInit(QMap<Interface, IReferenceInstancePtr> instances = {}, QMap<Interface, IReferenceInstancesListPtr> instancesList = {});
-
+	void initPluginBase(const QMap<Interface, IReferenceInstancePtr> &instances = {}, const QMap<Interface, IReferenceInstancesListPtr> &instancesList = {});
+	
 	template<class T>
 	T *castPluginToInterface(QObject *possiblePlugin)
 	{
@@ -50,47 +82,36 @@ protected:
 		{
 			qCritical() << QString("Can't cast plugin to interface.");
 		}
-
+		
 		return plugin;
 	}
 
 	// IPlugin interface
-public:
-	virtual bool pluginInit(uid_t uid, QWeakPointer<QJsonObject> meta) override;
+private:
+	virtual bool pluginInit(uid_t uid, const QWeakPointer<QJsonObject> &meta) override;
 	virtual bool isInited() override;
 	virtual IReferenceDescriptorPtr getDescriptor() override;
-	virtual QWeakPointer<IPluginReferencesHandler> getInstancesHandler() override;
+	virtual QWeakPointer<IReferencesHandler<Interface>> getInstancesHandler() override;
 	virtual bool pluginFini() override;
-
-public:
-	virtual void onReferencesSet() {}
-	virtual void onReady() {}
-
+	
+protected:
+	virtual void onPluginInited() {}
+	virtual void onPluginReferencesSet() {}
+	virtual void onPluginReady() {}
+	virtual void onPluginReferencesListUpdated(Interface interface) {Q_UNUSED(interface)}
+	
+	IReferenceDescriptorPtr descr();
+	
 private:
-	void onStateChanged(IPluginReferencesHandler::State state);
-
+	void onStateChanged(ReferencesHandlerState state);
+	void	onReferencesListUpdated(const Interface &interface);
+	
 private:
 	QObject* m_object;
 	QVector<Interface> m_interfaces;
 	QSharedPointer<PluginDescriptor> m_descr;
-	QSharedPointer<ReferencesHandler> m_instancesHandler;
+	QSharedPointer<PluginReferencesHandler> m_instancesHandler;
 	QSharedPointer<PluginBaseSignal> m_pluginBaseSignal;
-	bool m_isReady;
-};
-
-
-class PluginBaseSignal : public QObject
-{
-	Q_OBJECT
-public:
-	PluginBaseSignal(PluginBase* instance, QWeakPointer<ReferencesHandler> handler);
-
-public slots:
-	void onStateChanged(IPluginReferencesHandler::State state);
-
-public:
-	PluginBase* m_instance;
-	QWeakPointer<ReferencesHandler> m_handler;
 };
 #endif // PLUGINBASE_H
 

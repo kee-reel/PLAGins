@@ -6,7 +6,7 @@ UserTaskManager::UserTaskManager() :
 	INTERFACE(IUserTaskManager)
 })
 {
-	referencesInit({{INTERFACE(IExtendableDataManager), m_dataManager}}, {});
+	initPluginBase({{INTERFACE(IExtendableDataManager), m_dataManager}}, {});
 	tableName = "iUserTaskManager";
 	relationName = "iUserTaskManager";
 	treeModel = nullptr;
@@ -16,7 +16,7 @@ UserTaskManager::~UserTaskManager()
 {
 }
 
-void UserTaskManager::onReferencesSet()
+void UserTaskManager::onPluginReferencesSet()
 {
 	QMap<QString, QVariant::Type> newRelationStruct =
 	{
@@ -25,9 +25,10 @@ void UserTaskManager::onReferencesSet()
 	QVector<QVariant> defaultData;
 	defaultData << "New task";
 	m_dataManager->instance()->AddExtention(tableName, relationName, newRelationStruct, defaultData);
+	m_dataManager->instance()->SetActiveExtention(tableName, relationName);
 }
 
-void UserTaskManager::onReady()
+void UserTaskManager::onPluginReady()
 {
 	treeModel = m_dataManager->instance()->GetDataModel(tableName);
 }

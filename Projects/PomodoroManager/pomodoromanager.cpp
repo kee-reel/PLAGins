@@ -6,7 +6,7 @@ PomodoroManager::PomodoroManager() :
 	INTERFACE(IPomodoroManager)
 })
 {
-	referencesInit(
+	initPluginBase(
 	{
 		{INTERFACE(IExtendableDataManager), m_dataManager},
 		{INTERFACE(IUserTaskManager), m_myModel},
@@ -15,7 +15,7 @@ PomodoroManager::PomodoroManager() :
 	taskModel = nullptr;
 	tableName = "IUserTaskManager";
 	coreRelationName = "iPomodoroManager";
-	workSetup.workSessionDuration = 35 * 60;
+	workSetup.workSessionDuration = 5;//35 * 60;
 	workSetup.easyRestDuration = 5 * 60;
 	workSetup.longRestDuration = 15 * 60;
 	workSetup.longRestPeriod = 3;
@@ -25,7 +25,7 @@ PomodoroManager::~PomodoroManager()
 {
 }
 
-void PomodoroManager::onReferencesSet()
+void PomodoroManager::onPluginReferencesSet()
 {
 	QMap<QString, QVariant::Type> newRelationStruct =
 	{
@@ -36,7 +36,7 @@ void PomodoroManager::onReferencesSet()
 	m_dataManager->instance()->AddExtention(tableName, coreRelationName, newRelationStruct, defaultData);
 }
 
-void PomodoroManager::onReady()
+void PomodoroManager::onPluginReady()
 {
 	taskModel = m_dataManager->instance()->GetDataModel(tableName);
 }

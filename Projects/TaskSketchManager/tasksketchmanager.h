@@ -27,8 +27,8 @@ public:
 
 public:
 	// PluginBase interface
-	virtual void onReferencesSet() override;
-	virtual void onReady() override;
+	virtual void onPluginReferencesSet() override;
+	virtual void onPluginReady() override;
 
 	// ITaskSketchManager interface
 public:

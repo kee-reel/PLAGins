@@ -29,8 +29,8 @@ public:
 
 	// PluginBase interface
 protected:
-	virtual void onReferencesSet() override;
-	virtual void onReady() override;
+	virtual void onPluginReferencesSet() override;
+	virtual void onPluginReady() override;
 
 	// IUserTaskManager interface
 public:

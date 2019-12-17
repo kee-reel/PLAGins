@@ -1,22 +1,30 @@
 #include "pomodoromanagerview.h"
 #include "ui_form.h"
 
-PomodoroManagerView::PomodoroManagerView(QWidget *parent) :
-    PluginBase(parent)
+PomodoroManagerView::PomodoroManagerView() :
+	QWidget(),
+	PluginBase(this, {INTERFACE(IUIElement)}),
+	UIElementBase(this, this, {"MainMenuItem"}),
+	ui(new Ui::Form)
 {
-    myModel = nullptr;
+	ui->setupUi(this);
 
     ui->treeView->setVisible(false);
     ui->buttonEdit->setVisible(false);
     ui->buttonDelete->setVisible(false);
     ui->buttonAdd->setVisible(false);
 
-    connect(ui->buttonAdd, SIGNAL(clicked(bool)), this, SLOT(on_buttonAdd_clicked()));
-    connect(ui->buttonEdit, SIGNAL(clicked(bool)), this, SLOT(on_buttonEdit_clicked()));
-    connect(ui->buttonDelete, SIGNAL(clicked(bool)), this, SLOT(on_buttonDelete_clicked()));
-    connect(ui->buttonProjects, SIGNAL(clicked(bool)), this, SLOT(on_buttonProjects_clicked()));
-    connect(ui->treeView, SIGNAL(pressed(const QModelIndex &)), this, SLOT(on_treeView_pressed(const QModelIndex &)));
-    connect(ui->buttonExit, SIGNAL(clicked(bool)), SLOT(on_buttonExit_clicked()));
+    connect(ui->buttonAdd, SIGNAL(clicked(bool)), this, SLOT(buttonAdd_clicked()));
+    connect(ui->buttonEdit, SIGNAL(clicked(bool)), this, SLOT(buttonEdit_clicked()));
+    connect(ui->buttonDelete, SIGNAL(clicked(bool)), this, SLOT(buttonDelete_clicked()));
+    connect(ui->buttonProjects, SIGNAL(clicked(bool)), this, SLOT(buttonProjects_clicked()));
+    connect(ui->treeView, SIGNAL(pressed(const QModelIndex &)), this, SLOT(treeView_pressed(const QModelIndex &)));
+    connect(ui->buttonExit, SIGNAL(clicked(bool)), SLOT(buttonExit_clicked()));
+    
+    initPluginBase({
+		{INTERFACE(IPomodoroManager), myModel}
+    });
+    initUIElementBase();
 
 #ifdef Q_OS_ANDROID
     ui->buttonAdd->setFocusPolicy(Qt::NoFocus);
@@ -35,32 +43,21 @@ PomodoroManagerView::~PomodoroManagerView()
 {
 }
 
-void PomodoroManagerView::onAllReferencesSet()
+void PomodoroManagerView::onPluginInited()
 {
-    for(auto iter = m_referencesMap.begin(); iter != m_referencesMap.end(); ++iter)
-    {
-        auto&& interfaceName = iter.key();
-        auto&& plugin = iter.value();
-        if(!QString::compare(interfaceName, "IPomodoroManager", Qt::CaseInsensitive))
-        {
-            myModel = castPluginToInterface<IPomodoroManager>(plugin);
-            auto instance = plugin->getObject();
-            connect(ui->pomodoroButton, SIGNAL(OnStartPomodoro()), instance, SLOT(StartPomodoro()));
-            connect(instance, SIGNAL(OnPomodoroFinished()), SLOT(PomodoroFinished()));
-        }
-    }
-    PluginBase::onAllReferencesSet();
+	resetDescriptor(descr());	
 }
 
-void PomodoroManagerView::onAllReferencesReady()
+void PomodoroManagerView::onPluginReady()
 {
-    proxyModel = myModel->GetTaskModel();
+	connect(ui->pomodoroButton, SIGNAL(OnStartPomodoro()), myModel->descr().data()->object(), SLOT(StartPomodoro()));
+	connect(myModel->descr().data()->object(), SIGNAL(OnPomodoroFinished()), SLOT(PomodoroFinished()));
+
+    proxyModel = myModel->instance()->GetTaskModel();
     ui->treeView->setModel(proxyModel);
-    workSetup = myModel->GetWorkSetup();
+    workSetup = myModel->instance()->GetWorkSetup();
     ui->pomodoroButton->secsTarget = workSetup.workSessionDuration;
     UpdateSelectedTask();
-
-    PluginBase::onAllReferencesReady();
 }
 
 void PomodoroManagerView::PomodoroFinished()
@@ -69,7 +66,7 @@ void PomodoroManagerView::PomodoroFinished()
 //    ui->pomodoroCountLabel->setText(QString("%1 pomodoros").arg(finishedPomodoros->data().toString()));
 }
 
-void PomodoroManagerView::on_buttonProjects_clicked()
+void PomodoroManagerView::buttonProjects_clicked()
 {
     bool isTimerButtonVisible = !ui->pomodoroButton->isVisible();
     ui->buttonProjects->setIcon(QIcon(
@@ -83,27 +80,27 @@ void PomodoroManagerView::on_buttonProjects_clicked()
     ui->buttonAdd->     setVisible(!isTimerButtonVisible);
 }
 
-void PomodoroManagerView::on_buttonEdit_clicked()
+void PomodoroManagerView::buttonEdit_clicked()
 {
     auto list = ui->treeView->selectionModel()->selectedRows();
     if(list.length() == 0) return;
 }
 
-void PomodoroManagerView::on_buttonDelete_clicked()
+void PomodoroManagerView::buttonDelete_clicked()
 {
     auto list = ui->treeView->selectionModel()->selectedIndexes();
     for(int i = list.count()-1; i >= 0; --i)
         proxyModel->removeRows(list[i].row(), 1, list[i].parent());
 }
 
-void PomodoroManagerView::on_buttonAdd_clicked()
+void PomodoroManagerView::buttonAdd_clicked()
 {
     proxyModel->insertRow(0);
 }
 
-void PomodoroManagerView::on_buttonExit_clicked()
+void PomodoroManagerView::buttonExit_clicked()
 {
-    emit onClose(this);
+    m_opener->closeSelf();
 }
 
 void PomodoroManagerView::UpdateSelectedTask()
@@ -115,14 +112,14 @@ void PomodoroManagerView::UpdateSelectedTask()
     ui->pomodoroButton->isEnabled = isTaskValid;
 }
 
-void PomodoroManagerView::on_treeView_pressed(const QModelIndex &index)
+void PomodoroManagerView::treeView_pressed(const QModelIndex &index)
 {
     auto list = ui->treeView->selectionModel()->selectedIndexes();
     if(list.length() == 0) return;
     auto selected = list.first();
 
     currentTask = selected;
-    myModel->SetActiveProject(currentTask);
+    myModel->instance()->SetActiveProject(currentTask);
 
     UpdateSelectedTask();
 }

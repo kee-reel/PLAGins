@@ -31,12 +31,13 @@ public:
         virtual bool isLoaded() = 0;
 
     signals:
-        virtual void onLoadedStateChanged(uid_t selfUID, bool isLoaded) = 0;
-        virtual void onReferencesChanged(uid_t selfUID, uid_t itemUID, bool isAdded) = 0;
-        virtual void onReferentsChanged(uid_t selfUID, uid_t itemUID, bool isAdded) = 0;
+        void onLoadedStateChanged(uid_t selfUID, bool isLoaded);
+        void onReferencesChanged(uid_t selfUID, uid_t itemUID, bool isAdded);
+        void onReferentsChanged(uid_t selfUID, uid_t itemUID, bool isAdded);
     };
 
-    virtual QWeakPointer<ILinkerItem> loadNewPlugin(QString filename) = 0;
+    virtual QWeakPointer<ILinkerItem> addPlugin(QString filename) = 0;
+	virtual bool removePlugin(QWeakPointer<ILinkerItem> linkerItem) = 0;
     virtual bool loadPlugin(uid_t linkerItem) = 0;
     virtual bool unloadPlugin(uid_t linkerItem) = 0;
     virtual bool linkPlugins(uid_t referent, QString interface, uid_t reference) = 0;
