@@ -26,6 +26,11 @@ public:
 	// ILinkerItem interface
 public:
 	virtual const QMap<Interface, int>& references() override;
+	
+	// LinkerItemBase interface
+public:
+	void addReference(Interface interface, QWeakPointer<LinkerItemBase> linkItem) override;
+	void removeReference(Interface interface, QWeakPointer<LinkerItemBase> linkItem) override;
 
 protected:
 	virtual QString initItem(QObject *object) override;
@@ -40,7 +45,6 @@ public:
 
 private:
 	ReferenceInstancePtr<IPlugin> m_pluginInstance;
-
 };
 
 #endif // PLUGINLINKERITEM_H

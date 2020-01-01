@@ -1,7 +1,7 @@
 
 TARGET = GridMainMenuView
 TEMPLATE = lib
-QT += core widgets quickwidgets qml
+QT += core widgets quickwidgets qml quick
 
 include(../../Common/common.pri)
 
@@ -12,23 +12,15 @@ include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 include(../../Interfaces/Architecture/UIElementBase/UIElementBase.pri)
 
 HEADERS += \
-    backend.h \
-    gridmainmenuview.h \
-    aspectawaregridlayout.h \
-    pluginproxy.h \
-    uniquepushbutton.h
+    gridmainmenuview.h
 
 SOURCES += \
-    gridmainmenuview.cpp \
-    aspectawaregridlayout.cpp \
-    uniquepushbutton.cpp
+    gridmainmenuview.cpp
 
 DISTFILES += \
-    PluginMeta.json \
-    MenuGrid.qml
+    PluginMeta.json
 
-FORMS += \
-    form.ui
+FORMS +=
 
 RESOURCES += \
     res.qrc

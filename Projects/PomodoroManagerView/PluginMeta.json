@@ -5,7 +5,7 @@
 			"IPomodoroManager": 1
 		},
 		"info": {
-			"name": "PomodoroManagerView",
+			"name": "Pomodoro",
 			"about": "View plugin for plugin with interface IPluginLinker. Allows to load new plugins, unload existing plugins, read about plugin (this text)."
 		}
 	}

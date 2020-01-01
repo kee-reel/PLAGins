@@ -1,5 +1,4 @@
-#ifndef METHODSHANDLER_H
-#define METHODSHANDLER_H
+#pragma once
 
 #include <QObject>
 
@@ -39,4 +38,4 @@ private:
 //	QList<QMetaMethod>
 };
 
-#endif // METHODSHANDLER_H
+#pragma once

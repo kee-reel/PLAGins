@@ -51,7 +51,7 @@ public:
 	
 	friend QDebug operator<<(QDebug &debug, const Interface &instance)
 	{
-		debug << QString("%1 (%2:%3)\n").arg(instance.m_name).arg(instance.m_versionId).arg(instance.m_typeHash);
+		debug << QString("%1 (%2)\n").arg(instance.m_name).arg(instance.m_versionId);
 		return debug;
 	}
 	

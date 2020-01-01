@@ -50,9 +50,20 @@ void UIManager::onPluginReferencesListUpdated(Interface interface)
 	m_parentWidget->installEventFilter(this);
 	m_parentWidget->layout()->setMargin(0);
 	
-	for(auto item : *m_uiElementsList.data())
+	QList<uid_t> removedElements = m_elementsMap.keys();
+	for(auto uiElement : *m_uiElementsList.data())
 	{
-		registerUIElement(item);
+		auto uid = uiElement->descr().data()->uid();
+		if(!m_elementsMap.contains(uid))
+		{
+			registerUIElement(uiElement);
+		}
+		removedElements.removeOne(uid);
+	}
+	
+	for(auto uid : removedElements)
+	{
+		unregisterUIElement(uid);
 	}
 	
 	for(auto element : m_elementsMap)
@@ -65,14 +76,14 @@ void UIManager::onPluginReferencesListUpdated(Interface interface)
 			QList<IReferenceDescriptorPtr> list;
 			if(elementsIter != m_elementLinksByNameMap.end())
 			{
-				auto&& elementsList = elementsIter.value();
+				auto&& elementIdsList = elementsIter.value();
 				auto referencesCount = referenceIter.value();
-				auto elementsCount = elementsList.count();
+				auto elementsCount = elementIdsList.count();
 				if(referencesCount == 0 || referencesCount == elementsCount)
 				{
-					for(auto& element : elementsList)
+					for(auto& elementId : elementIdsList)
 					{
-						list.append(element.data()->descr());
+						list.append(m_elementsMap[elementId].data()->descr());
 					}
 				}
 				else if(referencesCount < elementsCount)
@@ -80,7 +91,7 @@ void UIManager::onPluginReferencesListUpdated(Interface interface)
 					// TODO: Add picking of references.
 					for(int i = 0; i < referencesCount; ++i)
 					{
-						list.append(elementsList[i].data()->descr());
+						list.append(m_elementsMap[elementIdsList[i]].data()->descr());
 					}
 				}
 				else
@@ -90,6 +101,11 @@ void UIManager::onPluginReferencesListUpdated(Interface interface)
 				linksHandler.data()->setReferences(elementsIter.key(), list);
 			}
 		}
+	}
+	
+	while(m_elementsStack.count() > 1)
+	{
+		onCloseSelf(getActiveElementUID());
 	}
 	
 	if(!m_elementsMap.isEmpty())
@@ -168,18 +184,13 @@ bool UIManager::registerUIElement(ReferenceInstancePtr<IUIElement> &uiElement)
 		return false;
 	}
 	
-	auto uid = uiElement->descr().data()->uid();
-	if(m_elementsMap.contains(uid))
-	{
-		return true;
-	}
-	
+	auto uid = uiElement->descr().data()->uid();	
 	m_elementsMap[uid] = uiElement;
 	auto linkNames = uiElement->instance()->linkNames();
 	for(auto& linkName : linkNames)
 	{
 		auto& elements = m_elementLinksByNameMap[linkName];
-		elements.append(uiElement);
+		elements.append(uid);
 	}
 	
 	if(linkNames.contains("MainMenu"))
@@ -190,5 +201,23 @@ bool UIManager::registerUIElement(ReferenceInstancePtr<IUIElement> &uiElement)
 	connect(object, SIGNAL(linkOpened(uid_t, uid_t)), this, SLOT(onOpenLink(uid_t, uid_t)));
 	connect(object, SIGNAL(linkClosed(uid_t, uid_t)), this, SLOT(onCloseLink(uid_t, uid_t)));
 	connect(object, SIGNAL(selfClosed(uid_t)), this, SLOT(onCloseSelf(uid_t)));
+	return true;
+}
+
+bool UIManager::unregisterUIElement(uid_t uid)
+{
+	auto uiElementIter = m_elementsMap.find(uid);
+	if(uiElementIter == m_elementsMap.end())
+	{
+		return true;
+	}
+	
+	m_elementsMap.remove(uid);
+	m_elementsStack.removeOne(uid);
+	auto uiElement = uiElementIter.value();
+	for(auto& linksList : m_elementLinksByNameMap)
+	{
+		linksList.removeOne(uid);
+	}
 	return true;
 }

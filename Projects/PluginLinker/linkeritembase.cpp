@@ -4,8 +4,8 @@ LinkerItemBase::LinkerItemBase(IPluginHandlerPtr pluginHandler):
 	QObject (nullptr),
 	m_uid(pluginHandler.data()->getUID()),
 	m_pluginHandler(pluginHandler),
-	m_references(new QMap< Interface, QList<QWeakPointer<IPluginLinker::ILinkerItem>> >),
-	m_referents(new QMap< Interface, QList<QWeakPointer<IPluginLinker::ILinkerItem>> >)
+	m_references(new QMap< Interface, QList<QWeakPointer<LinkerItemBase>> >),
+	m_referents(new QMap< Interface, QList<QWeakPointer<LinkerItemBase>> >)
 {
 }
 
@@ -148,12 +148,12 @@ bool LinkerItemBase::isLoaded()
 	return m_pluginHandler.isNull() || m_pluginHandler.data()->getInstance() != nullptr;
 }
 
-QWeakPointer<QMap<Interface, QList<QWeakPointer<IPluginLinker::ILinkerItem> > > > LinkerItemBase::referenceItems()
+QWeakPointer<QMap<Interface, QList<QWeakPointer<LinkerItemBase> > > > LinkerItemBase::referenceItems()
 {
 	return m_references;
 }
 
-QWeakPointer<QMap<Interface, QList<QWeakPointer<IPluginLinker::ILinkerItem> > > > LinkerItemBase::referentItems()
+QWeakPointer<QMap<Interface, QList<QWeakPointer<LinkerItemBase> > > > LinkerItemBase::referentItems()
 {
 	return m_referents;
 }

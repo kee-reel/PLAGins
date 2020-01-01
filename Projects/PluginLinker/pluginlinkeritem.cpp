@@ -23,6 +23,18 @@ const QMap<Interface, int> &PluginLinkerItem::references()
 	return m_pluginInstance->instance()->getInstancesHandler().data()->requiredReferences();
 }
 
+void PluginLinkerItem::addReference(Interface interface, QWeakPointer<LinkerItemBase> linkItem)
+{
+	LinkerItemBase::addReference(interface, linkItem);
+	setupReferences();
+}
+
+void PluginLinkerItem::removeReference(Interface interface, QWeakPointer<LinkerItemBase> linkItem)
+{
+	LinkerItemBase::removeReference(interface, linkItem);
+	setupReferences();
+}
+
 bool PluginLinkerItem::isPlugin(IPluginHandlerPtr pluginHandler)
 {
 	auto metaInfoObject = pluginHandler.data()->getMeta();

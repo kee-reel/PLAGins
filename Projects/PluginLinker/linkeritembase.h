@@ -25,8 +25,8 @@ public:
 public:
     virtual IReferenceDescriptorPtr descr() override;
 
-    virtual QWeakPointer<QMap<Interface, QList<QWeakPointer<IPluginLinker::ILinkerItem> > > > referenceItems() override;
-    virtual QWeakPointer<QMap<Interface, QList<QWeakPointer<ILinkerItem> > > > referentItems() override;
+    virtual QWeakPointer<QMap<Interface, QList<QWeakPointer<LinkerItemBase> > > > referenceItems();
+    virtual QWeakPointer<QMap<Interface, QList<QWeakPointer<LinkerItemBase> > > > referentItems();
 
     virtual bool isLoaded() override;
 
@@ -59,8 +59,8 @@ protected:
     uid_t m_uid;
     IReferenceDescriptorPtr m_descriptor;
     IPluginHandlerPtr m_pluginHandler;
-    QSharedPointer<QMap< Interface, QList<QWeakPointer<IPluginLinker::ILinkerItem>> >> m_references;
-    QSharedPointer<QMap< Interface, QList<QWeakPointer<IPluginLinker::ILinkerItem>> >> m_referents;
+    QSharedPointer<QMap< Interface, QList<QWeakPointer<LinkerItemBase>> >> m_references;
+    QSharedPointer<QMap< Interface, QList<QWeakPointer<LinkerItemBase>> >> m_referents;
 };
 
 #endif // LINKERITEMBASE_H

@@ -1,9 +1,11 @@
 #include "uielementbase.h"
 
-UIElementBase::UIElementBase(QObject *parentObject, QWidget *parentWidget, QStringList linkNames) :
+UIElementBase::UIElementBase(QObject *parentObject, QWidget *parentWidget, QStringList linkNames, QIcon icon) :
 	m_parentObject(parentObject),
 	m_parentWidget(parentWidget),
-	m_linkNames(linkNames)
+	m_linkNames(linkNames),
+	m_icon(icon),
+	m_isOpened(false)
 {
 	m_opener.reset(new UIElementLinksOpener(this));
 }
@@ -48,6 +50,11 @@ QStringList UIElementBase::linkNames()
 QWidget *UIElementBase::getWidget()
 {
 	return m_parentWidget;
+}
+
+QIcon UIElementBase::getIcon()
+{
+	return m_icon;
 }
 
 bool UIElementBase::open(QWidget* parent)
@@ -99,67 +106,4 @@ void UIElementBase::onReferencesListUpdated(QString link)
 void UIElementBase::resetDescriptor(IReferenceDescriptorPtr descriptor)
 {
 	m_descriptor = descriptor;
-}
-
-UIElementBaseSignal::UIElementBaseSignal(UIElementBase *instance, QWeakPointer<UIElementLinksHandler> handler) :
-	QObject(), m_instance(instance), m_handler(handler)
-{
-	connect(m_handler.data(), &UIElementLinksHandler::onStateChanged, this, &UIElementBaseSignal::onStateChanged);
-	connect(m_handler.data(), &UIElementLinksHandler::onReferencesListUpdated, this, &UIElementBaseSignal::onReferencesListUpdated);
-}
-
-void UIElementBaseSignal::onStateChanged(ReferencesHandlerState state)
-{
-	m_instance->onStateChanged(state);
-}
-
-void UIElementBaseSignal::onReferencesListUpdated(QString link)
-{
-	m_instance->onReferencesListUpdated(link);
-}
-
-UIElementLinksOpener::UIElementLinksOpener(UIElementBase *instance) :
-	m_instance(instance)
-{
-}
-
-QObject *UIElementLinksOpener::getObject()
-{
-	return this;
-}
-
-void UIElementLinksOpener::openLink(uid_t referenceUID)
-{
-	emit linkOpened(m_instance->getUID(), referenceUID);
-}
-
-void UIElementLinksOpener::closeLink(uid_t referenceUID)
-{
-	emit linkClosed(m_instance->getUID(), referenceUID);	
-}
-
-void UIElementLinksOpener::closeSelf()
-{
-	emit selfClosed(m_instance->getUID());	
-}
-
-UIElementLinksHandler::UIElementLinksHandler(QMap<QString, IReferenceInstancePtr> instances, QMap<QString, IReferenceInstancesListPtr> instancesLists) :
-	QObject(nullptr),
-	ReferencesHandler<QString>(instances, instancesLists)
-{
-	checkReferencesUpdate();
-}
-
-void UIElementLinksHandler::setState(ReferencesHandlerState state)
-{
-	if(m_state != state)
-	{
-		m_state = state;
-		emit onStateChanged(state);
-	}	
-}
-
-void UIElementLinksHandler::referencesListUpdated(QString link)
-{
-	emit onReferencesListUpdated(link);
 }

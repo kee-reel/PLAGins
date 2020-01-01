@@ -37,6 +37,9 @@ private:
 	virtual void onPluginReady() override;
 	virtual void onPluginInited() override;
 	
+public slots:
+	QString linkName();
+
 private slots:
 	void UpdateSelectedTask();
 	void PomodoroFinished();

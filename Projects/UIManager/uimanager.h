@@ -42,6 +42,7 @@ private slots:
 
 private:
 	bool registerUIElement(ReferenceInstancePtr<IUIElement>& uiElement);
+	bool unregisterUIElement(uid_t uid);
 	inline uid_t getActiveElementUID()
 	{
 		return m_elementsStack.last();
@@ -60,7 +61,7 @@ private:
 
 	QList<uid_t> m_elementsStack;
 	QMap<uid_t, ReferenceInstancePtr<IUIElement> > m_elementsMap;
-	QMap<QString, QList<ReferenceInstancePtr<IUIElement>> > m_elementLinksByNameMap;
+	QMap<QString, QList<uid_t> > m_elementLinksByNameMap;
 };
 //!  \}
 #endif // UIMANAGER_H

@@ -45,6 +45,7 @@ public:
 	virtual uid_t getUID() = 0;
 	virtual QStringList linkNames() = 0;
 	virtual QWidget *getWidget() = 0;
+	virtual QIcon getIcon() = 0;
 	
 	virtual bool open(QWidget *parent) = 0;
 	virtual bool isOpened() const = 0;

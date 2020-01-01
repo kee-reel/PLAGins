@@ -48,6 +48,11 @@ void PomodoroManagerView::onPluginInited()
 	resetDescriptor(descr());	
 }
 
+QString PomodoroManagerView::linkName()
+{
+	return UIElementBase::linkNames().first();
+}
+
 void PomodoroManagerView::onPluginReady()
 {
 	connect(ui->pomodoroButton, SIGNAL(OnStartPomodoro()), myModel->descr().data()->object(), SLOT(StartPomodoro()));

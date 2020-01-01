@@ -1,30 +1,12 @@
 #ifndef GRIDMAINMENUVIEW_H
 #define GRIDMAINMENUVIEW_H
 
-#include <QWidget>
-#include <QDebug>
-#include <QString>
-#include <QLayout>
-#include <QPushButton>
-#include <QSpacerItem>
-#include <QScroller>
 #include <QQuickWidget>
+#include <QtCore>
 
 #include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 #include "../../Interfaces/Architecture/UIElementBase/uielementbase.h"
 
-#include "uniquepushbutton.h"
-#include "aspectawaregridlayout.h"
-
-#include "backend.h"
-
-
-namespace Ui
-{
-class Form;
-}
-
-class QQuickWidget;
 
 //! \addtogroup UIManager_dep
 //!  \{
@@ -44,33 +26,19 @@ public:
 	// PluginBase interface
 public:
 	virtual void onPluginInited() override;
-	
-	// UIElementBase interface
-public:
-	void onUIElementReferencesListUpdated(QString link) override;
 
 	// QWidget interface
 	void closeEvent(QCloseEvent *event) override;
-protected:
-	void resizeEvent(QResizeEvent *event) override;
-	
-protected:
-	QSharedPointer<Ui::Form> ui;
-
-private slots:
-	void UniqueButtonPressed(UniquePushButton *button);
-	QString FormatMenuItemName(QString name);
 
 private:
-	void installMenuElements();
+	void setRatio();
 
 private:
-	QLayout *layout;
 	ReferenceInstancesListPtr<IUIElement> m_elements;
-	QMap<uid_t, UniquePushButton *> m_uniqueButtons;
-	QSharedPointer<UniquePushButton> m_exitItem;
-	QSharedPointer<UniquePushButton> m_addItem;
-	QSharedPointer<QObject> m_backEnd;
+	
+	// QWidget interface
+protected:
+	virtual void resizeEvent(QResizeEvent *event) override;
 };
 //!  \}
 #endif // GRIDMAINMENUVIEW_H

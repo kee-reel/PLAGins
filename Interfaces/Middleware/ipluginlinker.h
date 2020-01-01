@@ -24,10 +24,6 @@ public:
     {
     public:
         virtual IReferenceDescriptorPtr descr() = 0;
-
-        virtual QWeakPointer<QMap< Interface, QList<QWeakPointer<ILinkerItem>> >> referenceItems() = 0;
-        virtual QWeakPointer<QMap< Interface, QList<QWeakPointer<ILinkerItem>> >> referentItems() = 0;
-
         virtual bool isLoaded() = 0;
 
     signals:

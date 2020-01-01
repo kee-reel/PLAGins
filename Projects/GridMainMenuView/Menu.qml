@@ -1,54 +1,68 @@
 import QtQuick 2.5
 import QtQuick.Controls 2.1
 import QtQuick.Controls.Styles 1.4
-import QtQuick.Controls.Material 2.12
+import QtQuick.Layouts 1.3
 
 Item {
-    id: root
-    width: 1600
-    height: 700
-    Component {
-        id: myButton;
-        Button {
-            onClicked: links.openLink(Number(text))
-        }
-    }
-    
-    Button {
-        text: "Click"
-        anchors.fill: parent
-        background: Rectangle {
-            implicitWidth: 100
-            implicitHeight: 25
-            border.color: "#19A"
-            border.width: 30
-            color:  "#f0f"
-            radius: 90
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "white" }
-                GradientStop { position: 0.5; color: "blue" }
-                GradientStop { position: 1.0; color: "red"}
-            }
-        }
-        onClicked: initButtons()
-    }
-        
-    function initButtons () {
-        console.log(String(backEnd.instances))
-        for (var i=0; i<3; i++)
-        {
-            addButton(backEnd.instances[i].uid, 40 + 80 * i)
-        }
-    }
-    
-    function addButton (name, y) {
-        var button = myButton.createObject(root, {
-                                               "text"   : name,
-                                               "color"  : "red",
-                                               "width"  : 200,
-                                               "height" : 80,
-                                               "x"      : root.width / 2,
-                                               "y"      : y
-                                           });
-    }
+	id: root
+	
+	Rectangle {
+		anchors.fill: parent
+		color: "#3b4252"
+	}
+	
+	Button {
+		id: exitButton
+		width: 80 * ratio
+		height: 80 * ratio
+		topPadding: 2
+		icon.source: "qrc:/Res/back.png"
+		icon.color: "#eceff4"
+		icon.width: 30 * ratio
+		icon.height: 30 * ratio
+		onClicked: links.closeSelf()
+		anchors.left: parent.left
+		anchors.top: parent.top
+		anchors.leftMargin: 10
+		anchors.topMargin: 20
+		anchors.bottomMargin: 55
+		background: Rectangle {
+			color: exitButton.pressed ? "#88c0d0" : "#3b4252"
+			radius: 90
+		}
+	}
+	
+	GridLayout {
+		id: grid
+		anchors.top: exitButton.bottom
+		anchors.left: parent.left
+		anchors.right: parent.right
+		anchors.bottom: parent.bottom
+		anchors.margins: 40
+		columnSpacing: anchors.margins * 2 * ratio
+		columns: parent.width / columnSpacing * 2
+	}
+	
+	function recreateMenuItems () {
+		grid.children = []
+		for (var i = 0; i < elements.count; i++)
+		{
+			addButton(elements.instances[i])
+		}
+	}
+	
+	function addButton (element) {
+		console.log(element.name)
+		var component = Qt.createComponent("qrc:/MenuItem.qml")
+		var button = component.createObject(grid, {
+												"uid": element.uid,
+												"name": element.name
+											});
+	}
 }
+
+/*##^##
+Designer {
+    D{i:0;autoSize:true;height:960;width:540}
+}
+##^##*/

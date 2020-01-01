@@ -7,8 +7,9 @@ class ReferenceInstancesListObject : public QObject, public IReferenceInstancesL
 {
 	Q_OBJECT
 	Q_PROPERTY(QList<QObject*> instances READ instances NOTIFY instancesChanged)
+	Q_PROPERTY(int count READ count NOTIFY instancesChanged)
 public:
-	ReferenceInstancesListObject(QObject* parent, int limit) :
+	ReferenceInstancesListObject(QObject* parent=nullptr, int limit=0) :
 		QObject(parent), 
 		m_limit(limit)
 	{
@@ -16,6 +17,7 @@ public:
 
 public:
 	virtual QList<QObject*> instances() = 0;
+	virtual int count() = 0;
 
 Q_SIGNALS:
 	void instancesChanged();
@@ -35,7 +37,7 @@ template <class T>
 class ReferenceInstancesList : public ReferenceInstancesListObject, public QList<ReferenceInstancePtr<T>>
 {
 public:
-	ReferenceInstancesList(int limit=0, QObject* parent=nullptr) :
+	ReferenceInstancesList(QObject* parent=nullptr, int limit=0) :
 		ReferenceInstancesListObject(parent, limit), 
 		QList<ReferenceInstancePtr<T>>()
 	{
@@ -72,6 +74,11 @@ public:
 		}
 		return instances;
 	}
+	
+	int count() override
+	{
+		return this->length(); 
+	} 
 };
 
 template<class T>
