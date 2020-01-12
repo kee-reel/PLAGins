@@ -13,6 +13,7 @@ public:
 	ReferenceInstanceObject(QObject* parent=nullptr) :
 		QObject(parent)
 	{
+        qRegisterMetaType<uid_t>("uid_t");
 	}
 	
 	// IReferenceInstance interface
