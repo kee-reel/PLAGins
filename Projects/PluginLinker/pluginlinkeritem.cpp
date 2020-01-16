@@ -20,7 +20,7 @@ PluginLinkerItem::~PluginLinkerItem()
 
 const QMap<Interface, int> &PluginLinkerItem::references()
 {
-	return m_pluginInstance->instance()->getInstancesHandler().data()->requiredReferences();
+	return m_pluginInstance->instance()->getInstancesHandler().toStrongRef()->requiredReferences();
 }
 
 void PluginLinkerItem::addReference(Interface interface, QWeakPointer<LinkerItemBase> linkItem)
@@ -37,8 +37,8 @@ void PluginLinkerItem::removeReference(Interface interface, QWeakPointer<LinkerI
 
 bool PluginLinkerItem::isPlugin(IPluginHandlerPtr pluginHandler)
 {
-	auto metaInfoObject = pluginHandler.data()->getMeta();
-	QJsonObject metaInfo = metaInfoObject.data()->value("MetaData").toObject();
+	auto metaInfoObject = pluginHandler.toStrongRef()->getMeta();
+	QJsonObject metaInfo = metaInfoObject.toStrongRef()->value("MetaData").toObject();
 	metaInfo = metaInfo.value("iplugin").toObject();
 	for(auto iter = META_INFO_STRUCTURE.begin(); iter != META_INFO_STRUCTURE.end(); ++iter)
 	{
@@ -64,7 +64,7 @@ QString PluginLinkerItem::initItem(QObject* object)
 		return QString("can't cast plugin to IPlugin interface.");
 	}
 
-	if(!instance->isInited() && !instance->pluginInit(m_uid, m_pluginHandler.data()->getMeta()))
+	if(!instance->isInited() && !instance->pluginInit(m_uid, m_pluginHandler.toStrongRef()->getMeta()))
 	{
 		instance->pluginFini();
 		return "Can't load";
@@ -95,7 +95,7 @@ void PluginLinkerItem::setupReferences()
 		{
 			refs.append(refIter->data()->descr());
 		}
-		handler.data()->setReferences(iter.key(), refs);
+		handler.toStrongRef()->setReferences(iter.key(), refs);
 	}
 }
 

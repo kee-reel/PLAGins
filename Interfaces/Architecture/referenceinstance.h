@@ -30,22 +30,22 @@ public:
 	
 	uid_t uid()
 	{
-		return isSet() ? m_descr.data()->uid() : 0;
+		return isSet() ? m_descr.toStrongRef()->uid() : 0;
 	}
 	
 	QString name()
 	{
-		return isSet() ? m_descr.data()->name() : "Not set";
+		return isSet() ? m_descr.toStrongRef()->name() : "Not set";
 	}
 	
 	QString about()
 	{
-		return isSet() ? m_descr.data()->about() : "Not set";
+		return isSet() ? m_descr.toStrongRef()->about() : "Not set";
 	}
 	
 	QObject* object()
 	{
-		return isSet() ? m_descr.data()->object() : nullptr;
+		return isSet() ? m_descr.toStrongRef()->object() : nullptr;
 	}
 
 Q_SIGNALS:
@@ -76,7 +76,7 @@ public:
 		}
 		else
 		{
-			auto&& object = descr.data()->object();
+			auto&& object = descr.toStrongRef()->object();
 			T* instancePtr = qobject_cast<T*>(object);
 			if(instancePtr)
 			{

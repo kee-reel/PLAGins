@@ -7,8 +7,8 @@
 UIElementBaseSignal::UIElementBaseSignal(UIElementBase *instance, QWeakPointer<UIElementLinksHandler> handler) :
 	QObject(), m_instance(instance), m_handler(handler)
 {
-	connect(m_handler.data(), &UIElementLinksHandler::onStateChanged, this, &UIElementBaseSignal::onStateChanged);
-	connect(m_handler.data(), &UIElementLinksHandler::onReferencesListUpdated, this, &UIElementBaseSignal::onReferencesListUpdated);
+	connect(m_handler.toStrongRef().data(), &UIElementLinksHandler::onStateChanged, this, &UIElementBaseSignal::onStateChanged);
+	connect(m_handler.toStrongRef().data(), &UIElementLinksHandler::onReferencesListUpdated, this, &UIElementBaseSignal::onReferencesListUpdated);
 }
 
 void UIElementBaseSignal::onStateChanged(ReferencesHandlerState state)

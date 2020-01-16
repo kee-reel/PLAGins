@@ -19,7 +19,7 @@ public:
 		for(auto iter = m_instancesList.begin(); iter != m_instancesList.end(); ++iter)
 		{
 			Q_ASSERT(!m_identifiers.contains(iter.key()));
-			m_identifiers[iter.key()] = iter.value().data()->limit();
+			m_identifiers[iter.key()] = iter.value().toStrongRef()->limit();
 		}
 	}
 	
@@ -52,10 +52,10 @@ public:
 		if(referencesCount == 1)
 		{
 			auto instance = m_instances[identifier];
-			instance.data()->clearInstance();
-			if(!instance.data()->setInstance(references[0]))
+			instance.toStrongRef()->clearInstance();
+			if(!instance.toStrongRef()->setInstance(references[0]))
 			{
-				instance.data()->clearInstance();
+				instance.toStrongRef()->clearInstance();
 				return false;
 			}
 			m_references[identifier].append(references[0]);
@@ -63,10 +63,10 @@ public:
 		else
 		{
 			auto instancesList = m_instancesList[identifier];
-			instancesList.data()->clearInstances();
+			instancesList.toStrongRef()->clearInstances();
 			for(auto &ref : references)
 			{
-				if(!instancesList.data()->append(std::move(ref)))
+				if(!instancesList.toStrongRef()->append(std::move(ref)))
 				{
 					return false;
 				}
@@ -100,7 +100,7 @@ protected:
 		bool isSet = true;
 		for(auto iter = m_instances.begin(); iter != m_instances.end(); ++iter)
 		{
-			if(!iter.value().data()->isSet())
+			if(!iter.value().toStrongRef()->isSet())
 			{
 				isSet = false;
 				break;

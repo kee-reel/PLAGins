@@ -3,9 +3,7 @@
 PluginLinker::PluginLinker() :
 	QObject(nullptr),
 	PluginBase(this,
-{
-			   INTERFACE(IPluginLinker)
-			   })
+	{INTERFACE(IPluginLinker)})
 {
 	initPluginBase({ {INTERFACE(IApplication), m_app} });
 }
@@ -14,7 +12,7 @@ PluginLinker::~PluginLinker()
 {
 	for(auto& iter : m_linkerItemsMap)
 	{
-		iter.data()->unload();
+		iter->unload();
 	}
 }
 
@@ -37,7 +35,7 @@ QWeakPointer<IPluginLinker::ILinkerItem> PluginLinker::addPlugin(QString filenam
 
 bool PluginLinker::removePlugin(QWeakPointer<IPluginLinker::ILinkerItem> linkerItem)
 {
-	auto&& descr = linkerItem.data()->descr().data();
+	auto&& descr = linkerItem.toStrongRef()->descr().toStrongRef();
 	auto uid = descr->uid();
 	auto item = m_linkerItemsMap[uid];
 	m_linkerItemsMap.remove(uid);
@@ -48,19 +46,19 @@ bool PluginLinker::removePlugin(QWeakPointer<IPluginLinker::ILinkerItem> linkerI
 		m_rawInterfacesMap[interface]->removeOne(item);
 	}
 	auto references = item->referenceItems();
-	for(auto iter = references.data()->begin(); iter != references.data()->end(); ++iter)
+	for(auto iter = references.toStrongRef()->begin(); iter != references.toStrongRef()->end(); ++iter)
 	{
 		for(const auto& reference : iter.value())
 		{
-			reference.data()->removeReferent(iter.key(), item);
+			reference.toStrongRef()->removeReferent(iter.key(), item);
 		}
 	}
 	auto referents = item->referentItems();
-	for(auto iter = referents.data()->begin(); iter != referents.data()->end(); ++iter)
+	for(auto iter = referents.toStrongRef()->begin(); iter != referents.toStrongRef()->end(); ++iter)
 	{
 		for(const auto& referent : iter.value())
 		{
-			referent.data()->removeReference(iter.key(), item);
+			referent.toStrongRef()->removeReference(iter.key(), item);
 		}
 	}
 	return item->unload();
@@ -86,12 +84,12 @@ QSharedPointer<LinkerItemBase> PluginLinker::createLinkerItem(IPluginHandlerPtr 
 		return nullptr;
 	}
 	
-	//	qDebug() << "Load:" << pluginHandler.data()->getUID();
+	//	qDebug() << "Load:" << pluginHandler.toStrongRef()->getUID();
 	
 	QSharedPointer<LinkerItemBase> linkerItemPtr;
 	if(PluginLinkerItem::isPlugin(pluginHandler))
 	{
-		//		qDebug() << QString("PluginLinker::createLinkerItem: load plugin") << pluginHandler.data()->getMeta();
+		//		qDebug() << QString("PluginLinker::createLinkerItem: load plugin") << pluginHandler.toStrongRef()->getMeta();
 		//        log(SeverityType::WARNING, QString("PluginLinker::createLinkerItem: can't load plugin '%1'").arg(m_metaInfo.Name));
 		linkerItemPtr.reset(new PluginLinkerItem(pluginHandler));
 	}
@@ -107,9 +105,9 @@ QSharedPointer<LinkerItemBase> PluginLinker::createLinkerItem(IPluginHandlerPtr 
 		return nullptr;
 	}
 	
-	qDebug() << "Add" << linkerItemPtr->descr().data()->name();
+	qDebug() << "Add" << linkerItemPtr->descr().toStrongRef()->name();
 	
-	auto&& uid = linkerItemPtr->descr().data()->uid();
+	auto&& uid = linkerItemPtr->descr().toStrongRef()->uid();
 	m_linkerItemsMap.insert(uid, linkerItemPtr);
 	m_rawLinkerItemsMap.insert(uid, linkerItemPtr);
 	
@@ -124,7 +122,7 @@ QSharedPointer<LinkerItemBase> PluginLinker::createLinkerItem(IPluginHandlerPtr 
 		list->append(linkerItemPtr);
 	}
 	
-	auto&& interfaces = linkerItemPtr->descr().data()->interfaces();
+	auto&& interfaces = linkerItemPtr->descr().toStrongRef()->interfaces();
 	for(auto& interface : interfaces)
 	{
 		auto& list = m_interfacesMap[interface];
@@ -161,7 +159,7 @@ Type *PluginLinker::castToInterface(QObject *possiblePlugin) const
 
 bool PluginLinker::setupItemLinks(QSharedPointer<LinkerItemBase> &item)
 {
-	qDebug() << "setupItemLinks" << item.data()->descr().data()->name();
+	qDebug() << "setupItemLinks" << item->descr().toStrongRef()->name();
 	QMap<Interface, QList<QString>> troubledPlugins;
 	bool isLinkageSucceded = true;
 	auto references = item->references();
@@ -172,28 +170,28 @@ bool PluginLinker::setupItemLinks(QSharedPointer<LinkerItemBase> &item)
 		auto referencesList = m_interfacesMap.find(interface);
 		if(referencesList != m_interfacesMap.end())
 		{
-			for(auto& reference : *referencesList.value().data())
+			for(auto& reference : *referencesList.value())
 			{
 				item->addReference(interface, reference);
-				reference.data()->addReferent(interface, item);
+				reference.toStrongRef()->addReferent(interface, item);
 			}
 		}
 		else if(requiredReferencesCount != 0)
 		{
 			auto& list = troubledPlugins[interface];
-			list.append(item->descr().data()->name());
+			list.append(item->descr().toStrongRef()->name());
 			isLinkageSucceded = false;
 		}
 	}
 	
-	for(auto& interface : item->descr().data()->interfaces())
+	for(auto& interface : item->descr().toStrongRef()->interfaces())
 	{
 		auto referencesList = m_referencedInterfaces.find(interface);
 		if(referencesList != m_referencedInterfaces.end())
 		{
-			for(auto& reference : *referencesList.value().data())
+			for(auto& reference : *referencesList.value())
 			{
-				reference.data()->addReference(interface, item);
+				reference.toStrongRef()->addReference(interface, item);
 				item->addReferent(interface, reference);
 			}
 		}

@@ -55,8 +55,8 @@ QString PomodoroManagerView::linkName()
 
 void PomodoroManagerView::onPluginReady()
 {
-	connect(ui->pomodoroButton, SIGNAL(OnStartPomodoro()), myModel->descr().data()->object(), SLOT(StartPomodoro()));
-	connect(myModel->descr().data()->object(), SIGNAL(OnPomodoroFinished()), SLOT(PomodoroFinished()));
+	connect(ui->pomodoroButton, SIGNAL(OnStartPomodoro()), myModel->descr().toStrongRef()->object(), SLOT(StartPomodoro()));
+	connect(myModel->descr().toStrongRef()->object(), SIGNAL(OnPomodoroFinished()), SLOT(PomodoroFinished()));
 
     proxyModel = myModel->instance()->GetTaskModel();
     ui->treeView->setModel(proxyModel);

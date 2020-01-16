@@ -39,7 +39,7 @@ QWeakPointer<IUIElementLinksOpener> UIElementBase::getLinksOpener()
 
 uid_t UIElementBase::getUID()
 {
-	return m_descriptor.data()->uid();
+	return m_descriptor.toStrongRef()->uid();
 }
 
 QStringList UIElementBase::linkNames()

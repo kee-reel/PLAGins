@@ -23,10 +23,6 @@ PluginLinkerView::PluginLinkerView() :
 	initUIElementBase();
 }
 
-PluginLinkerView::~PluginLinkerView()
-{
-}
-
 void PluginLinkerView::onPluginInited()
 {
 	resetDescriptor(descr());
@@ -37,9 +33,9 @@ void PluginLinkerView::onPluginReady()
 	auto items = m_pluginLinker->instance()->getItemsWithInterface(INTERFACE(IPlugin));
 	m_linkerItems.clear();
 	
-	for(auto& item : *items.data())
+	for(auto& item : *items.toStrongRef())
 	{
-		auto descr = item.data()->descr().data();
+		auto descr = item.toStrongRef()->descr().toStrongRef();
 		auto id = QString("%1:%2").arg(descr->name()).arg(descr->uid());
 		m_linkerItems.insert(id, item);
 	}
@@ -61,10 +57,10 @@ void PluginLinkerView::addPlugin()
 		
 		if(items != nullptr)
 		{		
-			for(auto& item : *items.data())
+			for(auto& item : *items.toStrongRef())
 			{
-				auto itemPtr = item.data();
-				auto descr = itemPtr->descr().data();
+				auto itemPtr = item.toStrongRef();
+				auto descr = itemPtr->descr().toStrongRef();
 				auto id = QString("%1:%2").arg(descr->name()).arg(descr->uid());
 				m_linkerItems.insert(id, item);
 			}
@@ -83,9 +79,9 @@ void PluginLinkerView::removePlugin()
 	auto items = m_pluginLinker->instance()->getItemsWithInterface(INTERFACE(IPlugin));
 	m_linkerItems.clear();
 	
-	for(auto& item : *items.data())
+	for(auto& item : *items.toStrongRef())
 	{
-		auto descr = item.data()->descr().data();
+		auto descr = item.toStrongRef()->descr().toStrongRef();
 		if(descr)
 		{
 			auto id = QString("%1:%2").arg(descr->name()).arg(descr->uid());
@@ -99,6 +95,6 @@ void PluginLinkerView::onClicked(const QModelIndex &index)
 {
 	auto pluginName = index.data().toString();
 	auto item = m_linkerItems[pluginName];
-	//    auto meta = item.data()->getMeta();
+	//    auto meta = item.toStrongRef()->getMeta();
 	//    ui->textAbout->setText(meta.About);
 }

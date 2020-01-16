@@ -29,7 +29,7 @@ class PluginLinkerView : public QWidget, public PluginBase, public UIElementBase
 	
 public:
 	PluginLinkerView();
-	virtual ~PluginLinkerView();
+	~PluginLinkerView() override = default;
 	
 	// PluginBase interface
 public:

@@ -86,8 +86,8 @@ PluginBaseSignal::PluginBaseSignal(PluginBase* instance, QWeakPointer<PluginRefe
 	m_instance(instance),
 	m_handler(std::move(handler))
 {
-	connect(m_handler.data(), &PluginReferencesHandler::onStateChanged, this, &PluginBaseSignal::onStateChanged);
-	connect(m_handler.data(), &PluginReferencesHandler::onReferencesListUpdated, this, &PluginBaseSignal::onReferencesListUpdated);
+	connect(m_handler.toStrongRef().data(), &PluginReferencesHandler::onStateChanged, this, &PluginBaseSignal::onStateChanged);
+	connect(m_handler.toStrongRef().data(), &PluginReferencesHandler::onReferencesListUpdated, this, &PluginBaseSignal::onReferencesListUpdated);
 }
 
 void PluginBaseSignal::onStateChanged(ReferencesHandlerState state)

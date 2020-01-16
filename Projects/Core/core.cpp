@@ -34,15 +34,15 @@ void Core::onPluginReady()
 
 QWidget *Core::getParentWidget()
 {
-	return m_app.data()->getParentWidget();
+	return m_app.toStrongRef()->getParentWidget();
 }
 
 const QVector<IPluginHandlerPtr> &Core::getPlugins()
 {
-	return m_app.data()->getPlugins();
+	return m_app.toStrongRef()->getPlugins();
 }
 
 IPluginHandlerPtr Core::makePluginHandler(const QString &path)
 {
-	return m_app.data()->makePluginHandler(path);
+	return m_app.toStrongRef()->makePluginHandler(path);
 }
