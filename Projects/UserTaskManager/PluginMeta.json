@@ -1,8 +1,8 @@
 {
 "iplugin": {
-		"interfaces": ["IUserTaskManager"],
+		"interfaces": ["IUserTaskManager/1.0"],
 		"references": {
-			"IExtendableDataManager": 1
+			"IExtendableDataManager/1.0": 1
 		},
 		"info": {
 			"name": "UserTaskManager",

@@ -45,6 +45,6 @@ public:
     virtual ILearningAlgorithm *SetupNetwork(QJsonObject networkParams) = 0;
 
 };
-Q_DECLARE_INTERFACE(IMachineLearningManager, "IMachineLearningManager v0.1")
+Q_DECLARE_INTERFACE(IMachineLearningManager, "IMachineLearningManager/1.0")
 //!  \}
 #endif // IEMPTYPLUGINMODEL_H

@@ -1,8 +1,8 @@
 {
 "iplugin": {
-		"interfaces": ["IExtendableDataManager"],
+		"interfaces": ["IExtendableDataManager/1.0"],
 		"references": {
-			"IDataBase": 1
+			"IDataBase/1.0": 1
 		},
 		"info": {
 			"name": "ExtendableDataManager",

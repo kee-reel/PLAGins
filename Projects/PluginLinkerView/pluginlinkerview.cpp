@@ -4,28 +4,27 @@
 #include <QFileDialog>
 
 PluginLinkerView::PluginLinkerView() :
-	QWidget(),
-	PluginBase(this, {INTERFACE(IUIElement)}),
-	UIElementBase(this, this, {"MainMenuItem"}),
-	ui(new Ui::Form)
+	QObject(),
+	PluginBase(this),
+	ui(new Ui::Form),
+	m_uiElementBase(new UIElementBase(this, {"MainMenuItem"}))
 {
-	ui->setupUi(this);
+	ui->setupUi(m_uiElementBase);
 	connect(ui->btnAdd, &QPushButton::clicked, this, &PluginLinkerView::addPlugin);
 	connect(ui->btnRemove, &QPushButton::clicked, this, &PluginLinkerView::removePlugin);
 	connect(ui->listPlugins, &QListView::clicked, this, &PluginLinkerView::onClicked);
 	connect(ui->btnExit, &QPushButton::clicked, [this](){
-		m_opener->closeSelf();
+		m_uiElementBase->closeSelf();
 	});
 	ui->listPlugins->setModel(&m_pluginsListModel);
 	initPluginBase({
+		{INTERFACE(IPlugin), this},
+		{INTERFACE(IUIElement), m_uiElementBase}
+	},
+	{
 		{INTERFACE(IPluginLinker), m_pluginLinker}
 	});
-	initUIElementBase();
-}
-
-void PluginLinkerView::onPluginInited()
-{
-	resetDescriptor(descr());
+	m_uiElementBase->initUIElementBase();
 }
 
 void PluginLinkerView::onPluginReady()
@@ -44,7 +43,7 @@ void PluginLinkerView::onPluginReady()
 
 void PluginLinkerView::addPlugin()
 {
-	auto filename = QFileDialog::getOpenFileName(this, "Load plugin");
+	auto filename = QFileDialog::getOpenFileName(m_uiElementBase, "Load plugin");
 	if(filename.isNull())
 	{
 		return;

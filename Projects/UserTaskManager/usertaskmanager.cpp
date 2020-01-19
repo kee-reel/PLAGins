@@ -1,12 +1,15 @@
 #include "usertaskmanager.h"
 
 UserTaskManager::UserTaskManager() :
-	PluginBase(this,
+	PluginBase(this)
 {
-	INTERFACE(IUserTaskManager)
-})
-{
-	initPluginBase({{INTERFACE(IExtendableDataManager), m_dataManager}}, {});
+	initPluginBase({
+		{INTERFACE(IPlugin), this},
+		{INTERFACE(IUserTaskManager), this},
+	},
+	{
+		{INTERFACE(IExtendableDataManager), m_dataManager}
+	}, {});
 	tableName = "iUserTaskManager";
 	relationName = "iUserTaskManager";
 	treeModel = nullptr;

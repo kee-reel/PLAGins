@@ -25,21 +25,10 @@ public:
 	virtual QList<QMetaMethod> getSlots() = 0;
 };
 
-class IUIElementLinksOpener
-{
-public:
-	virtual QObject* getObject() = 0;
-signals:
-	void linkOpened(uid_t selfUID, uid_t referenceUID);
-	void linkClosed(uid_t selfUID, uid_t referenceUID);
-	void selfClosed(uid_t selfUID);
-};
-
 class IUIElement
 {
 public:
 	virtual QWeakPointer<IMethodsHandler> getMethodsHandler() = 0;
-	virtual QWeakPointer<IUIElementLinksOpener> getLinksOpener() = 0;
 	virtual QWeakPointer<IReferencesHandler<QString>> getLinksHandler() = 0;
 	
 	virtual uid_t getUID() = 0;
@@ -50,7 +39,11 @@ public:
 	virtual bool open(QWidget *parent) = 0;
 	virtual bool isOpened() const = 0;
 	virtual bool close() = 0;
+
+	void linkOpened(uid_t selfUID, uid_t referenceUID);
+	void linkClosed(uid_t selfUID, uid_t referenceUID);
+	void selfClosed(uid_t selfUID);
 };
 //!  \}
-Q_DECLARE_INTERFACE(IUIElement, "IUIElement")
+Q_DECLARE_INTERFACE(IUIElement, "IUIElement/1.0")
 #endif // IUIELEMENT_H

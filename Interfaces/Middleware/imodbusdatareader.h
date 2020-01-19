@@ -62,5 +62,5 @@ signals:
     void ExperimentStateChanged(bool state);
 };
 //!  \}
-Q_DECLARE_INTERFACE(IModbusDataReader, "IModbusDataReader")
+Q_DECLARE_INTERFACE(IModbusDataReader, "IModbusDataReader/1.0")
 #endif // IModbusDataReader_H

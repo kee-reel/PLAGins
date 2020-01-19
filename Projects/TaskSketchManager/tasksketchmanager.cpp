@@ -2,12 +2,12 @@
 
 TaskSketchManager::TaskSketchManager() :
 	QObject(nullptr),
-	PluginBase(this,
+	PluginBase(this)
 {
-	INTERFACE(ITaskSketchManager)
-})
-{
-	initPluginBase(
+	initPluginBase({
+		{INTERFACE(IPlugin), this},
+		{INTERFACE(ITaskSketchManager), this}
+	},
 	{
 		{INTERFACE(IExtendableDataManager), m_dataManager},
 		{INTERFACE(IUserTaskManager), m_myModel}

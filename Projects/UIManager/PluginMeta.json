@@ -1,10 +1,10 @@
 {
     "iplugin": {
-		"interfaces": [],
+		"interfaces": ["IPlugin/1.0"],
 		"references": {
-			"IApplication": 1,
-			"IPluginLinker": 1,
-			"IUIElement": 0
+			"IApplication/1.0": 1,
+			"IPluginLinker/1.0": 1,
+			"IUIElement/1.0": 0
 		},
 		"info": {
 			"name": "UIManager",

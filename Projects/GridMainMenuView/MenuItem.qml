@@ -12,7 +12,7 @@ Button {
 	icon.height: 80 * ratio
 	icon.color: "#eceff4"
 	Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
-	onClicked: links.openLink(uid)
+	onClicked: uiElement.openLink(uid)
 	background: Rectangle {
 		color: menuItem.pressed ? "#88c0d0" : "#81a1c1"
 		radius: 10

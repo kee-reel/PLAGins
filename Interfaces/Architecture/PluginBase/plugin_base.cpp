@@ -1,22 +1,20 @@
 #include "plugin_base.h"
 
-#include <utility>
-
-#include <utility>
-
-PluginBase::PluginBase(QObject *object, QVector<Interface> interfaces) :
+PluginBase::PluginBase(QObject *object) :
 	m_object(object)
 {
-	auto interface = INTERFACE(IPlugin);
-	if(!interfaces.contains(interface))
-	{
-		interfaces.append(interface);
-	}
-	m_interfaces = interfaces;
 }
 
-void PluginBase::initPluginBase(const QMap<Interface, IReferenceInstancePtr> &instances, const QMap<Interface, IReferenceInstancesListPtr> &instancesList)
+void PluginBase::initPluginBase(QMap<Interface, QObject *> interfaces, 
+	const QMap<Interface, IReferenceInstancePtr> &instances, 
+	const QMap<Interface, IReferenceInstancesListPtr> &instancesList)
 {
+	auto pluginInterface = INTERFACE(IPlugin);
+	if(!interfaces.contains(pluginInterface))
+	{
+		interfaces.insert(pluginInterface, m_object);
+	}
+	m_interfaces = interfaces;
 	m_instancesHandler.reset(new PluginReferencesHandler(instances, instancesList));
 	m_pluginBaseSignal.reset(new PluginBaseSignal(this, m_instancesHandler));
 }
@@ -39,6 +37,11 @@ bool PluginBase::pluginInit(uid_t uid, const QWeakPointer<QJsonObject> &meta)
 bool PluginBase::isInited()
 {
 	return !m_descr.isNull();
+}
+
+QObject *PluginBase::getInstance(Interface interface)
+{
+	return m_interfaces[interface];
 }
 
 IReferenceDescriptorPtr PluginBase::getDescriptor()

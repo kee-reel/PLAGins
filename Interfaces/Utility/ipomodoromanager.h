@@ -41,5 +41,5 @@ signals:
     void OnPomodoroFinished();
 };
 //!  \}
-Q_DECLARE_INTERFACE(IPomodoroManager, "IPomodoroManager v0.1")
+Q_DECLARE_INTERFACE(IPomodoroManager, "IPomodoroManager/1.0")
 #endif // ITASKLISTMODEL_H

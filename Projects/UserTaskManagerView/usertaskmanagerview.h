@@ -24,11 +24,11 @@ class Form;
 
 //! \addtogroup UserTaskManager_dep
 //!  \{
-class UserTaskManagerView : public QWidget, public PluginBase, public UIElementBase
+class UserTaskManagerView : public QWidget, public PluginBase
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
-	Q_INTERFACES(IPlugin IUIElement)
+	Q_INTERFACES(IPlugin)
 	
 public:
 	UserTaskManagerView();
@@ -36,7 +36,6 @@ public:
 	
 	// PluginBase interface
 private:
-	virtual void onPluginInited() override;
 	virtual void onPluginReady() override;
 	
 public slots:
@@ -56,6 +55,7 @@ private slots:
 	
 private:
 	QSharedPointer<Ui::Form> ui;
+	QPointer<UIElementBase> m_uiElementBase;
 	
 	ReferenceInstancePtr<IUserTaskManager> m_taskManager;
 	QIdentityProxyModel *proxyModel;

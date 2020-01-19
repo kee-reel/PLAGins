@@ -21,5 +21,5 @@ public:
 
 };
 //!  \}
-Q_DECLARE_INTERFACE(IUserTaskManager, "IUserTaskManager v0.1")
+Q_DECLARE_INTERFACE(IUserTaskManager, "IUserTaskManager/1.0")
 #endif // ITASKLISTMODEL_H

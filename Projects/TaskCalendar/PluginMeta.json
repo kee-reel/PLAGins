@@ -1,9 +1,9 @@
 {
     "iplugin": {
-		"interfaces": ["ITaskCalendar"],
+		"interfaces": ["ITaskCalendar/1.0"],
 		"references": {
-			"IExtendableDataManager": 1,
-			"IUserTaskManager": 1
+			"IExtendableDataManager/1.0": 1,
+			"IUserTaskManager/1.0": 1
 		},
 		"info": {
 			"name": "TaskCalendar",

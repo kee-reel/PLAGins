@@ -1,13 +1,13 @@
 #include "uielementbase.h"
 
-UIElementBase::UIElementBase(QObject *parentObject, QWidget *parentWidget, QStringList linkNames, QIcon icon) :
+UIElementBase::UIElementBase(QObject *parentObject, QStringList linkNames, QIcon icon) :
+	UIElementBaseParent(nullptr),
 	m_parentObject(parentObject),
-	m_parentWidget(parentWidget),
+	m_pluginBase(qobject_cast<IPlugin*>(parentObject)),
 	m_linkNames(linkNames),
 	m_icon(icon),
 	m_isOpened(false)
 {
-	m_opener.reset(new UIElementLinksOpener(this));
 }
 
 void UIElementBase::initUIElementBase(QMap<QString, IReferenceInstancePtr > instances,
@@ -18,8 +18,19 @@ void UIElementBase::initUIElementBase(QMap<QString, IReferenceInstancePtr > inst
 	m_uiElementBaseSignal.reset(new UIElementBaseSignal(this, m_linksHandler));
 }
 
-UIElementBase::~UIElementBase()
+void UIElementBase::openLink(uid_t referenceUID)
 {
+	emit linkOpened(m_pluginBase->getDescriptor().toStrongRef()->uid(), referenceUID);
+}
+
+void UIElementBase::closeLink(uid_t referenceUID)
+{
+	emit linkClosed(m_pluginBase->getDescriptor().toStrongRef()->uid(), referenceUID);	
+}
+
+void UIElementBase::closeSelf()
+{
+	emit selfClosed(m_pluginBase->getDescriptor().toStrongRef()->uid());	
 }
 
 QWeakPointer<IReferencesHandler<QString> > UIElementBase::getLinksHandler()
@@ -32,14 +43,9 @@ QWeakPointer<IMethodsHandler> UIElementBase::getMethodsHandler()
 	return m_methodsHandler;
 }
 
-QWeakPointer<IUIElementLinksOpener> UIElementBase::getLinksOpener()
-{
-	return m_opener;
-}
-
 uid_t UIElementBase::getUID()
 {
-	return m_descriptor.toStrongRef()->uid();
+	return m_pluginBase->getDescriptor().toStrongRef()->uid();
 }
 
 QStringList UIElementBase::linkNames()
@@ -49,7 +55,7 @@ QStringList UIElementBase::linkNames()
 
 QWidget *UIElementBase::getWidget()
 {
-	return m_parentWidget;
+	return this;
 }
 
 QIcon UIElementBase::getIcon()
@@ -61,8 +67,8 @@ bool UIElementBase::open(QWidget* parent)
 {
 	if(!m_isOpened)
 	{
-		m_parentWidget->setParent(parent);
-		m_parentWidget->show();
+		this->setParent(parent);
+		this->show();
 		m_isOpened = true;
 	}
 	return true;
@@ -72,7 +78,7 @@ bool UIElementBase::close()
 {
 	if(m_isOpened)
 	{
-		m_parentWidget->hide();
+		this->hide();
 		m_isOpened = false;
 	}
 	return true;
@@ -103,7 +109,26 @@ void UIElementBase::onReferencesListUpdated(QString link)
 	onUIElementReferencesListUpdated(link);
 }
 
-void UIElementBase::resetDescriptor(IReferenceDescriptorPtr descriptor)
-{
-	m_descriptor = descriptor;
+#ifdef QML_UIElement
+
+#include <QScreen>
+#include <QQmlEngine>
+#include <QQuickItem>
+#include <QGuiApplication>
+
+void UIElementBase::resizeEvent(QResizeEvent *event)
+{	
+	qreal refDpi = 102.;
+	qreal refWidth = 540.;
+	qreal refHeight = 960.;
+	QRect rect = this->rect();
+	qreal height = qMax(rect.width(), rect.height());
+	qreal width = qMin(rect.width(), rect.height());
+	qreal dpi = QGuiApplication::primaryScreen()->logicalDotsPerInch();
+	qreal ratio = qMin(height/refHeight, width/refWidth);
+	qreal ratioFont = qMin(height*dpi/(refDpi*refHeight), width*dpi/(refDpi*refWidth));
+	this->rootContext()->setContextProperty("ratio", ratio);
+	this->rootContext()->setContextProperty("ratioFont", ratioFont);
+	return UIElementBaseParent::resizeEvent(event);
 }
+#endif

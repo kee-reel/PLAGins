@@ -46,5 +46,5 @@ signals:
     void onLinkageFinished();
 };
 //!  \}
-Q_DECLARE_INTERFACE(IPluginLinker, "IPluginLinker")
+Q_DECLARE_INTERFACE(IPluginLinker, "IPluginLinker/1.0")
 #endif // IPLUGINLINKER_H

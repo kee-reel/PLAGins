@@ -2,10 +2,15 @@
 
 PluginLinker::PluginLinker() :
 	QObject(nullptr),
-	PluginBase(this,
-	{INTERFACE(IPluginLinker)})
+	PluginBase(this)
 {
-	initPluginBase({ {INTERFACE(IApplication), m_app} });
+	initPluginBase({
+		{INTERFACE(IPlugin), this},
+		{INTERFACE(IPluginLinker), this}
+	},
+	{
+		{INTERFACE(IApplication), m_app}
+	});
 }
 
 PluginLinker::~PluginLinker()

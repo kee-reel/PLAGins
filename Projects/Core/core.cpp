@@ -1,15 +1,13 @@
 #include "core.h"
 
-#include <QWidget>
-
 Core::Core() :
 	QObject(nullptr),
-	PluginBase(this,
+	PluginBase(this)
 {
-	INTERFACE(IApplication)
-})
-{
-	initPluginBase();
+	initPluginBase({
+		{INTERFACE(IPlugin), this},
+		{INTERFACE(IApplication), this}
+	});
 }
 
 Core::~Core()

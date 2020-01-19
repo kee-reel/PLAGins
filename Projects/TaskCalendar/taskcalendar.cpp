@@ -1,12 +1,12 @@
 #include "taskcalendar.h"
 
 TaskCalendar::TaskCalendar() :
-	PluginBase(this,
+	PluginBase(this)
 {
-	INTERFACE(ITaskCalendar)
-})
-{
-	initPluginBase(
+	initPluginBase({
+		{INTERFACE(IPlugin), this},
+		{INTERFACE(ITaskCalendar), this}
+	},
 	{
 		{INTERFACE(IExtendableDataManager), m_dataManager},
 		{INTERFACE(IUserTaskManager), m_taskTree}

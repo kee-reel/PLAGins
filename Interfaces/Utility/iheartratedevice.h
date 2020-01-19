@@ -27,5 +27,5 @@ signals:
     void TempoData(float);
 };
 //!  \}
-Q_DECLARE_INTERFACE(IHeartRateDevice, "IHeartRateDevice")
+Q_DECLARE_INTERFACE(IHeartRateDevice, "IHeartRateDevice/1.0")
 #endif // IHeartRateDevice_H

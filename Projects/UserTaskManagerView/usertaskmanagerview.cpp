@@ -3,11 +3,11 @@
 
 UserTaskManagerView::UserTaskManagerView() :
 	QWidget(nullptr),
-	PluginBase(this, {INTERFACE(IUIElement)}),
-	UIElementBase(this, this, {"MainMenuItem"}),
-	ui(new Ui::Form)
+	PluginBase(this),
+	ui(new Ui::Form),
+	m_uiElementBase(new UIElementBase(this, {"MainMenuItem"}))
 {
-	ui->setupUi(this);
+	ui->setupUi(m_uiElementBase);
 	taskTree = nullptr;
 	proxyModel = nullptr;
 	
@@ -39,19 +39,18 @@ UserTaskManagerView::UserTaskManagerView() :
 	connect(addForm, SIGNAL(OnClose()), this, SLOT(OnAddFormClosed()));
 	
 	initPluginBase({
+		{INTERFACE(IPlugin), this},
+		{INTERFACE(IUIElement), m_uiElementBase}
+	},
+	{
 		{INTERFACE(IUserTaskManager), m_taskManager}
 	});
-	initUIElementBase();
+	m_uiElementBase->initUIElementBase();
 }
 
 UserTaskManagerView::~UserTaskManagerView()
 {
 	
-}
-
-void UserTaskManagerView::onPluginInited()
-{
-	resetDescriptor(descr());	
 }
 
 void UserTaskManagerView::onPluginReady()
@@ -85,7 +84,7 @@ void UserTaskManagerView::OnAddFormClosed()
 
 void UserTaskManagerView::buttonExit_clicked()
 {
-	m_opener->closeSelf();
+	m_uiElementBase->closeSelf();
 }
 
 void UserTaskManagerView::buttonAdd_clicked()

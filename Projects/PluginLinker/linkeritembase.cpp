@@ -40,7 +40,8 @@ bool LinkerItemBase::load()
 	}
 	else
 	{
-		qWarning() << QString("Caught error on initialization of plugin [%1]: %2").arg(descr().toStrongRef()->name()).arg(errMsg);
+		auto pluginName = descr().isNull() ? "Unknown" : descr().toStrongRef()->name();
+		qWarning() << QString("Caught error on initialization of plugin [%1]: %2").arg(pluginName).arg(errMsg);
 		unload();
 		return false;
 	}

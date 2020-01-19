@@ -1,6 +1,6 @@
 {
     "iplugin": {
-		"interfaces": ["IUIElement"],
+		"interfaces": ["IPlugin/1.0", "IUIElement/1.0"],
 		"references": {},
 		"info": {
 			"name": "GridMainMenuView",

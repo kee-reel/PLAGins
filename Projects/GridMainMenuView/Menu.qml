@@ -20,7 +20,7 @@ Item {
 		icon.color: "#eceff4"
 		icon.width: 30 * ratio
 		icon.height: 30 * ratio
-		onClicked: links.closeSelf()
+		onClicked: uiElement.closeSelf()
 		anchors.left: parent.left
 		anchors.top: parent.top
 		anchors.leftMargin: 10

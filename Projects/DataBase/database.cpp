@@ -2,13 +2,13 @@
 
 DataBase::DataBase() :
 	QObject(nullptr),
-	PluginBase(this,
-{
-	INTERFACE(IDataBase)
-})
+	PluginBase(this)
 {
 	m_possibleDriverNames<< "SQLITECIPHER"<< "QSQLITE";
-	initPluginBase();
+	initPluginBase({
+		{INTERFACE(IPlugin), this},
+		{INTERFACE(IDataBase), this}
+	});
 }
 
 DataBase::~DataBase()

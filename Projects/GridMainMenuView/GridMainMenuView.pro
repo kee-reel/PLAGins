@@ -11,6 +11,8 @@ include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 
 include(../../Interfaces/Architecture/UIElementBase/UIElementBase.pri)
 
+DEFINES += QML_UIElement
+
 HEADERS += \
     gridmainmenuview.h
 

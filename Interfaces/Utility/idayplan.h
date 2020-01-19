@@ -24,5 +24,5 @@ public:
     virtual void SetDataTypeEditor(QWidget *widget) = 0;
 };
 //!  \}
-Q_DECLARE_INTERFACE(IDayPlan, "IDayPlan")
+Q_DECLARE_INTERFACE(IDayPlan, "IDayPlan/1.0")
 #endif // IDayPlan_H

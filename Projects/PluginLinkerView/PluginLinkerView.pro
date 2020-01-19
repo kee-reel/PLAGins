@@ -11,6 +11,8 @@ include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 
 include(../../Interfaces/Architecture/UIElementBase/UIElementBase.pri)
 
+DEFINES += QWidget_UIElement
+
 SOURCES += \
     pluginlinkerview.cpp
 

@@ -1,8 +1,8 @@
 {
     "iplugin": {
-		"interfaces": ["IPluginLinker"],
+		"interfaces": ["IPluginLinker/1.0"],
 		"references": {
-			"IApplication": 1
+			"IApplication/1.0": 1
 		},
 		"info": {
 			"name": "PluginLinker",

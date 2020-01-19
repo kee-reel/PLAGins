@@ -1,10 +1,7 @@
 #ifndef COREPLUGIN_H
 #define COREPLUGIN_H
 
-#include <QObject>
-#include <QDebug>
-#include <QString>
-#include <typeindex>
+#include <QtCore>
 
 #include "../../../Application/icoreplugin.h"
 #include "../../Interfaces/Architecture/iplugin.h"
@@ -14,14 +11,14 @@
 
 //! addtogroup CorePlugin_imp
 //! {
-class Core : public QObject, public ICore, public PluginBase, public IApplication
+class Core : public QObject, public PluginBase, public ICore, public IApplication
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID "MASS.Module.CorePlugin" FILE "PluginMeta.json")
 	Q_INTERFACES(
-	    ICore
-	    IPlugin
-	    IApplication)
+		IPlugin
+		ICore
+		IApplication)
 
 public:
 	Core();

@@ -41,7 +41,7 @@ public:
 protected:
     virtual ~IDataBase() {}
 };
-Q_DECLARE_INTERFACE(IDataBase, "IDataBase v0.1")
+Q_DECLARE_INTERFACE(IDataBase, "IDataBase/1.0")
 //! @}
 
 #endif // IDataBase_H

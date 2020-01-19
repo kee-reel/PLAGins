@@ -2,9 +2,12 @@
 
 ExtendableDataManager::ExtendableDataManager() :
 	QObject(),
-	PluginBase(this, {INTERFACE(IExtendableDataManager)})
+	PluginBase(this)
 {
 	initPluginBase({
+		{INTERFACE(IExtendableDataManager), this}
+	},
+	{
 		{INTERFACE(IDataBase), m_dataSource}
 	});
 }

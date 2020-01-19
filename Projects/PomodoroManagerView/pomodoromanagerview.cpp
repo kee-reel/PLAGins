@@ -2,12 +2,12 @@
 #include "ui_form.h"
 
 PomodoroManagerView::PomodoroManagerView() :
-	QWidget(),
-	PluginBase(this, {INTERFACE(IUIElement)}),
-	UIElementBase(this, this, {"MainMenuItem"}),
-	ui(new Ui::Form)
+	QObject(),
+	PluginBase(this),
+	ui(new Ui::Form),
+	m_uiElementBase(new UIElementBase(this, {"MainMenuItem"}))
 {
-	ui->setupUi(this);
+	ui->setupUi(m_uiElementBase);
 
     ui->treeView->setVisible(false);
     ui->buttonEdit->setVisible(false);
@@ -22,9 +22,13 @@ PomodoroManagerView::PomodoroManagerView() :
     connect(ui->buttonExit, SIGNAL(clicked(bool)), SLOT(buttonExit_clicked()));
     
     initPluginBase({
+		{INTERFACE(IPlugin), this},
+		{INTERFACE(IUIElement), m_uiElementBase}
+    },
+    {
 		{INTERFACE(IPomodoroManager), myModel}
     });
-    initUIElementBase();
+    m_uiElementBase->initUIElementBase();
 
 #ifdef Q_OS_ANDROID
     ui->buttonAdd->setFocusPolicy(Qt::NoFocus);
@@ -43,14 +47,9 @@ PomodoroManagerView::~PomodoroManagerView()
 {
 }
 
-void PomodoroManagerView::onPluginInited()
-{
-	resetDescriptor(descr());	
-}
-
 QString PomodoroManagerView::linkName()
 {
-	return UIElementBase::linkNames().first();
+	return m_uiElementBase->linkNames().first();
 }
 
 void PomodoroManagerView::onPluginReady()
@@ -105,7 +104,7 @@ void PomodoroManagerView::buttonAdd_clicked()
 
 void PomodoroManagerView::buttonExit_clicked()
 {
-    m_opener->closeSelf();
+    m_uiElementBase->closeSelf();
 }
 
 void PomodoroManagerView::UpdateSelectedTask()
@@ -127,13 +126,4 @@ void PomodoroManagerView::treeView_pressed(const QModelIndex &index)
     myModel->instance()->SetActiveProject(currentTask);
 
     UpdateSelectedTask();
-}
-
-bool PomodoroManagerView::eventFilter(QObject *watched, QEvent *event)
-{
-    if(watched == ui->pomodoroButton && event->type() == QEvent::MouseButtonRelease)
-    {
-        return currentTask.isValid();
-    }
-    return QWidget::eventFilter(watched, event);
 }

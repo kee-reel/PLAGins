@@ -6,12 +6,15 @@
 
 UIManager::UIManager() :
 	QObject(nullptr),
-	PluginBase(this, {}),
+	PluginBase(this),
 	m_parentWidget(nullptr),
 	m_rootElementUID(0)
 {
 	m_uiElementsList.reset(new ReferenceInstancesList<IUIElement>());
 	initPluginBase(
+	{
+		{INTERFACE(IPlugin), this}
+	},
 	{
 		{INTERFACE(IApplication), m_app},
 		{INTERFACE(IPluginLinker), m_pluginLinker}
@@ -176,8 +179,7 @@ void UIManager::onCloseSelf(uid_t selfUID)
 
 bool UIManager::registerUIElement(ReferenceInstancePtr<IUIElement> &uiElement)
 {
-	const auto &linksOpener = uiElement->instance()->getLinksOpener();
-	const auto &object = linksOpener.toStrongRef()->getObject();
+	const auto &object = uiElement.data()->object();
 	if(!object)
 	{
 		qCritical() << "UIManager::addChildItem: skip element adding: no QObject available";

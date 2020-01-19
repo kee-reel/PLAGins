@@ -18,14 +18,13 @@ class Form;
 
 //! addtogroup PluginLinkerView_imp
 //! {
-class PluginLinkerView : public QWidget, public PluginBase, public UIElementBase
+class PluginLinkerView : public QObject, public PluginBase
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID "MASS.Module.PluginLinkerView" FILE "PluginMeta.json")
 	Q_INTERFACES(
-			IPlugin
-			IUIElement
-			)
+		IPlugin
+	)
 	
 public:
 	PluginLinkerView();
@@ -33,7 +32,6 @@ public:
 	
 	// PluginBase interface
 public:
-	virtual void onPluginInited() override;
 	virtual void onPluginReady() override;
 	
 private slots:
@@ -43,6 +41,7 @@ private slots:
 	
 private:
 	QSharedPointer<Ui::Form> ui;
+	QPointer<UIElementBase> m_uiElementBase;
 	ReferenceInstancePtr<IPluginLinker> m_pluginLinker;
 	QStringListModel m_pluginsListModel;
 	QMap<QString, QWeakPointer<IPluginLinker::ILinkerItem>> m_linkerItems;

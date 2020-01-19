@@ -60,11 +60,18 @@ void SimpleLinker::removePlugin(IReferenceDescriptorPtr descr)
 void SimpleLinker::init()
 {
 	auto&& plugins = m_app.toStrongRef()->getPlugins();
-	for (auto& plugin : plugins)
+	try 
 	{
-		addPlugin(plugin);
+		qDebug() << "Load";
+		for (auto& plugin : plugins)
+		{
+			addPlugin(plugin);
+		}
 	}
-
+	catch(QException e)
+	{
+		qDebug() << "Can't load plugin:" << e.what();
+	}
 	for(auto& pluginPair : m_plugins)
 	{
 		auto instancesHandler = pluginPair->second->instance()->getInstancesHandler();

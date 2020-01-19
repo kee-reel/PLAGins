@@ -1,6 +1,6 @@
 {
     "iplugin": {
-		"interfaces": ["INotificationManager"],
+		"interfaces": ["INotificationManager/1.0"],
 		"references": {},
 		"info": {
 			"name": "NotificationManager",

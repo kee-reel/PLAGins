@@ -1,5 +1,6 @@
 #pragma once
 
+#include "iplugin.h"
 #include "ireferenceinstance.h"
 
 class ReferenceInstanceObject : public QObject, public IReferenceInstance
@@ -11,7 +12,8 @@ class ReferenceInstanceObject : public QObject, public IReferenceInstance
 	Q_PROPERTY(QObject* object READ object NOTIFY descriptorChanged)
 public:
 	ReferenceInstanceObject(QObject* parent=nullptr) :
-		QObject(parent)
+		QObject(parent),
+		m_object(nullptr)
 	{
         qRegisterMetaType<uid_t>("uid_t");
 	}
@@ -45,13 +47,14 @@ public:
 	
 	QObject* object()
 	{
-		return isSet() ? m_descr.toStrongRef()->object() : nullptr;
+		return m_object;
 	}
 
 Q_SIGNALS:
 	void descriptorChanged();
 	
 protected:
+	QObject* m_object;
 	IReferenceDescriptorPtr m_descr;
 };
 Q_DECLARE_METATYPE(uid_t)
@@ -62,7 +65,8 @@ class ReferenceInstance : public ReferenceInstanceObject
 public:	
 	ReferenceInstance(QObject* parent=nullptr) :
 		ReferenceInstanceObject(parent),
-		m_instance(nullptr)
+		m_instance(nullptr),
+		m_interface(Interface::make<T>())
 	{
 	}
 	
@@ -76,12 +80,15 @@ public:
 		}
 		else
 		{
-			auto&& object = descr.toStrongRef()->object();
-			T* instancePtr = qobject_cast<T*>(object);
+			auto&& pluginObject = descr.toStrongRef()->object();
+			IPlugin* pluginInstance = qobject_cast<IPlugin*>(pluginObject);
+			QObject* instanceObject = pluginInstance->getInstance(m_interface);
+			T* instancePtr = qobject_cast<T*>(instanceObject);
 			if(instancePtr)
 			{
 				m_descr = descr;
 				m_instance = instancePtr;
+				m_object = instanceObject;
 				emit descriptorChanged();
 			}
 			else
@@ -110,6 +117,7 @@ public:
 	
 private:
 	T* m_instance;
+	Interface m_interface;
 };
 
 template<class T>

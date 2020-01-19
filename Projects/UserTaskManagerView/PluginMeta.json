@@ -1,8 +1,8 @@
 {
     "iplugin": {
-		"interfaces": ["IUIElement"],
+		"interfaces": ["IUIElement/1.0"],
 		"references": {
-			"IUserTaskManager": 1
+			"IUserTaskManager/1.0": 1
 		},
 		"info": {
 			"name": "Task list",

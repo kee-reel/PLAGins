@@ -7,7 +7,7 @@ class PluginDescriptor : public IReferenceDescriptor
 {
 public:
 	static PluginDescriptor* make(uid_t uid, QObject* instance, QWeakPointer<QJsonObject> meta,
-	                              QVector<Interface> interfaces, const QSharedPointer<IReferencesHandler<Interface>> &instances)
+	                              QMap<Interface, QObject*> interfaces, const QSharedPointer<IReferencesHandler<Interface>> &instances)
 	{
 		auto metaData = meta.toStrongRef()->value("MetaData").toObject();
 		auto section = metaData.value("iplugin").toObject();
@@ -23,9 +23,9 @@ public:
 		}
 
 		QStringList interfacesNames;
-		for(auto& interface : interfaces)
+		for(auto& interface : interfaces.keys())
 		{
-			interfacesNames << interface.name();
+			interfacesNames << interface.iid();
 		}
 
 		auto iterfacesJSONArr = section.value("interfaces").toArray();
@@ -48,7 +48,7 @@ public:
 		auto &requiredReferences = instances->requiredReferences();
 		for(auto iter = requiredReferences.keyBegin(); iter != requiredReferences.keyEnd(); ++iter)
 		{
-			referencesNames << iter->name();
+			referencesNames << iter->iid();
 		}
 
 		auto referencesJSONMap = section.value("references").toObject();
@@ -72,7 +72,7 @@ public:
 		ptr->m_name = name;
 		ptr->m_about = about;
 		ptr->m_instance = instance;
-		ptr->m_interfaces = interfaces;
+		ptr->m_interfaces = interfaces.keys().toVector();
 
 //        qDebug() << "PluginDescriptor::make: created reference descriptor:" <<
 //            "uid:" << uid << endl <<

@@ -22,11 +22,11 @@ class Form;
 
 //! \addtogroup PomodoroManager_dep
 //!  \{
-class PomodoroManagerView : public QWidget, public PluginBase, public UIElementBase
+class PomodoroManagerView : public QObject, public PluginBase
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
-	Q_INTERFACES(IPlugin IUIElement)
+	Q_INTERFACES(IPlugin)
 	
 public:
 	explicit PomodoroManagerView();
@@ -35,7 +35,6 @@ public:
 	// PluginBase interface
 private:
 	virtual void onPluginReady() override;
-	virtual void onPluginInited() override;
 	
 public slots:
 	QString linkName();
@@ -53,12 +52,9 @@ private slots:
 	void buttonExit_clicked();
 	void treeView_pressed(const QModelIndex &index);
 	
-	// QObject interface
-public:
-	bool eventFilter(QObject *watched, QEvent *event) override;
-	
 private:
 	QSharedPointer<Ui::Form> ui;
+	QPointer<UIElementBase> m_uiElementBase;
 	ReferenceInstancePtr<IPomodoroManager> myModel;
 	QAbstractItemModel *proxyModel;
 	

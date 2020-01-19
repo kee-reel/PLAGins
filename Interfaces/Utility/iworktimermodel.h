@@ -35,5 +35,5 @@ signals:
     void SecondTick();
 };
 //!  \}
-Q_DECLARE_INTERFACE(IWorkTimer, "IWorkTimer")
+Q_DECLARE_INTERFACE(IWorkTimer, "IWorkTimer/1.0")
 #endif // IWorkTimer_H

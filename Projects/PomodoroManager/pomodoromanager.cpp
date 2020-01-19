@@ -1,12 +1,12 @@
 #include "pomodoromanager.h"
 
 PomodoroManager::PomodoroManager() :
-	PluginBase(this,
+	PluginBase(this)
 {
-	INTERFACE(IPomodoroManager)
-})
-{
-	initPluginBase(
+	initPluginBase({
+		{INTERFACE(IPlugin), this},
+		{INTERFACE(IPomodoroManager), this}
+	},
 	{
 		{INTERFACE(IExtendableDataManager), m_dataManager},
 		{INTERFACE(IUserTaskManager), m_myModel},

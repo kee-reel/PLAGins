@@ -60,14 +60,16 @@ class PluginBase : public IPlugin
 {
 	friend class PluginBaseSignal;
 public:
-	explicit PluginBase(QObject *object, QVector<Interface> interfaces);
+	explicit PluginBase(QObject *object);
 	
 	virtual ~PluginBase()
 	{
 	}
 	
 protected:
-	void initPluginBase(const QMap<Interface, IReferenceInstancePtr> &instances = {}, const QMap<Interface, IReferenceInstancesListPtr> &instancesList = {});
+	void initPluginBase(QMap<Interface, QObject *> interfaces, 
+		const QMap<Interface, IReferenceInstancePtr> &instances = {}, 
+		const QMap<Interface, IReferenceInstancesListPtr> &instancesList = {});
 	
 	template<class T>
 	T *castPluginToInterface(QObject *possiblePlugin)
@@ -90,6 +92,7 @@ protected:
 private:
 	virtual bool pluginInit(uid_t uid, const QWeakPointer<QJsonObject> &meta) override;
 	virtual bool isInited() override;
+	virtual QObject* getInstance(Interface interface) override;
 	virtual IReferenceDescriptorPtr getDescriptor() override;
 	virtual QWeakPointer<IReferencesHandler<Interface>> getInstancesHandler() override;
 	virtual bool pluginFini() override;
@@ -104,11 +107,11 @@ protected:
 	
 private:
 	void onStateChanged(ReferencesHandlerState state);
-	void	onReferencesListUpdated(const Interface &interface);
+	void onReferencesListUpdated(const Interface &interface);
 	
 private:
 	QObject* m_object;
-	QVector<Interface> m_interfaces;
+	QMap<Interface, QObject*> m_interfaces;
 	QSharedPointer<PluginDescriptor> m_descr;
 	QSharedPointer<PluginReferencesHandler> m_instancesHandler;
 	QSharedPointer<PluginBaseSignal> m_pluginBaseSignal;

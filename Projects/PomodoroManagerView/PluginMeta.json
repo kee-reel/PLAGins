@@ -1,8 +1,8 @@
 {
 	"iplugin": {
-		"interfaces": ["IUIElement"],
+		"interfaces": ["IUIElement/1.0"],
 		"references": {
-			"IPomodoroManager": 1
+			"IPomodoroManager/1.0": 1
 		},
 		"info": {
 			"name": "Pomodoro",

@@ -3,7 +3,6 @@ HEADERS += \
     $$PWD/uielementbase.h \
     $$PWD/uielementbasesignal.h \
     $$PWD/uielementlinkshandler.h \
-    $$PWD/uielementlinksopener.h \
     $$PWD/methodshandler.h \
     $$PWD/../referenceshandler.h \
     $$PWD/../referenceinstance.h \
@@ -12,5 +11,4 @@ HEADERS += \
 SOURCES += \
     $$PWD/uielementbase.cpp \
     $$PWD/uielementbasesignal.cpp \
-    $$PWD/uielementlinkshandler.cpp \
-    $$PWD/uielementlinksopener.cpp
+    $$PWD/uielementlinkshandler.cpp

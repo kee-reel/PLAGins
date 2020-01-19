@@ -25,5 +25,5 @@ signals:
     void ConvertTaskToSketch(int);
 };
 //!  \}
-Q_DECLARE_INTERFACE(ITaskSketchManager, "ITaskSketchManager v0.1")
+Q_DECLARE_INTERFACE(ITaskSketchManager, "ITaskSketchManager/1.0")
 #endif // ITASKLISTMODEL_H

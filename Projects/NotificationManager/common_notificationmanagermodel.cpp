@@ -3,12 +3,11 @@
 #include <QDebug>
 
 NotificationManager::NotificationManager() :
-	PluginBase(this,
+	PluginBase(this)
 {
-	INTERFACE(INotificationManager)
-})
-{
-	initPluginBase();
+	initPluginBase({
+		{INTERFACE(INotificationManager), this}
+	});
 }
 
 NotificationManager::~NotificationManager()

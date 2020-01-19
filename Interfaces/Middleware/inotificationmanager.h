@@ -49,5 +49,5 @@ signals:
     void OnTimerTimeout(int);
 };
 //!  \}
-Q_DECLARE_INTERFACE(INotificationManager, "INotificationManager")
+Q_DECLARE_INTERFACE(INotificationManager, "INotificationManager/1.0")
 #endif // INOTIFICATIONMANAGER_H

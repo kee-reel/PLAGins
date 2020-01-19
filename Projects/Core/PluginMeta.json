@@ -1,7 +1,7 @@
 {
     "isCorePlugin": true,
     "iplugin": {
-		"interfaces": ["IApplication"],
+		"interfaces": ["IApplication/1.0"],
 		"references": {},
 		"info": {
 			"name": "Application",

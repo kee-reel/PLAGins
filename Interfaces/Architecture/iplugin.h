@@ -12,6 +12,7 @@
 class IPlugin
 {
 public:
+	virtual QObject* getInstance(Interface interface) = 0;
 	virtual IReferenceDescriptorPtr getDescriptor() = 0;
 	virtual QWeakPointer<IReferencesHandler<Interface>> getInstancesHandler() = 0;
 	
@@ -19,5 +20,5 @@ public:
 	virtual bool isInited() = 0;
 	virtual bool pluginFini() = 0;
 };
-Q_DECLARE_INTERFACE(IPlugin, "IPlugin")
+Q_DECLARE_INTERFACE(IPlugin, "IPlugin/1.0")
 #endif // IPLUGIN_H

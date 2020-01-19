@@ -21,5 +21,5 @@ public:
 
 };
 //!  \}
-Q_DECLARE_INTERFACE(ITaskCalendar, "ITaskCalendar")
+Q_DECLARE_INTERFACE(ITaskCalendar, "ITaskCalendar/1.0")
 #endif // ITASKCALENDAR_H

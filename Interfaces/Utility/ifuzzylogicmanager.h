@@ -89,7 +89,7 @@ public:
     virtual IFuzzyRule *MakeRule() = 0;
 };
 //!  \}
-Q_DECLARE_INTERFACE(IFuzzyLogicManager, "IFuzzyLogicManager")
+Q_DECLARE_INTERFACE(IFuzzyLogicManager, "IFuzzyLogicManager/1.0")
 #endif // IFuzzyLogicManager_H
 
 //InputLinguisticVariable* x = new InputLinguisticVariable("x",-10,10);

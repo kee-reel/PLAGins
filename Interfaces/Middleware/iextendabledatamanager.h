@@ -47,6 +47,6 @@ public:
     virtual bool UpdateItem(QString treeName, ManagerDataItem task) = 0;
     virtual bool DeleteItem(QString treeName, int id) = 0;
 };
-Q_DECLARE_INTERFACE(IExtendableDataManager, "IExtendableDataManager v0.1")
+Q_DECLARE_INTERFACE(IExtendableDataManager, "IExtendableDataManager/1.0")
 //! \}
 #endif // ITASKDBTOOLPLUGIN_H

@@ -9,13 +9,12 @@ include(../../../Application/PluginBuildInfo.pri)
 
 include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 
-include(../../Interfaces/Architecture/UIElementBase/UIElementBase.pri)
-
 SOURCES += \
     uimanager.cpp
 
 HEADERS += \
-    uimanager.h
+    uimanager.h \
+    ../../Interfaces/Architecture/iuielement.h
 
 DEFINES += \
     PLUGIN_BASE_QOBJECT

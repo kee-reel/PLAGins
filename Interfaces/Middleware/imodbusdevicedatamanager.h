@@ -59,5 +59,5 @@ signals:
     void ModbusListUpdated();
 };
 //!  \}
-Q_DECLARE_INTERFACE(IModbusDeviceDataManager, "IModbusDeviceDataManager")
+Q_DECLARE_INTERFACE(IModbusDeviceDataManager, "IModbusDeviceDataManager/1.0")
 #endif // IMODBUSDEVICEDATAMANAGER_H

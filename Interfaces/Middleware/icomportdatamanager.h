@@ -52,5 +52,5 @@ public:
     virtual QMap<QString, ISerialPortHandler*> GetPortHandlers() = 0;
 };
 //!  \}
-Q_DECLARE_INTERFACE(ICOMPortDataManager, "ICOMPortDataManager")
+Q_DECLARE_INTERFACE(ICOMPortDataManager, "ICOMPortDataManager/1.0")
 #endif // ICOMPortDataManager_H
