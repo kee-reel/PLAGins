@@ -36,14 +36,14 @@ signals:
 	void onPop();
 
 private slots:
-	void onOpenLink(uid_t selfUID, uid_t referenceUID);
-	void onCloseLink(uid_t selfUID, uid_t referenceUID);
-	void onCloseSelf(uid_t selfUID);
+	void onOpenLink(quint32 selfUID, quint32 referenceUID);
+	void onCloseLink(quint32 selfUID, quint32 referenceUID);
+	void onCloseSelf(quint32 selfUID);
 
 private:
 	bool registerUIElement(ReferenceInstancePtr<IUIElement>& uiElement);
-	bool unregisterUIElement(uid_t uid);
-	inline uid_t getActiveElementUID()
+	bool unregisterUIElement(quint32 uid);
+	inline quint32 getActiveElementUID()
 	{
 		return m_elementsStack.last();
 	}
@@ -57,11 +57,11 @@ private:
 	ReferenceInstancePtr<IPluginLinker> m_pluginLinker;
 	ReferenceInstancesListPtr<IUIElement> m_uiElementsList;
 	QWidget *m_parentWidget;
-	uid_t m_rootElementUID;
+	quint32 m_rootElementUID;
 
-	QList<uid_t> m_elementsStack;
-	QMap<uid_t, ReferenceInstancePtr<IUIElement> > m_elementsMap;
-	QMap<QString, QList<uid_t> > m_elementLinksByNameMap;
+	QList<quint32> m_elementsStack;
+	QMap<quint32, ReferenceInstancePtr<IUIElement> > m_elementsMap;
+	QMap<QString, QList<quint32> > m_elementLinksByNameMap;
 };
 //!  \}
 #endif // UIMANAGER_H

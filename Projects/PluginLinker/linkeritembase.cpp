@@ -91,14 +91,14 @@ void LinkerItemBase::addReference(Interface interface, QWeakPointer<LinkerItemBa
 {
 	auto & refs = (*m_references)[interface];
 	refs.append(linkItem);
-	connect(linkItem.toStrongRef().data(), SIGNAL(onLoadedStateChanged(uid_t, bool)), this, SLOT(onReferenceLoadedStateChanged(uid_t, bool)));
+	connect(linkItem.toStrongRef().data(), SIGNAL(onLoadedStateChanged(quint32, bool)), this, SLOT(onReferenceLoadedStateChanged(quint32, bool)));
 	emit onReferencesChanged(m_uid, linkItem.toStrongRef()->descr().toStrongRef()->uid(), true);
 }
 
 void LinkerItemBase::removeReference(Interface interface, QWeakPointer<LinkerItemBase> linkItem)
 {
 	m_references->find(interface).value().removeOne(linkItem);
-	disconnect(linkItem.toStrongRef().data(), SIGNAL(onLoadedStateChanged(uid_t, bool)), this, SLOT(onReferenceLoadedStateChanged(uid_t, bool)));
+	disconnect(linkItem.toStrongRef().data(), SIGNAL(onLoadedStateChanged(quint32, bool)), this, SLOT(onReferenceLoadedStateChanged(quint32, bool)));
 	emit onReferencesChanged(m_uid, linkItem.toStrongRef()->descr().toStrongRef()->uid(), false);
 }
 
@@ -134,7 +134,7 @@ bool LinkerItemBase::loadAllConnected()
 	return true;
 }
 
-void LinkerItemBase::onReferenceLoadedStateChanged(uid_t uid, bool isLoaded)
+void LinkerItemBase::onReferenceLoadedStateChanged(quint32 uid, bool isLoaded)
 {
 
 }

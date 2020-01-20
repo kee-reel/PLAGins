@@ -27,19 +27,19 @@ public:
         virtual bool isLoaded() = 0;
 
     signals:
-        void onLoadedStateChanged(uid_t selfUID, bool isLoaded);
-        void onReferencesChanged(uid_t selfUID, uid_t itemUID, bool isAdded);
-        void onReferentsChanged(uid_t selfUID, uid_t itemUID, bool isAdded);
+        void onLoadedStateChanged(quint32 selfUID, bool isLoaded);
+        void onReferencesChanged(quint32 selfUID, quint32 itemUID, bool isAdded);
+        void onReferentsChanged(quint32 selfUID, quint32 itemUID, bool isAdded);
     };
 
     virtual QWeakPointer<ILinkerItem> addPlugin(QString filename) = 0;
 	virtual bool removePlugin(QWeakPointer<ILinkerItem> linkerItem) = 0;
-    virtual bool loadPlugin(uid_t linkerItem) = 0;
-    virtual bool unloadPlugin(uid_t linkerItem) = 0;
-    virtual bool linkPlugins(uid_t referent, QString interface, uid_t reference) = 0;
-    virtual bool unlinkPlugins(uid_t referent, QString interface, uid_t reference) = 0;
+    virtual bool loadPlugin(quint32 linkerItem) = 0;
+    virtual bool unloadPlugin(quint32 linkerItem) = 0;
+    virtual bool linkPlugins(quint32 referent, QString interface, quint32 reference) = 0;
+    virtual bool unlinkPlugins(quint32 referent, QString interface, quint32 reference) = 0;
 
-    virtual QWeakPointer<ILinkerItem> getItemByUID(uid_t uid) = 0;
+    virtual QWeakPointer<ILinkerItem> getItemByUID(quint32 uid) = 0;
     virtual QWeakPointer< QList<QWeakPointer<ILinkerItem>> > getItemsWithInterface(Interface interface) = 0;
 
 signals:

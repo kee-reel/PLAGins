@@ -19,7 +19,7 @@ void PluginBase::initPluginBase(QMap<Interface, QObject *> interfaces,
 	m_pluginBaseSignal.reset(new PluginBaseSignal(this, m_instancesHandler));
 }
 
-bool PluginBase::pluginInit(uid_t uid, const QWeakPointer<QJsonObject> &meta)
+bool PluginBase::pluginInit(quint32 uid, const QWeakPointer<QJsonObject> &meta)
 {
 	assert(m_descr.isNull());
 	m_descr.reset(PluginDescriptor::make(uid, m_object, meta, m_interfaces, m_instancesHandler));

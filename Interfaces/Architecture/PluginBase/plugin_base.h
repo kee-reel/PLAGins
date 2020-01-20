@@ -90,7 +90,7 @@ protected:
 
 	// IPlugin interface
 private:
-	virtual bool pluginInit(uid_t uid, const QWeakPointer<QJsonObject> &meta) override;
+	virtual bool pluginInit(quint32 uid, const QWeakPointer<QJsonObject> &meta) override;
 	virtual bool isInited() override;
 	virtual QObject* getInstance(Interface interface) override;
 	virtual IReferenceDescriptorPtr getDescriptor() override;

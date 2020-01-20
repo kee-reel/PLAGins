@@ -37,7 +37,7 @@ protected:
 	virtual QString finiItem() override;
 
 private slots:
-	void connectionsChanged(uid_t selfUID, uid_t itemUID, bool isAdded);
+	void connectionsChanged(quint32 selfUID, quint32 itemUID, bool isAdded);
 
 public:
 	static bool isPlugin(IPluginHandlerPtr pluginHandler);

@@ -106,7 +106,7 @@ QString PluginLinkerItem::finiItem()
 	return QString();
 }
 
-void PluginLinkerItem::connectionsChanged(uid_t selfUID, uid_t itemUID, bool isAdded)
+void PluginLinkerItem::connectionsChanged(quint32 selfUID, quint32 itemUID, bool isAdded)
 {
 	if(m_pluginInstance->isSet())
 	{

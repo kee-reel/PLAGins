@@ -18,12 +18,12 @@ void UIElementBase::initUIElementBase(QMap<QString, IReferenceInstancePtr > inst
 	m_uiElementBaseSignal.reset(new UIElementBaseSignal(this, m_linksHandler));
 }
 
-void UIElementBase::openLink(uid_t referenceUID)
+void UIElementBase::openLink(quint32 referenceUID)
 {
 	emit linkOpened(m_pluginBase->getDescriptor().toStrongRef()->uid(), referenceUID);
 }
 
-void UIElementBase::closeLink(uid_t referenceUID)
+void UIElementBase::closeLink(quint32 referenceUID)
 {
 	emit linkClosed(m_pluginBase->getDescriptor().toStrongRef()->uid(), referenceUID);	
 }
@@ -43,7 +43,7 @@ QWeakPointer<IMethodsHandler> UIElementBase::getMethodsHandler()
 	return m_methodsHandler;
 }
 
-uid_t UIElementBase::getUID()
+quint32 UIElementBase::getUID()
 {
 	return m_pluginBase->getDescriptor().toStrongRef()->uid();
 }

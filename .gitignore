@@ -14,8 +14,8 @@
 object_script.*.Release
 object_script.*.Debug
 *_plugin_import.cpp
-/.qmake.cache
-/.qmake.stash
+.qmake.cache
+.qmake.stash
 *.pro.user
 *.pro.user.*
 *.qbs.user
@@ -45,3 +45,6 @@ CMakeLists.txt.user*
 
 # Android build
 *.so-deployment-settings.*
+
+# Windows
+*object_script.*

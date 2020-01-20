@@ -33,3 +33,7 @@ CONFIG += c++11
 
 QMAKE_CXXFLAGS += -W
 QMAKE_CXXFLAGS += -Wno-undef
+
+win32 {
+    DEFINES += WIN32_LEAN_AND_MEAN
+}

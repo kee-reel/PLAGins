@@ -43,12 +43,12 @@ public:
     virtual bool loadAllConnected();
 
 signals:
-    void onLoadedStateChanged(uid_t selfUID, bool isLoaded);
-    void onReferencesChanged(uid_t selfUID, uid_t itemUID, bool isAdded);
-    void onReferentsChanged(uid_t selfUID, uid_t itemUID, bool isAdded);
+    void onLoadedStateChanged(quint32 selfUID, bool isLoaded);
+    void onReferencesChanged(quint32 selfUID, quint32 itemUID, bool isAdded);
+    void onReferentsChanged(quint32 selfUID, quint32 itemUID, bool isAdded);
 
 private slots:
-    void onReferenceLoadedStateChanged(uid_t uid, bool isLoaded);
+    void onReferenceLoadedStateChanged(quint32 uid, bool isLoaded);
 
 protected:
     virtual QString initItem(QObject* object) = 0;
@@ -56,7 +56,7 @@ protected:
     virtual bool isInited();
 
 protected:
-    uid_t m_uid;
+    quint32 m_uid;
     IReferenceDescriptorPtr m_descriptor;
     IPluginHandlerPtr m_pluginHandler;
     QSharedPointer<QMap< Interface, QList<QWeakPointer<LinkerItemBase>> >> m_references;

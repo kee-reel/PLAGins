@@ -7,7 +7,7 @@ class IReferenceDescriptor
 {
 public:
     //! \brief Plugin unique id. Every plugin in system guaranteed to have unique id.
-    virtual uid_t uid() = 0;
+    virtual quint32 uid() = 0;
     //! \brief Plugin interface name. By this field all plugins are linked.
     virtual const QVector<Interface>& interfaces() = 0;
     //! \brief Plugin name.

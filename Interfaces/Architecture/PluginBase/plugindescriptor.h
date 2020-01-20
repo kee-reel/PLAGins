@@ -6,7 +6,7 @@
 class PluginDescriptor : public IReferenceDescriptor
 {
 public:
-	static PluginDescriptor* make(uid_t uid, QObject* instance, QWeakPointer<QJsonObject> meta,
+	static PluginDescriptor* make(quint32 uid, QObject* instance, QWeakPointer<QJsonObject> meta,
 	                              QMap<Interface, QObject*> interfaces, const QSharedPointer<IReferencesHandler<Interface>> &instances)
 	{
 		auto metaData = meta.toStrongRef()->value("MetaData").toObject();
@@ -91,7 +91,7 @@ public:
 
 	// IReferenceDescriptor interface
 public:
-	inline virtual uid_t uid() override
+	inline virtual quint32 uid() override
 	{
 		return m_uid;
 	}
@@ -113,7 +113,7 @@ public:
 	}
 
 private:
-	uid_t m_uid;
+	quint32 m_uid;
 	QString m_name;
 	QString m_about;
 	QObject* m_instance;

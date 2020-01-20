@@ -41,11 +41,11 @@ public:
 public:
 	virtual QWeakPointer<ILinkerItem> addPlugin(QString filename) override;
 	virtual bool removePlugin(QWeakPointer<ILinkerItem> linkerItem) override;
-	virtual bool loadPlugin(uid_t uid) override;
-	virtual bool unloadPlugin(uid_t uid) override;
-	virtual bool linkPlugins(uid_t referentUID, QString interface, uid_t referenceUID) override;
-	virtual bool unlinkPlugins(uid_t referent, QString interface, uid_t referenceUID) override;
-	virtual QWeakPointer<ILinkerItem> getItemByUID(uid_t uid) override;
+	virtual bool loadPlugin(quint32 uid) override;
+	virtual bool unloadPlugin(quint32 uid) override;
+	virtual bool linkPlugins(quint32 referentUID, QString interface, quint32 referenceUID) override;
+	virtual bool unlinkPlugins(quint32 referent, QString interface, quint32 referenceUID) override;
+	virtual QWeakPointer<ILinkerItem> getItemByUID(quint32 uid) override;
 	virtual QWeakPointer<QList<QWeakPointer<ILinkerItem> > > getItemsWithInterface(Interface interface) override;
 
 signals:
@@ -63,10 +63,10 @@ private:
 	QMap<Interface, QSharedPointer< QList<QWeakPointer<LinkerItemBase>> > > m_referencedInterfaces;
 
 	QMap<Interface, QSharedPointer< QList<QWeakPointer<LinkerItemBase>> > > m_interfacesMap;
-	QMap<uid_t, QSharedPointer<LinkerItemBase>> m_linkerItemsMap;
+	QMap<quint32, QSharedPointer<LinkerItemBase>> m_linkerItemsMap;
 
 	QMap<Interface, QSharedPointer< QList<QWeakPointer<ILinkerItem>> > > m_rawInterfacesMap;
-	QMap<uid_t, QSharedPointer<ILinkerItem>> m_rawLinkerItemsMap;
+	QMap<quint32, QSharedPointer<ILinkerItem>> m_rawLinkerItemsMap;
 
 private:
 	ReferenceInstancePtr<IApplication> m_app;

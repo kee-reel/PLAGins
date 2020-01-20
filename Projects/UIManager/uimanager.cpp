@@ -53,7 +53,7 @@ void UIManager::onPluginReferencesListUpdated(Interface interface)
 	m_parentWidget->installEventFilter(this);
 	m_parentWidget->layout()->setMargin(0);
 	
-	QList<uid_t> removedElements = m_elementsMap.keys();
+	QList<quint32> removedElements = m_elementsMap.keys();
 	for(auto uiElement : *m_uiElementsList)
 	{
 		auto uid = uiElement->descr().toStrongRef()->uid();
@@ -117,7 +117,7 @@ void UIManager::onPluginReferencesListUpdated(Interface interface)
 	}
 }
 
-void UIManager::onOpenLink(uid_t selfUID, uid_t referenceUID)
+void UIManager::onOpenLink(quint32 selfUID, quint32 referenceUID)
 {
 	if(!m_elementsStack.isEmpty() && referenceUID == getActiveElementUID())
 	{
@@ -144,7 +144,7 @@ void UIManager::onOpenLink(uid_t selfUID, uid_t referenceUID)
 	element->instance()->open(m_parentWidget);
 }
 
-void UIManager::onCloseLink(uid_t selfUID, uid_t referenceUID)
+void UIManager::onCloseLink(quint32 selfUID, quint32 referenceUID)
 {
 	if(selfUID != getActiveElementUID())
 	{
@@ -160,7 +160,7 @@ void UIManager::onCloseLink(uid_t selfUID, uid_t referenceUID)
 	onCloseSelf(iter.value()->instance()->getUID());
 }
 
-void UIManager::onCloseSelf(uid_t selfUID)
+void UIManager::onCloseSelf(quint32 selfUID)
 {
 	Q_ASSERT(selfUID == getActiveElementUID());
 	if (m_elementsStack.count() > 1)
@@ -200,13 +200,13 @@ bool UIManager::registerUIElement(ReferenceInstancePtr<IUIElement> &uiElement)
 		m_rootElementUID = uid;	
 	}
 	
-	connect(object, SIGNAL(linkOpened(uid_t, uid_t)), this, SLOT(onOpenLink(uid_t, uid_t)));
-	connect(object, SIGNAL(linkClosed(uid_t, uid_t)), this, SLOT(onCloseLink(uid_t, uid_t)));
-	connect(object, SIGNAL(selfClosed(uid_t)), this, SLOT(onCloseSelf(uid_t)));
+	connect(object, SIGNAL(linkOpened(quint32, quint32)), this, SLOT(onOpenLink(quint32, quint32)));
+	connect(object, SIGNAL(linkClosed(quint32, quint32)), this, SLOT(onCloseLink(quint32, quint32)));
+	connect(object, SIGNAL(selfClosed(quint32)), this, SLOT(onCloseSelf(quint32)));
 	return true;
 }
 
-bool UIManager::unregisterUIElement(uid_t uid)
+bool UIManager::unregisterUIElement(quint32 uid)
 {
 	auto uiElementIter = m_elementsMap.find(uid);
 	if(uiElementIter == m_elementsMap.end())

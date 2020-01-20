@@ -211,19 +211,19 @@ bool PluginLinker::setupItemLinks(QSharedPointer<LinkerItemBase> &item)
 	return isLinkageSucceded;
 }
 
-bool PluginLinker::loadPlugin(uid_t uid)
+bool PluginLinker::loadPlugin(quint32 uid)
 {
 	m_linkerItemsMap.find(uid).value()->load();
 	return true;
 }
 
-bool PluginLinker::unloadPlugin(uid_t uid)
+bool PluginLinker::unloadPlugin(quint32 uid)
 {
 	m_linkerItemsMap.find(uid).value()->unload();
 	return true;
 }
 
-bool PluginLinker::linkPlugins(uid_t referentUID, QString interface, uid_t referenceUID)
+bool PluginLinker::linkPlugins(quint32 referentUID, QString interface, quint32 referenceUID)
 {
 	Q_UNUSED(referentUID)
 	Q_UNUSED(interface)
@@ -231,7 +231,7 @@ bool PluginLinker::linkPlugins(uid_t referentUID, QString interface, uid_t refer
 	return true;
 }
 
-bool PluginLinker::unlinkPlugins(uid_t referentUID, QString interface, uid_t referenceUID)
+bool PluginLinker::unlinkPlugins(quint32 referentUID, QString interface, quint32 referenceUID)
 {
 	Q_UNUSED(referentUID)
 	Q_UNUSED(interface)
@@ -239,7 +239,7 @@ bool PluginLinker::unlinkPlugins(uid_t referentUID, QString interface, uid_t ref
 	return true;
 }
 
-QWeakPointer<IPluginLinker::ILinkerItem> PluginLinker::getItemByUID(uid_t uid)
+QWeakPointer<IPluginLinker::ILinkerItem> PluginLinker::getItemByUID(quint32 uid)
 {
 	return m_rawLinkerItemsMap.find(uid).value();
 }

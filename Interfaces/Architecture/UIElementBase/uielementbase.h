@@ -40,7 +40,7 @@ public slots:
 	QWeakPointer<IMethodsHandler> getMethodsHandler() override;
 	QWeakPointer<IReferencesHandler<QString>> getLinksHandler() override;
 	
-	uid_t getUID() override;
+	quint32 getUID() override;
 	QStringList linkNames() override;
 	QWidget *getWidget() override;
 	QIcon getIcon() override;
@@ -56,14 +56,14 @@ public:
 	void initUIElementBase(QMap<QString, IReferenceInstancePtr> instances = {}, QMap<QString, IReferenceInstancesListPtr> instancesLists = {});
 	
 public slots:
-	void openLink(uid_t referenceUID);
-	void closeLink(uid_t referenceUID);
+	void openLink(quint32 referenceUID);
+	void closeLink(quint32 referenceUID);
 	void closeSelf();
 	
 signals:
-	void linkOpened(uid_t selfUID, uid_t referenceUID);
-	void linkClosed(uid_t selfUID, uid_t referenceUID);
-	void selfClosed(uid_t selfUID);
+	void linkOpened(quint32 selfUID, quint32 referenceUID);
+	void linkClosed(quint32 selfUID, quint32 referenceUID);
+	void selfClosed(quint32 selfUID);
 	
 private:
 	void onStateChanged(ReferencesHandlerState state);

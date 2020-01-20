@@ -6,7 +6,7 @@
 class ReferenceInstanceObject : public QObject, public IReferenceInstance
 {
 	Q_OBJECT
-	Q_PROPERTY(uid_t uid READ uid NOTIFY descriptorChanged)
+	Q_PROPERTY(quint32 uid READ uid NOTIFY descriptorChanged)
 	Q_PROPERTY(QString name READ name NOTIFY descriptorChanged)
 	Q_PROPERTY(QString about READ about NOTIFY descriptorChanged)
 	Q_PROPERTY(QObject* object READ object NOTIFY descriptorChanged)
@@ -15,7 +15,7 @@ public:
 		QObject(parent),
 		m_object(nullptr)
 	{
-        qRegisterMetaType<uid_t>("uid_t");
+        qRegisterMetaType<quint32>("quint32");
 	}
 	
 	// IReferenceInstance interface
@@ -30,7 +30,7 @@ public:
 		return m_descr;
 	}
 	
-	uid_t uid()
+	quint32 uid()
 	{
 		return isSet() ? m_descr.toStrongRef()->uid() : 0;
 	}
@@ -57,7 +57,7 @@ protected:
 	QObject* m_object;
 	IReferenceDescriptorPtr m_descr;
 };
-Q_DECLARE_METATYPE(uid_t)
+Q_DECLARE_METATYPE(quint32)
 
 template <class T>
 class ReferenceInstance : public ReferenceInstanceObject
