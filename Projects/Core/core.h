@@ -3,7 +3,7 @@
 
 #include <QtCore>
 
-#include "../../../Application/icoreplugin.h"
+#include "../../../Application/icore.h"
 #include "../../Interfaces/Architecture/iplugin.h"
 #include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 
