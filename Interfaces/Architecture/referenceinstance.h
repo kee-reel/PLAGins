@@ -126,4 +126,14 @@ class ReferenceInstancePtr : public QSharedPointer<ReferenceInstance<T>>
 public:
 	ReferenceInstancePtr() : QSharedPointer<ReferenceInstance<T>>(new ReferenceInstance<T>()) 
 	{}
+	
+	ReferenceInstance<T>* reference() const
+	{
+		return this->data();
+	}
+	
+	T* operator->() const
+	{
+		return this->data()->instance();
+	}
 };

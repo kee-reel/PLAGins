@@ -26,7 +26,7 @@ bool Core::coreFini()
 	return true;
 }
 
-void Core::onPluginReady()
+void Core::onReady()
 {
 }
 

@@ -19,7 +19,7 @@ UserTaskManager::~UserTaskManager()
 {
 }
 
-void UserTaskManager::onPluginReferencesSet()
+void UserTaskManager::onReferencesSet()
 {
 	QMap<QString, QVariant::Type> newRelationStruct =
 	{
@@ -27,13 +27,13 @@ void UserTaskManager::onPluginReferencesSet()
 	};
 	QVector<QVariant> defaultData;
 	defaultData << "New task";
-	m_dataManager->instance()->AddExtention(tableName, relationName, newRelationStruct, defaultData);
-	m_dataManager->instance()->SetActiveExtention(tableName, relationName);
+	m_dataManager->AddExtention(tableName, relationName, newRelationStruct, defaultData);
+	m_dataManager->SetActiveExtention(tableName, relationName);
 }
 
-void UserTaskManager::onPluginReady()
+void UserTaskManager::onReady()
 {
-	treeModel = m_dataManager->instance()->GetDataModel(tableName);
+	treeModel = m_dataManager->GetDataModel(tableName);
 }
 
 QAbstractItemModel* UserTaskManager::GetTreeModel()

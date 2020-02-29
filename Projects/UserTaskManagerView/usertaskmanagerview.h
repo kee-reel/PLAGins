@@ -1,5 +1,5 @@
-#ifndef TASKLISTVIEW_H
-#define TASKLISTVIEW_H
+#pragma once
+
 
 #include <QApplication>
 #include <QDebug>
@@ -24,7 +24,7 @@ class Form;
 
 //! \addtogroup UserTaskManager_dep
 //!  \{
-class UserTaskManagerView : public QWidget, public PluginBase
+class UserTaskManagerView : public QObject, public PluginBase
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
@@ -36,13 +36,10 @@ public:
 	
 	// PluginBase interface
 private:
-	virtual void onPluginReady() override;
+	virtual void onReady() override;
 	
 public slots:
 	void OpenTaskEditor(int id);
-	
-private:
-	virtual void resizeEvent(QResizeEvent *event) override;
 	
 private slots:
 	void OnAddFormClosed();
@@ -52,6 +49,7 @@ private slots:
 	void buttonEdit_clicked();
 	void onTreeViewClicked(const QModelIndex &index);
 	void buttonExit_clicked();
+	void onTreeViewDoubleClicked(const QModelIndex &index);
 	
 private:
 	QSharedPointer<Ui::Form> ui;
@@ -68,4 +66,4 @@ private:
 	const QModelIndex *currentModelIndex;
 };
 //!  \}
-#endif // TASKLISTVIEW_H
+

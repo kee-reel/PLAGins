@@ -23,9 +23,9 @@ ExtendableDataManager::~ExtendableDataManager()
 	}
 }
 
-void ExtendableDataManager::onPluginReferencesSet()
+void ExtendableDataManager::onReferencesSet()
 {
-	m_dataSource->instance()->SetPassword("rqCZB63Fr7tmTB");
+	m_dataSource->SetPassword("rqCZB63Fr7tmTB");
 }
 
 bool ExtendableDataManager::RegisterExtentionFieldEditor(QString relation, QString field, QWidget *widget)

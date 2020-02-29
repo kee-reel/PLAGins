@@ -1,5 +1,5 @@
-#ifndef PLUGINBASE_H
-#define PLUGINBASE_H
+#pragma once
+
 
 #include <QtCore>
 #include <QJsonObject>
@@ -98,16 +98,15 @@ private:
 	virtual bool pluginFini() override;
 	
 protected:
-	virtual void onPluginInited() {}
-	virtual void onPluginReferencesSet() {}
-	virtual void onPluginReady() {}
-	virtual void onPluginReferencesListUpdated(Interface interface) {Q_UNUSED(interface)}
+	virtual void onInited() {}
+	virtual void onReferencesSet() {}
+	virtual void onReady() {}
+	virtual void onReferencesListUpdated(Interface interface) {Q_UNUSED(interface)}
 	
 	IReferenceDescriptorPtr descr();
 	
 private:
 	void onStateChanged(ReferencesHandlerState state);
-	void onReferencesListUpdated(const Interface &interface);
 	
 private:
 	QObject* m_object;
@@ -116,6 +115,6 @@ private:
 	QSharedPointer<PluginReferencesHandler> m_instancesHandler;
 	QSharedPointer<PluginBaseSignal> m_pluginBaseSignal;
 };
-#endif // PLUGINBASE_H
+
 
 

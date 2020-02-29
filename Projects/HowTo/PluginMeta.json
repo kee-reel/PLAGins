@@ -1,0 +1,14 @@
+{
+	"iplugin": {
+		"interfaces": [
+			"IPlugin/1.0"
+			, "IHowTo/1.0"
+		],
+		"references": {
+		},
+		"info": {
+			"name": "HowTo",		
+			"about": "Plugin example for tutorial"
+		}
+	}
+}

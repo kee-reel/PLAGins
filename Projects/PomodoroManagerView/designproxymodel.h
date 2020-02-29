@@ -1,5 +1,5 @@
-#ifndef DESIGNPROXYMODEL_H
-#define DESIGNPROXYMODEL_H
+#pragma once
+
 
 #include <QSize>
 #include <QFont>
@@ -23,4 +23,4 @@ private:
     QVector<int> modelIndexesShown;
     int columnsCount;
 };
-#endif // DESIGNPROXYMODEL_H
+

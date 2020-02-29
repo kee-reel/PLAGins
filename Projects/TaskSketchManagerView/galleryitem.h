@@ -1,5 +1,5 @@
-#ifndef GALLERYITEM_H
-#define GALLERYITEM_H
+#pragma once
+
 
 #include <QByteArray>
 #include <QDebug>
@@ -38,4 +38,4 @@ protected:
 signals:
     void OnClicked(GalleryItem*);
 };
-#endif // GALLERYITEM_H
+

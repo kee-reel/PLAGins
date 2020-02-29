@@ -1,5 +1,5 @@
-#ifndef POMODOROVIEW_H
-#define POMODOROVIEW_H
+#pragma once
+
 
 #include <QApplication>
 #include <QDebug>
@@ -34,7 +34,7 @@ public:
 	
 	// PluginBase interface
 private:
-	virtual void onPluginReady() override;
+	virtual void onReady() override;
 	
 public slots:
 	QString linkName();
@@ -62,4 +62,4 @@ private:
 	IPomodoroManager::WorkSetup workSetup;
 };
 //!  \}
-#endif // TASKLISTVIEW_H
+

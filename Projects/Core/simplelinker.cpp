@@ -28,7 +28,7 @@ void SimpleLinker::addPlugin(IPluginHandlerPtr pluginHandler)
 
 		QSharedPointer<LoadedPluginPair> handler(new LoadedPluginPair(pluginHandler, ReferenceInstancePtr<IPlugin>()));
 		auto descr = plugin->getDescriptor();
-		if(!handler->second->setInstance(descr))
+		if(!handler->second.reference()->setInstance(descr))
 		{
 			return;
 		}
@@ -62,7 +62,6 @@ void SimpleLinker::init()
 	auto&& plugins = m_app.toStrongRef()->getPlugins();
 	try 
 	{
-		qDebug() << "Load";
 		for (auto& plugin : plugins)
 		{
 			addPlugin(plugin);
@@ -74,7 +73,7 @@ void SimpleLinker::init()
 	}
 	for(auto& pluginPair : m_plugins)
 	{
-		auto instancesHandler = pluginPair->second->instance()->getInstancesHandler();
+		auto instancesHandler = pluginPair->second->getInstancesHandler();
 		auto &&requiredReferences = instancesHandler.toStrongRef()->requiredReferences();
 //		qDebug() << "Referent" << pluginPair->second.toStrongRef()->descr().toStrongRef()->name() << "require" << requiredReferences;
 		for (auto referenceIter = requiredReferences.begin(); referenceIter != requiredReferences.end(); ++referenceIter)
@@ -90,14 +89,14 @@ void SimpleLinker::init()
 				{
 					for(auto& plugin : pluginsList)
 					{
-						list.append(plugin.toStrongRef()->second->descr());
+						list.append(plugin.toStrongRef()->second.reference()->descr());
 					}
 				}
 				else
 				{
 					for(auto i = 0; i < referencesCount; ++i)
 					{
-						list.append(pluginsList[i].toStrongRef()->second->descr());
+						list.append(pluginsList[i].toStrongRef()->second.reference()->descr());
 					}
 				}
 				if(!instancesHandler.toStrongRef()->setReferences(referenceIter.key(), list))
@@ -110,7 +109,7 @@ void SimpleLinker::init()
 
 	for(auto& pluginPair : m_plugins)
 	{
-		auto instancesHandler = pluginPair->second->instance()->getInstancesHandler();
+		auto instancesHandler = pluginPair->second->getInstancesHandler();
 		instancesHandler.toStrongRef()->transitToReadyState();
 	}
 }

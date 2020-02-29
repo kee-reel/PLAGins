@@ -1,5 +1,5 @@
-#ifndef IHeartRateDevice_H
-#define IHeartRateDevice_H
+#pragma once
+
 
 #include <QtCore>
 
@@ -28,4 +28,4 @@ signals:
 };
 //!  \}
 Q_DECLARE_INTERFACE(IHeartRateDevice, "IHeartRateDevice/1.0")
-#endif // IHeartRateDevice_H
+

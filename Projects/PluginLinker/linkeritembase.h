@@ -1,5 +1,5 @@
-#ifndef LINKERITEMBASE_H
-#define LINKERITEMBASE_H
+#pragma once
+
 
 #include <QObject>
 #include <QDebug>
@@ -63,4 +63,4 @@ protected:
     QSharedPointer<QMap< Interface, QList<QWeakPointer<LinkerItemBase>> >> m_referents;
 };
 
-#endif // LINKERITEMBASE_H
+

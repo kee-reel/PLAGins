@@ -1,5 +1,5 @@
-#ifndef IDataBase_H
-#define IDataBase_H
+#pragma once
+
 
 #include <QtCore>
 
@@ -44,4 +44,4 @@ protected:
 Q_DECLARE_INTERFACE(IDataBase, "IDataBase/1.0")
 //! @}
 
-#endif // IDataBase_H
+

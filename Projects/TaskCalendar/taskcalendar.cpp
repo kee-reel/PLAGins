@@ -17,7 +17,7 @@ TaskCalendar::~TaskCalendar()
 {
 }
 
-void TaskCalendar::onPluginReferencesSet()
+void TaskCalendar::onReferencesSet()
 {
 	QMap<QString, QVariant::Type> newRelationStruct =
 	{
@@ -25,7 +25,7 @@ void TaskCalendar::onPluginReferencesSet()
 	};
 	QVector<QVariant> defaultData;
 	defaultData << QDateTime::currentDateTime();
-	m_dataManager->instance()->AddExtention("IUserTaskManager", "ITaskCalendar", newRelationStruct, defaultData);
+	m_dataManager->AddExtention("IUserTaskManager", "ITaskCalendar", newRelationStruct, defaultData);
 }
 
 void TaskCalendar::LinkEditorWidget(QWidget *widget)

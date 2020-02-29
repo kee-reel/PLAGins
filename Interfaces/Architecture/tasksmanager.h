@@ -1,5 +1,5 @@
-#ifndef TASKSMANAGER_H
-#define TASKSMANAGER_H
+#pragma once
+
 
 #include <QtCore>
 
@@ -92,4 +92,4 @@ private:
 };
 
 //! \}
-#endif // TASKSMANAGER_H
+

@@ -1,5 +1,5 @@
-#ifndef IPomodoroManager_H
-#define IPomodoroManager_H
+#pragma once
+
 
 #include <QtCore>
 
@@ -42,4 +42,4 @@ signals:
 };
 //!  \}
 Q_DECLARE_INTERFACE(IPomodoroManager, "IPomodoroManager/1.0")
-#endif // ITASKLISTMODEL_H
+

@@ -7,7 +7,7 @@ TARGET = TaskSketchManagerView
 TEMPLATE = lib
 QT += widgets
 
-DEFINES += PLUGIN_BASE_QWIDGET
+DEFINES += QWidget_UIElement
 
 include(../../Common/common.pri)
 

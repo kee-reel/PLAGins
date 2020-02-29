@@ -1,5 +1,5 @@
-#ifndef MYTREEVIEW_H
-#define MYTREEVIEW_H
+#pragma once
+
 
 #include <QDebug>
 #include <QTreeView>
@@ -21,4 +21,4 @@ protected:
 
 };
 //!  \}
-#endif // MYTREEVIEW_H
+

@@ -2,14 +2,14 @@
 #include "ui_form.h"
 
 TaskSketchManagerView::TaskSketchManagerView() :
-	QWidget(),
-	PluginBase(this, {INTERFACE(IUIElement)}),
-	UIElementBase(this, this, {"MainMenuItem"}),
-	ui(new Ui::Form)
+	QObject(),
+	PluginBase(this),
+	ui(new Ui::Form),
+	m_elementBase(new UIElementBase(this, {"MainMenuItem"}))
 {
-	ui->setupUi(this);
+	ui->setupUi(m_elementBase);
 	paintWidgetTypeEditor = nullptr;
-	galleryForm = new GalleryForm(this);
+	galleryForm = new GalleryForm(m_elementBase);
 	galleryForm->setVisible(false);
 	imageFormat = "png";
 	connect(ui->buttonSave, SIGNAL(clicked(bool)), SLOT(buttonSave_clicked()));
@@ -30,32 +30,34 @@ TaskSketchManagerView::TaskSketchManagerView() :
 	ui->buttonClose->setVisible(false);
 #endif
 	initPluginBase({
+		{INTERFACE(IPlugin), this},
+		{INTERFACE(IUIElement), m_elementBase}
+	},
+	{
 		{INTERFACE(ITaskSketchManager), myModel}
 	});
-	initUIElementBase();
+	m_elementBase->initUIElementBase();
 }
 
 TaskSketchManagerView::~TaskSketchManagerView()
-{
-	delete galleryForm;
-	
+{	
 //	if(paintWidgetTypeEditor && paintWidgetTypeEditor->parent())
 //		delete paintWidgetTypeEditor;
 }
 
-void TaskSketchManagerView::onPluginInited()
-{
-	resetDescriptor(descr());
-}
-
-void TaskSketchManagerView::onPluginReferencesSet()
+void TaskSketchManagerView::onReferencesSet()
 {
 	paintWidgetTypeEditor = new PaintWidget();
-	myModel->instance()->LinkEditorWidget(paintWidgetTypeEditor);
+	myModel->LinkEditorWidget(paintWidgetTypeEditor);
 	
-	taskModel = myModel->instance()->GetModel();
-	sketchModel = myModel->instance()->GetInternalModel();
+	taskModel = myModel->GetModel();
+	sketchModel = myModel->GetInternalModel();
 	galleryForm->SetModel(sketchModel);
+	
+	if(!sketchModel)
+	{
+		return;
+	}
 	
 	int n = sketchModel->rowCount();
 	for(int i = 0; i < n; ++i)
@@ -66,11 +68,6 @@ void TaskSketchManagerView::onPluginReferencesSet()
 	}
 }
 
-void TaskSketchManagerView::resizeEvent(QResizeEvent *event)
-{
-	galleryForm->setGeometry(rect());
-}
-
 void TaskSketchManagerView::OnItemDelete(int index)
 {
 	sketchModel->removeRows(index, 1);
@@ -78,7 +75,7 @@ void TaskSketchManagerView::OnItemDelete(int index)
 
 void TaskSketchManagerView::OnItemConvertSlot(int index)
 {
-	myModel->instance()->ConvertSketchToTask(index);
+	myModel->ConvertSketchToTask(index);
 }
 
 void TaskSketchManagerView::buttonClear_clicked()
@@ -103,5 +100,5 @@ void TaskSketchManagerView::buttonOpenGallery_clicked()
 
 void TaskSketchManagerView::buttonClose_clicked()
 {
-	closeSelf();
+	m_elementBase->closeSelf();
 }

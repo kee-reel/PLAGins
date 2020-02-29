@@ -1,5 +1,5 @@
-#ifndef TASKLISTMODEL_H
-#define TASKLISTMODEL_H
+#pragma once
+
 
 #include <QObject>
 #include <QDebug>
@@ -29,8 +29,8 @@ public:
 
 	// PluginBase interface
 protected:
-	virtual void onPluginReferencesSet() override;
-	virtual void onPluginReady() override;
+	virtual void onReferencesSet() override;
+	virtual void onReady() override;
 
 	// IUserTaskManager interface
 public:
@@ -48,4 +48,4 @@ private:
 	QAbstractItemModel *treeModel;
 };
 //! \}
-#endif // TASKLISTMODEL_H
+

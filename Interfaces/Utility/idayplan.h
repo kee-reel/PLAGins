@@ -1,5 +1,5 @@
-#ifndef IDayPlan_H
-#define IDayPlan_H
+#pragma once
+
 
 #include <QtCore>
 
@@ -25,4 +25,4 @@ public:
 };
 //!  \}
 Q_DECLARE_INTERFACE(IDayPlan, "IDayPlan/1.0")
-#endif // IDayPlan_H
+

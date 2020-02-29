@@ -1,5 +1,5 @@
-#ifndef SERVICELINKERITEM_H
-#define SERVICELINKERITEM_H
+#pragma once
+
 
 #include <QObject>
 #include <QDebug>
@@ -40,4 +40,4 @@ private:
 public:
 };
 
-#endif // SERVICELINKERITEM_H
+

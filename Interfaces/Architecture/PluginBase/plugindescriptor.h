@@ -1,5 +1,5 @@
-#ifndef PLUGINDESCRIPTOR_H
-#define PLUGINDESCRIPTOR_H
+#pragma once
+
 
 #include "../../Architecture/ireferenceshandler.h"
 
@@ -120,4 +120,4 @@ private:
 	QVector<Interface> m_interfaces;
 };
 
-#endif // PLUGINDESCRIPTOR_H
+

@@ -2,7 +2,7 @@
 #include "ui_form.h"
 
 UserTaskManagerView::UserTaskManagerView() :
-	QWidget(nullptr),
+	QObject(nullptr),
 	PluginBase(this),
 	ui(new Ui::Form),
 	m_uiElementBase(new UIElementBase(this, {"MainMenuItem"}))
@@ -11,18 +11,16 @@ UserTaskManagerView::UserTaskManagerView() :
 	taskTree = nullptr;
 	proxyModel = nullptr;
 	
-	myTreeView = new MyTreeView(this);
-	ui->verticalLayout->setDirection(QBoxLayout::BottomToTop);
-	ui->verticalLayout->addWidget(myTreeView);
+	myTreeView = new MyTreeView(m_uiElementBase);
 	
 	connect(ui->buttonAdd, &QPushButton::clicked, this, &UserTaskManagerView::buttonAdd_clicked);
 	connect(ui->buttonEdit, &QPushButton::clicked, this, &UserTaskManagerView::buttonEdit_clicked);
 	connect(ui->buttonDelete, &QPushButton::clicked, this, &UserTaskManagerView::buttonDelete_clicked);
 	connect(ui->buttonExit, &QPushButton::clicked, this, &UserTaskManagerView::buttonExit_clicked);
 	
-	connect(myTreeView, SIGNAL(clicked(QModelIndex)), SLOT(onTreeViewClicked(QModelIndex)));
-	connect(myTreeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(onTreeViewDoubleClicked(QModelIndex)));
-	connect(myTreeView, SIGNAL(pressed(QModelIndex)), SLOT(onTreeViewPressed(QModelIndex)));
+	connect(myTreeView, &QTreeView::clicked, this, &UserTaskManagerView::onTreeViewClicked);
+	connect(myTreeView, &QTreeView::doubleClicked, this, &UserTaskManagerView::onTreeViewDoubleClicked);
+	connect(myTreeView, &QTreeView::pressed, this, &UserTaskManagerView::onTreeViewPressed);
 	myTreeView->setExpandsOnDoubleClick(false);
 	
 #ifdef Q_OS_ANDROID
@@ -35,8 +33,12 @@ UserTaskManagerView::UserTaskManagerView() :
 	ui->buttonExit->setVisible(false);
 #endif
 	
-	addForm = new AddForm(this);
+	addForm = new AddForm(m_uiElementBase);
 	connect(addForm, SIGNAL(OnClose()), this, SLOT(OnAddFormClosed()));
+	
+	ui->verticalLayout->setDirection(QBoxLayout::BottomToTop);
+	ui->verticalLayout->addWidget(addForm);
+	ui->verticalLayout->addWidget(myTreeView);
 	
 	initPluginBase({
 		{INTERFACE(IPlugin), this},
@@ -53,9 +55,9 @@ UserTaskManagerView::~UserTaskManagerView()
 	
 }
 
-void UserTaskManagerView::onPluginReady()
+void UserTaskManagerView::onReady()
 {
-	taskTree = m_taskManager->instance()->GetTreeModel();
+	taskTree = m_taskManager->GetTreeModel();
 	model = new DesignProxyModel(taskTree);
 	currentModelIndex = nullptr;
 	myTreeView->setModel(model);
@@ -66,14 +68,8 @@ void UserTaskManagerView::OpenTaskEditor(int id)
 {
 }
 
-void UserTaskManagerView::resizeEvent(QResizeEvent *event)
-{
-	addForm->resize(event->size());
-}
-
 void UserTaskManagerView::OnAddFormClosed()
 {
-	show();
 	ui->buttonAdd->setFocusPolicy(Qt::StrongFocus);
 	ui->buttonDelete->setFocusPolicy(Qt::StrongFocus);
 	ui->buttonEdit->setFocusPolicy(Qt::StrongFocus);
@@ -123,6 +119,8 @@ void UserTaskManagerView::buttonEdit_clicked()
 void UserTaskManagerView::onTreeViewPressed(const QModelIndex &index)
 {
 	currentModelIndex = &index;
+	if(index.isValid())
+		addForm->ShowModelData(index);
 }
 
 void UserTaskManagerView::onTreeViewClicked(const QModelIndex &index)
@@ -134,4 +132,12 @@ void UserTaskManagerView::onTreeViewClicked(const QModelIndex &index)
 		myTreeView->setExpanded(index, !myTreeView->isExpanded(index));
 		expandFlag = true;
 	}
+	if(index.isValid())
+		addForm->ShowModelData(index);
+}
+
+void UserTaskManagerView::onTreeViewDoubleClicked(const QModelIndex &index)
+{
+	if(index.isValid())
+		addForm->ShowModelData(index);
 }

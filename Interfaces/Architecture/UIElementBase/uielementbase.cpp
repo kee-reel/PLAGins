@@ -13,9 +13,13 @@ UIElementBase::UIElementBase(QObject *parentObject, QStringList linkNames, QIcon
 void UIElementBase::initUIElementBase(QMap<QString, IReferenceInstancePtr > instances,
 									  QMap<QString, IReferenceInstancesListPtr > instancesLists)
 {
-	m_methodsHandler.reset(new MethodsHandler(m_parentObject));
 	m_linksHandler.reset(new UIElementLinksHandler(instances, instancesLists));
-	m_uiElementBaseSignal.reset(new UIElementBaseSignal(this, m_linksHandler));
+	connect(m_linksHandler.data(), &UIElementLinksHandler::onStateChanged, this, &UIElementBase::onStateChanged);
+	connect(m_linksHandler.data(), &UIElementLinksHandler::onReferencesListUpdated, this, &UIElementBase::onReferencesListUpdated);
+
+#ifdef QML_UIElement
+	setResizeMode(QQuickWidget::SizeRootObjectToView);
+#endif
 }
 
 void UIElementBase::openLink(quint32 referenceUID)
@@ -36,11 +40,6 @@ void UIElementBase::closeSelf()
 QWeakPointer<IReferencesHandler<QString> > UIElementBase::getLinksHandler()
 {
 	return m_linksHandler;
-}
-
-QWeakPointer<IMethodsHandler> UIElementBase::getMethodsHandler()
-{
-	return m_methodsHandler;
 }
 
 quint32 UIElementBase::getUID()

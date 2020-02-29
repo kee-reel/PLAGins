@@ -1,5 +1,5 @@
-#ifndef INOTIFICATIONMANAGER_H
-#define INOTIFICATIONMANAGER_H
+#pragma once
+
 
 #include <QtCore>
 
@@ -50,4 +50,4 @@ signals:
 };
 //!  \}
 Q_DECLARE_INTERFACE(INotificationManager, "INotificationManager/1.0")
-#endif // INOTIFICATIONMANAGER_H
+

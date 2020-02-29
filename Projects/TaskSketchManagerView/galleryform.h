@@ -1,5 +1,5 @@
-#ifndef GALLERYFORM_H
-#define GALLERYFORM_H
+#pragma once
+
 
 #include <QWidget>
 #include <QAbstractItemModel>
@@ -36,4 +36,4 @@ signals:
     void OnItemDelete(int index);
     void OnItemConvert(int index);
 };
-#endif // GALLERYFORM_H
+

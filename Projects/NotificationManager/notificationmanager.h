@@ -1,5 +1,5 @@
-#ifndef ANDROIDNOTIFICATIONMODEL_H
-#define ANDROIDNOTIFICATIONMODEL_H
+#pragma once
+
 
 #include <QtCore>
 #include <QString>
@@ -64,4 +64,4 @@ private:
 };
 
 //!  \}
-#endif // ANDROIDNOTIFICATIONMODEL_H
+

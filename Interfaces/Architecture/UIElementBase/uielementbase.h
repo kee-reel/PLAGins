@@ -6,8 +6,6 @@
 #include "../../Interfaces/Architecture/iuielement.h"
 #include "../../Interfaces/Architecture/iplugin.h"
 #include "../../Interfaces/Architecture/referenceshandler.h"
-#include "methodshandler.h"
-#include "uielementbasesignal.h"
 #include "uielementlinkshandler.h"
 
 
@@ -37,7 +35,6 @@ public:
 	
 	// IUIElement interface
 public slots:
-	QWeakPointer<IMethodsHandler> getMethodsHandler() override;
 	QWeakPointer<IReferencesHandler<QString>> getLinksHandler() override;
 	
 	quint32 getUID() override;
@@ -68,6 +65,10 @@ signals:
 private:
 	void onStateChanged(ReferencesHandlerState state);
 	void onReferencesListUpdated(QString link);
+	
+private:
+	UIElementBase* m_instance;
+	QWeakPointer<UIElementLinksHandler> m_handler;
 
 
 #ifdef QML_UIElement
@@ -82,8 +83,6 @@ protected:
 	QStringList m_linkNames;
 	QIcon m_icon;
 	QSharedPointer<UIElementLinksHandler> m_linksHandler;
-	QSharedPointer<MethodsHandler> m_methodsHandler;
-	QSharedPointer<UIElementBaseSignal> m_uiElementBaseSignal;
 	bool m_isOpened;
 };
 

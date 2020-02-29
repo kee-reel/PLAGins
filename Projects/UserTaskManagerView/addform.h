@@ -1,5 +1,5 @@
-#ifndef ADDFORM_H
-#define ADDFORM_H
+#pragma once
+
 
 #include <QDebug>
 #include <QWidget>
@@ -47,4 +47,4 @@ private slots:
 public:
     bool event(QEvent *event) override;
 };
-#endif // ADDFORM_H
+

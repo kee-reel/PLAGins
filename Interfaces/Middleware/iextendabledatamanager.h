@@ -1,5 +1,5 @@
-#ifndef ITASKDBTOOLPLUGIN_H
-#define ITASKDBTOOLPLUGIN_H
+#pragma once
+
 
 #include <QtGlobal>
 #include <QVariant>
@@ -49,4 +49,4 @@ public:
 };
 Q_DECLARE_INTERFACE(IExtendableDataManager, "IExtendableDataManager/1.0")
 //! \}
-#endif // ITASKDBTOOLPLUGIN_H
+

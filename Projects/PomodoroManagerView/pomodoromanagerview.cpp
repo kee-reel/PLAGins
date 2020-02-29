@@ -52,14 +52,14 @@ QString PomodoroManagerView::linkName()
 	return m_uiElementBase->linkNames().first();
 }
 
-void PomodoroManagerView::onPluginReady()
+void PomodoroManagerView::onReady()
 {
-	connect(ui->pomodoroButton, SIGNAL(OnStartPomodoro()), myModel->descr().toStrongRef()->object(), SLOT(StartPomodoro()));
-	connect(myModel->descr().toStrongRef()->object(), SIGNAL(OnPomodoroFinished()), SLOT(PomodoroFinished()));
+	connect(ui->pomodoroButton, SIGNAL(OnStartPomodoro()), myModel.reference()->object(), SLOT(StartPomodoro()));
+	connect(myModel.reference()->object(), SIGNAL(OnPomodoroFinished()), SLOT(PomodoroFinished()));
 
-    proxyModel = myModel->instance()->GetTaskModel();
+    proxyModel = myModel->GetTaskModel();
     ui->treeView->setModel(proxyModel);
-    workSetup = myModel->instance()->GetWorkSetup();
+    workSetup = myModel->GetWorkSetup();
     ui->pomodoroButton->secsTarget = workSetup.workSessionDuration;
     UpdateSelectedTask();
 }
@@ -123,7 +123,7 @@ void PomodoroManagerView::treeView_pressed(const QModelIndex &index)
     auto selected = list.first();
 
     currentTask = selected;
-    myModel->instance()->SetActiveProject(currentTask);
+    myModel->SetActiveProject(currentTask);
 
     UpdateSelectedTask();
 }

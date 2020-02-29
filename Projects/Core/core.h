@@ -1,5 +1,5 @@
-#ifndef COREPLUGIN_H
-#define COREPLUGIN_H
+#pragma once
+
 
 #include <QtCore>
 
@@ -31,7 +31,7 @@ public:
 
 	// PluginBase interface
 public:
-	virtual void onPluginReady() override;
+	virtual void onReady() override;
 
 	// IApplication interface
 public:
@@ -44,4 +44,4 @@ private:
 	QSharedPointer<SimpleLinker> m_linker;
 };
 //! }
-#endif // COREPLUGIN_H
+

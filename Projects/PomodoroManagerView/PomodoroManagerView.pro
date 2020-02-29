@@ -7,8 +7,6 @@ TARGET = PomodoroManagerView
 TEMPLATE = lib
 QT += widgets multimedia
 
-DEFINES += PLUGIN_BASE_QWIDGET
-
 include(../../Common/common.pri)
 
 include(../../../Application/PluginBuildInfo.pri)

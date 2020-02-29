@@ -31,3 +31,6 @@ Every plugin has its own meta info -- it's stored in "PluginMeta.json'. Here is 
 There are "plugins.pro" file in "/Plugins" folder - by using it you could build all plugins.
 When you'll open project make sure that you disable "Shadow build" option.
 ![Shadow build](/Resources/Images/ShadowBuild.png)
+
+## How to
+

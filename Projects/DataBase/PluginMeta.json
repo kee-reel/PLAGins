@@ -1,6 +1,6 @@
 {
     "iplugin": {
-		"interfaces": ["IDataBase/1.0"],
+		"interfaces": ["IPlugin/1.0", "IDataBase/1.0"],
 		"references": {},
 		"info": {
 			"name": "DataBase",

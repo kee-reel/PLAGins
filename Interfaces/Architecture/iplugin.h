@@ -1,5 +1,4 @@
-#ifndef IPLUGIN_H
-#define IPLUGIN_H
+#pragma once
 
 #include <QtCore>
 #include <QObject>
@@ -7,8 +6,6 @@
 
 #include "ireferenceshandler.h"
 
-
-//! \brief This interface provides basic methods for all plugins.
 class IPlugin
 {
 public:
@@ -19,6 +16,7 @@ public:
 	virtual bool pluginInit(quint32 uid, const QWeakPointer<QJsonObject> &metaInfoObject) = 0;
 	virtual bool isInited() = 0;
 	virtual bool pluginFini() = 0;
+protected:
+	virtual ~IPlugin() = 0;
 };
 Q_DECLARE_INTERFACE(IPlugin, "IPlugin/1.0")
-#endif // IPLUGIN_H

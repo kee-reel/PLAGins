@@ -1,5 +1,5 @@
-#ifndef TASKSKETCHMODEL_H
-#define TASKSKETCHMODEL_H
+#pragma once
+
 
 #include <QObject>
 #include <QDebug>
@@ -31,8 +31,8 @@ public:
 
 	// PluginBase interface
 public:
-	virtual void onPluginReferencesSet() override;
-	virtual void onPluginReady() override;
+	virtual void onReferencesSet() override;
+	virtual void onReady() override;
 
 private slots:
 	void OnTimerEnded(int timerId);
@@ -67,4 +67,4 @@ private:
 	int notificationTimerId;
 };
 //! \}
-#endif // TASKLISTMODEL_H
+

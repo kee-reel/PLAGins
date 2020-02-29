@@ -1,5 +1,5 @@
-#ifndef QIMAGEITEMDELEGATE_H
-#define QIMAGEITEMDELEGATE_H
+#pragma once
+
 
 #include <QStyledItemDelegate>
 #include <QApplication>
@@ -22,4 +22,4 @@ public:
     void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 };
-#endif // QIMAGEITEMDELEGATE_H
+

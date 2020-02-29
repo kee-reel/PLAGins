@@ -1,5 +1,5 @@
-#ifndef GRIDMAINMENUVIEW_H
-#define GRIDMAINMENUVIEW_H
+#pragma once
+
 
 #include <QtCore>
 
@@ -26,4 +26,4 @@ private:
 	ReferenceInstancesListPtr<IUIElement> m_elements;
 };
 //!  \}
-#endif // GRIDMAINMENUVIEW_H
+

@@ -1,9 +1,9 @@
-#include "%{HdrFileName}"
+#include "plugin.h"
 @if '%{PluginType}' === 'QWidget'
 #include "ui_form.h"
 @endif
 
-%{CN}::%{CN}() :
+Plugin::Plugin() :
 	QObject(nullptr),
 	PluginBase(this)
 @if '%{PluginType}' === 'QWidget'
@@ -11,6 +11,9 @@
 @endif
 @if '%{PluginType}' === 'QWidget' || '%{PluginType}' === 'QWidget with QML'
 	, m_uiElementBase(new UIElementBase(this, {""}))
+@endif
+@if %{CreateNewInterface}
+	, m_impl(new %{CN}(this))
 @endif
 {
 @if '%{PluginType}' === 'QWidget'
@@ -23,21 +26,23 @@
 			, {INTERFACE(IUIElement), m_uiElementBase}
 @endif
 @if %{CreateNewInterface}
-			, {INTERFACE(%{InterfaceName}), /*this or instance*/ nullptr}
+			, {INTERFACE(%{InterfaceName}), m_impl}
 @endif
 		},
 		{},
 		{}
 	);
-@if '%{PluginType}' === 'QWidget with QML'
+@if '%{PluginType}' === 'QWidget' || '%{PluginType}' === 'QWidget with QML'
 	m_uiElementBase->initUIElementBase(
 		{}, 
 		{}
 	);
+@endif
+@if '%{PluginType}' === 'QWidget with QML'
 	m_uiElementBase->setSource(QUrl("qrc:/form.qml"));
 @endif
 }
 
-%{CN}::~%{CN}()
+Plugin::~Plugin()
 {
 }

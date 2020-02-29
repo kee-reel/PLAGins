@@ -35,6 +35,7 @@ void AddForm::SetModel(QAbstractItemModel *model)
 
 void AddForm::ShowModelData(const QModelIndex &index, bool isNew)
 {
+	ClearEditors();
     show();
 //    auto map = mapper->model()->itemData(index);
 //    ui->label_2->setText();
@@ -153,8 +154,7 @@ void AddForm::AcceptChanges()
     QMap<int, QVariant> rolesMap;
     rolesMap.insert(Qt::UserRole, currentItemMap);
     model->setItemData(currentModelIndex, rolesMap);
-    ClearEditors();
-    CancelChanges();
+    emit OnClose();
 }
 
 void AddForm::CancelChanges()

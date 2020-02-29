@@ -1,5 +1,5 @@
-#ifndef IModbusDataReader_H
-#define IModbusDataReader_H
+#pragma once
+
 
 #include "imodbusdevicedatamanager.h"
 #include <QtCore>
@@ -63,4 +63,4 @@ signals:
 };
 //!  \}
 Q_DECLARE_INTERFACE(IModbusDataReader, "IModbusDataReader/1.0")
-#endif // IModbusDataReader_H
+

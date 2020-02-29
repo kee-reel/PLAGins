@@ -1,5 +1,5 @@
-#ifndef IFuzzyLogicManager_H
-#define IFuzzyLogicManager_H
+#pragma once
+
 
 #include <QtCore>
 
@@ -90,7 +90,7 @@ public:
 };
 //!  \}
 Q_DECLARE_INTERFACE(IFuzzyLogicManager, "IFuzzyLogicManager/1.0")
-#endif // IFuzzyLogicManager_H
+
 
 //InputLinguisticVariable* x = new InputLinguisticVariable("x",-10,10);
 //TrapezoidalFuzzySet* negative = new TrapezoidalFuzzySet("Negative", -10, -10, -1, 0);

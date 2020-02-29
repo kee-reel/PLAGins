@@ -1,5 +1,5 @@
-#ifndef SERVICESMANAGER_H
-#define SERVICESMANAGER_H
+#pragma once
+
 
 #include "../../../Application/iapplication.h"
 #include "../../Interfaces/Architecture/iplugin.h"
@@ -26,4 +26,4 @@ private:
 	QMap<Interface, QList<QWeakPointer<LoadedPluginPair>>> m_pluginsInterfaces;
 	QList<QSharedPointer<LoadedPluginPair>> m_plugins;
 };
-#endif // SERVICESMANAGER_H
+

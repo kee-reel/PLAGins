@@ -1,5 +1,5 @@
-#ifndef PLUGINLINKERVIEW_H
-#define PLUGINLINKERVIEW_H
+#pragma once
+
 
 #include <QtCore>
 #include <QWidget>
@@ -32,7 +32,7 @@ public:
 	
 	// PluginBase interface
 public:
-	virtual void onPluginReady() override;
+	virtual void onReady() override;
 	
 private slots:
 	void addPlugin();
@@ -47,4 +47,4 @@ private:
 	QMap<QString, QWeakPointer<IPluginLinker::ILinkerItem>> m_linkerItems;
 };
 //! }
-#endif // PLUGINLINKERVIEW_H
+

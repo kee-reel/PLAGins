@@ -1,5 +1,5 @@
-#ifndef ITEM_H
-#define ITEM_H
+#pragma once
+
 
 #include <QVector>
 #include <QVariant>
@@ -111,4 +111,4 @@ private:
 	QVariant *decoration;
 	QList<Item*> childItems;
 };
-#endif // ITEM_H
+

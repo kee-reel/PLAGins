@@ -1,5 +1,5 @@
-#ifndef POMODOROBUTTON_H
-#define POMODOROBUTTON_H
+#pragma once
+
 
 #include <QWidget>
 #include <QPaintEvent>
@@ -39,4 +39,4 @@ private slots:
 signals:
     void OnStartPomodoro();
 };
-#endif // POMODOROBUTTON_H
+

@@ -1,14 +1,7 @@
-#ifndef TASKSKETCHVIEW_H
-#define TASKSKETCHVIEW_H
+#pragma once
 
-#include <QApplication>
-#include <QDebug>
-#include <QLayout>
-#include <QAbstractProxyModel>
-#include <QPainter>
-#include <QAbstractItemModel>
-#include <QResizeEvent>
 
+#include <QtCore>
 
 #include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 #include "../../Interfaces/Architecture/UIElementBase/uielementbase.h"
@@ -22,14 +15,13 @@ namespace Ui
 class Form;
 }
 
-
 //! \addtogroup TaskSketchManager_dep
 //!  \{
-class TaskSketchManagerView : public QWidget, public PluginBase, public UIElementBase
+class TaskSketchManagerView : public QObject, public PluginBase
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID "TimeKeeper.Module.Test" FILE "PluginMeta.json")
-	Q_INTERFACES(IPlugin IUIElement)
+	Q_INTERFACES(IPlugin)
 	
 public:
 	TaskSketchManagerView();
@@ -37,11 +29,7 @@ public:
 	
 	// PluginBase interface
 private:
-	virtual void onPluginInited() override;
-	virtual void onPluginReferencesSet() override;
-
-private:
-	virtual void resizeEvent(QResizeEvent *event) override;
+	virtual void onReferencesSet() override;
 	
 signals:
 	void OnItemConvert(int index);
@@ -56,6 +44,7 @@ private slots:
 	
 private:
 	QSharedPointer<Ui::Form> ui;
+	QPointer<UIElementBase> m_elementBase;
 	ReferenceInstancePtr<ITaskSketchManager> myModel;
 	PaintWidget *paintWidgetTypeEditor;
 	
@@ -66,4 +55,4 @@ private:
 	QString imageFormat;
 };
 //!  \}
-#endif // TASKSKETCHVIEW_H
+

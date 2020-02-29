@@ -44,10 +44,10 @@ bool UIManager::eventFilter(QObject *watched, QEvent *event)
 	return QObject::eventFilter(watched, event);
 }
 
-void UIManager::onPluginReferencesListUpdated(Interface interface)
+void UIManager::onReferencesListUpdated(Interface interface)
 {
 	Q_UNUSED(interface)
-	m_parentWidget = m_app->instance()->getParentWidget();
+	m_parentWidget = m_app->getParentWidget();
 	Q_ASSERT_X(m_parentWidget, "UIManager initialization", "parent widget is null");
 	
 	m_parentWidget->installEventFilter(this);
@@ -56,7 +56,7 @@ void UIManager::onPluginReferencesListUpdated(Interface interface)
 	QList<quint32> removedElements = m_elementsMap.keys();
 	for(auto uiElement : *m_uiElementsList)
 	{
-		auto uid = uiElement->descr().toStrongRef()->uid();
+		auto uid = uiElement.reference()->descr().toStrongRef()->uid();
 		if(!m_elementsMap.contains(uid))
 		{
 			registerUIElement(uiElement);
@@ -71,7 +71,7 @@ void UIManager::onPluginReferencesListUpdated(Interface interface)
 	
 	for(auto element : m_elementsMap)
 	{
-		auto&& linksHandler = element->instance()->getLinksHandler();
+		auto&& linksHandler = element->getLinksHandler();
 		auto references = linksHandler.toStrongRef()->requiredReferences();
 		for(auto referenceIter = references.begin(); referenceIter != references.end(); ++referenceIter)
 		{
@@ -86,7 +86,7 @@ void UIManager::onPluginReferencesListUpdated(Interface interface)
 				{
 					for(auto& elementId : elementIdsList)
 					{
-						list.append(m_elementsMap[elementId]->descr());
+						list.append(m_elementsMap[elementId].reference()->descr());
 					}
 				}
 				else if(referencesCount < elementsCount)
@@ -94,7 +94,7 @@ void UIManager::onPluginReferencesListUpdated(Interface interface)
 					// TODO: Add picking of references.
 					for(int i = 0; i < referencesCount; ++i)
 					{
-						list.append(m_elementsMap[elementIdsList[i]]->descr());
+						list.append(m_elementsMap[elementIdsList[i]].reference()->descr());
 					}
 				}
 				else
@@ -136,12 +136,12 @@ void UIManager::onOpenLink(quint32 selfUID, quint32 referenceUID)
 	
 	if (!m_elementsStack.isEmpty())
 	{
-		getActiveElement()->instance()->close();
+		getActiveElement()->close();
 	}
 	
 	m_elementsStack.append(descr);
-	m_parentWidget->layout()->addWidget(element->instance()->getWidget());
-	element->instance()->open(m_parentWidget);
+	m_parentWidget->layout()->addWidget(element->getWidget());
+	element->open(m_parentWidget);
 }
 
 void UIManager::onCloseLink(quint32 selfUID, quint32 referenceUID)
@@ -157,7 +157,7 @@ void UIManager::onCloseLink(quint32 selfUID, quint32 referenceUID)
 		return;
 	}
 	//    log(SeverityType::INFO, QString("Pop window: %1").arg(uiElement->getNodeName()));
-	onCloseSelf(iter.value()->instance()->getUID());
+	onCloseSelf(iter.value()->getUID());
 }
 
 void UIManager::onCloseSelf(quint32 selfUID)
@@ -166,10 +166,10 @@ void UIManager::onCloseSelf(quint32 selfUID)
 	if (m_elementsStack.count() > 1)
 	{
 		auto element = getActiveElement();
-		element->instance()->close();
+		element->close();
 		
 		m_elementsStack.removeLast();
-		getActiveElement()->instance()->open(m_parentWidget);
+		getActiveElement()->open(m_parentWidget);
 	}
 	else
 	{
@@ -186,9 +186,9 @@ bool UIManager::registerUIElement(ReferenceInstancePtr<IUIElement> &uiElement)
 		return false;
 	}
 	
-	auto uid = uiElement->descr().toStrongRef()->uid();	
+	auto uid = uiElement.reference()->descr().toStrongRef()->uid();
 	m_elementsMap[uid] = uiElement;
-	auto linkNames = uiElement->instance()->linkNames();
+	auto linkNames = uiElement->linkNames();
 	for(auto& linkName : linkNames)
 	{
 		auto& elements = m_elementLinksByNameMap[linkName];

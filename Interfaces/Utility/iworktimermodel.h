@@ -1,5 +1,5 @@
-#ifndef IWorkTimer_H
-#define IWorkTimer_H
+#pragma once
+
 
 #include <QtCore>
 
@@ -36,4 +36,4 @@ signals:
 };
 //!  \}
 Q_DECLARE_INTERFACE(IWorkTimer, "IWorkTimer/1.0")
-#endif // IWorkTimer_H
+

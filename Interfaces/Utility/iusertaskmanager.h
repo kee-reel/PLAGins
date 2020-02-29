@@ -1,5 +1,5 @@
-#ifndef ITASKLISTMODEL_H
-#define ITASKLISTMODEL_H
+#pragma once
+
 
 #include <QtCore>
 
@@ -22,4 +22,4 @@ public:
 };
 //!  \}
 Q_DECLARE_INTERFACE(IUserTaskManager, "IUserTaskManager/1.0")
-#endif // ITASKLISTMODEL_H
+

@@ -12,7 +12,7 @@
 		"references": {},
 		"info": {
 			"name": "%{CN}",
-			"about": ""
+			"about": "%{Description}"
 		}
 	}
 }

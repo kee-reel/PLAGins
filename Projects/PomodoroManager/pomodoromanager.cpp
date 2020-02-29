@@ -25,7 +25,7 @@ PomodoroManager::~PomodoroManager()
 {
 }
 
-void PomodoroManager::onPluginReferencesSet()
+void PomodoroManager::onReferencesSet()
 {
 	QMap<QString, QVariant::Type> newRelationStruct =
 	{
@@ -33,12 +33,12 @@ void PomodoroManager::onPluginReferencesSet()
 	};
 	QVector<QVariant> defaultData;
 	defaultData << 0;
-	m_dataManager->instance()->AddExtention(tableName, coreRelationName, newRelationStruct, defaultData);
+	m_dataManager->AddExtention(tableName, coreRelationName, newRelationStruct, defaultData);
 }
 
-void PomodoroManager::onPluginReady()
+void PomodoroManager::onReady()
 {
-	taskModel = m_dataManager->instance()->GetDataModel(tableName);
+	taskModel = m_dataManager->GetDataModel(tableName);
 }
 
 QAbstractItemModel *PomodoroManager::GetTaskModel()
@@ -63,10 +63,10 @@ IPomodoroManager::WorkSetup PomodoroManager::GetWorkSetup()
 
 void PomodoroManager::StartPomodoro()
 {
-	notificationTimerId = m_notificationManager->instance()->SetAlarm(INotificationManager::RTC_TIME,
+	notificationTimerId = m_notificationManager->SetAlarm(INotificationManager::RTC_TIME,
 	                      QDateTime::currentDateTime().addSecs(workSetup.workSessionDuration));
 
-	m_notificationManager->instance()->SetAlarmedNotification(INotificationManager::RTC_TIME,
+	m_notificationManager->SetAlarmedNotification(INotificationManager::RTC_TIME,
 	        QDateTime::currentDateTime().addSecs(workSetup.workSessionDuration),
 	        "Message from Pomodoro:",
 	        "You can take a rest now");

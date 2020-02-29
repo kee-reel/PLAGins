@@ -1,5 +1,5 @@
-#ifndef UIMANAGER_H
-#define UIMANAGER_H
+#pragma once
+
 
 #include <QtCore>
 #include <QWidget>
@@ -30,7 +30,7 @@ public:
 
 	// PluginBase interface
 public:
-	virtual void onPluginReferencesListUpdated(Interface interface) override;
+	virtual void onReferencesListUpdated(Interface interface) override;
 
 signals:
 	void onPop();
@@ -64,4 +64,4 @@ private:
 	QMap<QString, QList<quint32> > m_elementLinksByNameMap;
 };
 //!  \}
-#endif // UIMANAGER_H
+

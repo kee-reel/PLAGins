@@ -1,5 +1,5 @@
-#ifndef TABLEHANDLER_H
-#define TABLEHANDLER_H
+#pragma once
+
 
 #include <QMap>
 #include <QtSql>
@@ -77,4 +77,4 @@ private:
 	void InstallModel();
 };
 //!  \}
-#endif // TABLEHANDLER_H
+

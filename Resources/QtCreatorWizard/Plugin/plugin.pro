@@ -2,7 +2,6 @@
 TARGET = %{CN}
 TEMPLATE = lib
 QT += core
-
 @if '%{PluginType}' === 'QWidget'
 QT += widgets
 
@@ -23,11 +22,23 @@ include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 include(../../Interfaces/Architecture/UIElementBase/UIElementBase.pri)
 @endif
 
-SOURCES += \\
-	%{SrcFileName}
-
+@if %{CreateNewInterface}
 HEADERS += \\
+	plugin.h \\
 	%{HdrFileName}
+@else
+HEADERS += \\
+	plugin.h
+@endif
+
+@if %{CreateNewInterface}
+SOURCES += \\
+	plugin.cpp \\
+	%{SrcFileName}
+@else
+SOURCES += \\
+	plugin.cpp
+@endif
 
 DISTFILES += PluginMeta.json
 

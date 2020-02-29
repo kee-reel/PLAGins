@@ -1,5 +1,5 @@
-#ifndef ITaskSketchManager_H
-#define ITaskSketchManager_H
+#pragma once
+
 
 #include <QtCore>
 
@@ -26,4 +26,4 @@ signals:
 };
 //!  \}
 Q_DECLARE_INTERFACE(ITaskSketchManager, "ITaskSketchManager/1.0")
-#endif // ITASKLISTMODEL_H
+

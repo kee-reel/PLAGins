@@ -1,6 +1,6 @@
 {
     "iplugin": {
-		"interfaces": ["ITaskSketchManager/1.0"],
+		"interfaces": ["IPlugin/1.0", "ITaskSketchManager/1.0"],
 		"references": {
 			"IExtendableDataManager/1.0": 1,
 			"IUserTaskManager/1.0": 1

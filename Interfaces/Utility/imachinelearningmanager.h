@@ -1,5 +1,5 @@
-#ifndef IMachineLearningManager_H
-#define IMachineLearningManager_H
+#pragma once
+
 
 #include <QtCore>
 
@@ -47,4 +47,4 @@ public:
 };
 Q_DECLARE_INTERFACE(IMachineLearningManager, "IMachineLearningManager/1.0")
 //!  \}
-#endif // IEMPTYPLUGINMODEL_H
+

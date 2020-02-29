@@ -1,5 +1,5 @@
-#ifndef ITASKCALENDAR_H
-#define ITASKCALENDAR_H
+#pragma once
+
 
 #include <QtCore>
 
@@ -22,4 +22,4 @@ public:
 };
 //!  \}
 Q_DECLARE_INTERFACE(ITaskCalendar, "ITaskCalendar/1.0")
-#endif // ITASKCALENDAR_H
+

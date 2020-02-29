@@ -1,5 +1,5 @@
-#ifndef TaskSketchManager_H
-#define TaskSketchManager_H
+#pragma once
+
 
 #include <QObject>
 #include <QDebug>
@@ -27,8 +27,8 @@ public:
 
 public:
 	// PluginBase interface
-	virtual void onPluginReferencesSet() override;
-	virtual void onPluginReady() override;
+	virtual void onReferencesSet() override;
+	virtual void onReady() override;
 
 	// ITaskSketchManager interface
 public:
@@ -47,4 +47,4 @@ private:
 	QString coreRelationName;
 };
 //! \}
-#endif // TASKLISTMODEL_H
+

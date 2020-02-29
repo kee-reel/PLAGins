@@ -1,10 +1,9 @@
-%{Cpp:LicenseTemplate}\
-#ifndef %{GUARD}
-#define %{GUARD}
+#pragma once
 
 #include <QtCore>
 
 #include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
+
 @if '%{PluginType}' === 'QWidget' || '%{PluginType}' === 'QWidget with QML'
 #include "../../Interfaces/Architecture/UIElementBase/uielementbase.h"
 @endif
@@ -13,25 +12,22 @@ namespace Ui
 {
 class Form;
 }
-@endif
 
+@endif
 @if %{CreateNewInterface}
 #include "%{IPath}"
+#include "%{HdrFileName}"
 
 @endif
-//! \addtogroup %{CN}_imp
-//! \{
-class %{CN} : public QObject, public PluginBase
+class Plugin : public QObject, public PluginBase
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID "MASS.Module.%{CN}" FILE "PluginMeta.json")
-	Q_INTERFACES(
-		IPlugin
-	)
+	Q_INTERFACES(IPlugin)
 
 public:
-	%{CN}();
-	virtual ~%{CN}() override;
+	Plugin();
+	~Plugin() override;
 
 private:
 @if '%{PluginType}' === 'QWidget'
@@ -40,6 +36,7 @@ private:
 @if '%{PluginType}' === 'QWidget' || '%{PluginType}' === 'QWidget with QML'
 	UIElementBase* m_uiElementBase;
 @endif
+@if %{CreateNewInterface}
+	%{CN}* m_impl;
+@endif
 };
-//! \}
-#endif // %{GUARD}

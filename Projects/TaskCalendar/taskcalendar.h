@@ -1,5 +1,5 @@
-#ifndef TASKCALENDAR_H
-#define TASKCALENDAR_H
+#pragma once
+
 
 #include <QObject>
 #include <QDebug>
@@ -29,7 +29,7 @@ public:
 
 	// PluginBase interface
 public:
-	virtual void onPluginReferencesSet() override;
+	virtual void onReferencesSet() override;
 
 	// ITaskCalendar interface
 public:
@@ -41,4 +41,4 @@ private:
 	QWidget* customDataWidget;
 };
 //!  \}
-#endif // TASKCALENDAR_H
+

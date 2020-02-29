@@ -1,5 +1,5 @@
-#ifndef IMODBUSDEVICEDATAMANAGER_H
-#define IMODBUSDEVICEDATAMANAGER_H
+#pragma once
+
 
 #include <QtCore>
 #include <QSerialPort>
@@ -60,4 +60,4 @@ signals:
 };
 //!  \}
 Q_DECLARE_INTERFACE(IModbusDeviceDataManager, "IModbusDeviceDataManager/1.0")
-#endif // IMODBUSDEVICEDATAMANAGER_H
+

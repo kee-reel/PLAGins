@@ -1,5 +1,5 @@
-#ifndef EXTENDABLEITEMMODEL_H
-#define EXTENDABLEITEMMODEL_H
+#pragma once
+
 
 #include <QAbstractItemModel>
 #include <QVariant>
@@ -75,4 +75,4 @@ private:
 	Item *rootItem;
 };
 //!  \}
-#endif // EXTENDABLEITEMMODEL_H
+

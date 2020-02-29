@@ -1,5 +1,5 @@
-#ifndef ICOMPortDataManager_H
-#define ICOMPortDataManager_H
+#pragma once
+
 
 #include <QtGlobal>
 #include <QSerialPort>
@@ -53,4 +53,4 @@ public:
 };
 //!  \}
 Q_DECLARE_INTERFACE(ICOMPortDataManager, "ICOMPortDataManager/1.0")
-#endif // ICOMPortDataManager_H
+

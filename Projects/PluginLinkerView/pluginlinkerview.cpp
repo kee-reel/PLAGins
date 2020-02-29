@@ -27,9 +27,9 @@ PluginLinkerView::PluginLinkerView() :
 	m_uiElementBase->initUIElementBase();
 }
 
-void PluginLinkerView::onPluginReady()
+void PluginLinkerView::onReady()
 {
-	auto items = m_pluginLinker->instance()->getItemsWithInterface(INTERFACE(IPlugin));
+	auto items = m_pluginLinker->getItemsWithInterface(INTERFACE(IPlugin));
 	m_linkerItems.clear();
 	
 	for(auto& item : *items.toStrongRef())
@@ -49,9 +49,9 @@ void PluginLinkerView::addPlugin()
 		return;
 	}
 	
-	if(m_pluginLinker->instance()->addPlugin(filename))
+	if(m_pluginLinker->addPlugin(filename))
 	{
-		auto items = m_pluginLinker->instance()->getItemsWithInterface(INTERFACE(IPlugin));
+		auto items = m_pluginLinker->getItemsWithInterface(INTERFACE(IPlugin));
 		m_linkerItems.clear();
 		
 		if(items != nullptr)
@@ -73,9 +73,9 @@ void PluginLinkerView::removePlugin()
 	auto index = ui->listPlugins->selectionModel()->currentIndex();
 	auto pluginName = m_pluginsListModel.data(index).toString();
 	auto item = m_linkerItems[pluginName];
-	m_pluginLinker->instance()->removePlugin(item);
+	m_pluginLinker->removePlugin(item);
 	
-	auto items = m_pluginLinker->instance()->getItemsWithInterface(INTERFACE(IPlugin));
+	auto items = m_pluginLinker->getItemsWithInterface(INTERFACE(IPlugin));
 	m_linkerItems.clear();
 	
 	for(auto& item : *items.toStrongRef())

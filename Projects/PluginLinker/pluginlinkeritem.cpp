@@ -20,7 +20,7 @@ PluginLinkerItem::~PluginLinkerItem()
 
 const QMap<Interface, int> &PluginLinkerItem::references()
 {
-	return m_pluginInstance->instance()->getInstancesHandler().toStrongRef()->requiredReferences();
+	return m_pluginInstance->getInstancesHandler().toStrongRef()->requiredReferences();
 }
 
 void PluginLinkerItem::addReference(Interface interface, QWeakPointer<LinkerItemBase> linkItem)
@@ -79,7 +79,7 @@ QString PluginLinkerItem::initItem(QObject* object)
 	}
 	else
 	{
-		m_pluginInstance->setInstance(m_descriptor);
+		m_pluginInstance.reference()->setInstance(m_descriptor);
 		setupReferences();
 		return QString();
 	}
@@ -87,13 +87,13 @@ QString PluginLinkerItem::initItem(QObject* object)
 
 void PluginLinkerItem::setupReferences()
 {
-	const auto &handler = m_pluginInstance->instance()->getInstancesHandler();
+	const auto &handler = m_pluginInstance->getInstancesHandler();
 	for(auto iter = m_references->begin(); iter != m_references->end(); ++iter)
 	{
 		QList<IReferenceDescriptorPtr> refs;
 		for (auto refIter = iter.value().begin(); refIter != iter.value().end(); ++refIter)
 		{
-			refs.append(refIter->data()->descr());
+			refs.append(refIter->toStrongRef()->descr());
 		}
 		handler.toStrongRef()->setReferences(iter.key(), refs);
 	}
@@ -101,14 +101,14 @@ void PluginLinkerItem::setupReferences()
 
 QString PluginLinkerItem::finiItem()
 {
-	m_pluginInstance->instance()->pluginFini();
+	m_pluginInstance->pluginFini();
 	m_pluginInstance.reset();
 	return QString();
 }
 
 void PluginLinkerItem::connectionsChanged(quint32 selfUID, quint32 itemUID, bool isAdded)
 {
-	if(m_pluginInstance->isSet())
+	if(m_pluginInstance.reference()->isSet())
 	{
 		setupReferences();
 	}

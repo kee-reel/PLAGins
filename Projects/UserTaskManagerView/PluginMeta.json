@@ -1,6 +1,6 @@
 {
     "iplugin": {
-		"interfaces": ["IUIElement/1.0"],
+		"interfaces": ["IPlugin/1.0", "IUIElement/1.0"],
 		"references": {
 			"IUserTaskManager/1.0": 1
 		},

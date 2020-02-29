@@ -49,7 +49,7 @@ public:
 	{
 		assert(limit() == 0 || this->size() != limit());
 		ReferenceInstancePtr<T> instance;
-		if(instance->setInstance(descriptor))
+		if(instance.reference()->setInstance(descriptor))
 		{
 			QList<ReferenceInstancePtr<T>>::append(instance);
 			emit instancesChanged();

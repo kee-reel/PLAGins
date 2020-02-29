@@ -1,5 +1,5 @@
-#ifndef PAINTWIDGET_H
-#define PAINTWIDGET_H
+#pragma once
+
 
 #include <QImage>
 #include <QPicture>
@@ -38,4 +38,4 @@ protected:
     virtual void resizeEvent(QResizeEvent *event);
 
 };
-#endif // PAINTWIDGET_H
+

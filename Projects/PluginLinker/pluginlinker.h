@@ -1,5 +1,5 @@
-#ifndef PLUGINLINKER_H
-#define PLUGINLINKER_H
+#pragma once
+
 
 #include <QtCore>
 #include <QObject>
@@ -35,7 +35,7 @@ public:
 
 	// PluginBase interface
 public:
-	virtual void onPluginReferencesSet() override;
+	virtual void onReferencesSet() override;
 
 	// IPluginLinker interface
 public:
@@ -73,4 +73,4 @@ private:
 	QSharedPointer<ReferenceInstancesList<IPlugin>> m_plugins;
 };
 //! @}
-#endif // PLUGINLINKER_H
+

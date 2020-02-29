@@ -1,5 +1,5 @@
-#ifndef RAWIMAGEDELEGATE_H
-#define RAWIMAGEDELEGATE_H
+#pragma once
+
 #include <QBuffer>
 #include <QImage>
 #include <QWidget>
@@ -23,4 +23,4 @@ private:
 	QImage image;
 };
 
-#endif // RAWIMAGEDELEGATE_H
+

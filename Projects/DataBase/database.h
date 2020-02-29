@@ -1,5 +1,5 @@
-#ifndef DataBasePLUGIN_H
-#define DataBasePLUGIN_H
+#pragma once
+
 
 #include <QString>
 #include <QtSql>
@@ -28,7 +28,7 @@ public:
 
 	// PluginBase interface
 public:
-	virtual void onPluginReady() override;
+	virtual void onReady() override;
 
 	// IDataBase interface
 public:
@@ -49,4 +49,4 @@ private:
 	QSqlDatabase m_dbconn;
 };
 //! \}
-#endif // DATABASEMANAGERMODULE_H
+

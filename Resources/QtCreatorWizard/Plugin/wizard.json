@@ -13,12 +13,13 @@
     "options":
     [
         { "key": "TargetPath", "value": "%{Path}" },
-		{ "key": "IPath", "value": "%{InterfacePath}/%{IFileName}" },
+		{ "key": "IPath", "value": "%{JS: Util.relativeFilePath('%{InterfacePath}/%{IFileName}', '%{TargetPath}') }" },
+        { "key": "IFileName", "value": "i%{JS: Cpp.classToFileName('%{Class}', '%{JS: Util.preferredSuffix('text/x-c++hdr')}')}" },
+        { "key": "HdrFileName", "value": "%{JS: Cpp.classToFileName('%{Class}', '%{JS: Util.preferredSuffix('text/x-c++hdr')}')}" },
+        { "key": "SrcFileName", "value": "%{JS: Cpp.classToFileName('%{Class}', '%{JS: Util.preferredSuffix('text/x-c++src')}')}" },
         { "key": "HdrPath", "value": "%{Path}/%{HdrFileName}" },
         { "key": "SrcPath", "value": "%{Path}/%{SrcFileName}" },
         { "key": "CN", "value": "%{JS: Cpp.className('%{Class}')}" },
-        { "key": "isQObject", "value": "%{JS: [ 'QObject', 'QWidget', 'QMainWindow', 'QDeclarativeItem', 'QQuickItem'].indexOf('%{Base}') >= 0 }" },
-        { "key": "GUARD", "value": "%{JS: Cpp.headerGuard('%{HdrFileName}')}" },
         { "key": "InterfaceName", "value": "I%{CN}" }
     ],
 
@@ -32,10 +33,21 @@
             [
                 {
                     "name": "Class",
-                    "trDisplayName": "Class name:",
+                    "trDisplayName": "Plugin name:",
                     "mandatory": true,
                     "type": "LineEdit",
-                    "data": { "validator": "(?:(?:[a-zA-Z_][a-zA-Z_0-9]*::)*[a-zA-Z_][a-zA-Z_0-9]*|)" }
+                    "data": 
+                    { 
+                        "trPlaceholder": "How your plugin will be called",
+                        "validator": "(?:(?:[a-zA-Z_][a-zA-Z_0-9]*::)*[a-zA-Z_][a-zA-Z_0-9]*|)"
+                    }
+                },
+                {
+                    "name": "Description",
+                    "trDisplayName": "Plugin description:",
+                    "mandatory": true,
+                    "type": "LineEdit",
+                    "data": { "trPlaceholder": "Few words about your plugin" }
                 },
                 {
                     "name": "PluginType",
@@ -46,6 +58,18 @@
                     {
                         "items": [ { "trKey": "QObject", "value": "QObject" },
                         "QWidget", "QWidget with QML" ]
+                    }
+                },
+                {
+                    "name": "Path",
+                    "type": "PathChooser",
+                    "trDisplayName": "Project path:",
+                    "mandatory": true,
+                    "data":
+                    {
+                        "kind": "existingDirectory",
+                        "basePath": "%{InitialPath}",
+                        "path": "%{InitialPath}"
                     }
                 },
                 {
@@ -61,44 +85,9 @@
                 },
                 {
                     "visible": "%{CreateNewInterface}",
-                    "name": "IFileName",
-                    "type": "LineEdit",
-                    "trDisplayName": "Interface header file:",
-                    "mandatory": true,
-                    "data": { "trText": "i%{JS: Cpp.classToFileName('%{Class}', '%{JS: Util.preferredSuffix('text/x-c++hdr')}')}" }
-                },
-                {
-                    "name": "HdrFileName",
-                    "type": "LineEdit",
-                    "trDisplayName": "Header file:",
-                    "mandatory": true,
-                    "data": { "trText": "%{JS: Cpp.classToFileName('%{Class}', '%{JS: Util.preferredSuffix('text/x-c++hdr')}')}" }
-                },
-                {
-                    "name": "SrcFileName",
-                    "type": "LineEdit",
-                    "trDisplayName": "Source file:",
-                    "mandatory": true,
-                    "data": { "trText": "%{JS: Cpp.classToFileName('%{Class}', '%{JS: Util.preferredSuffix('text/x-c++src')}')}" }
-                },
-                {
-                    "name": "Path",
-                    "type": "PathChooser",
-                    "trDisplayName": "Path:",
-                    "mandatory": true,
-                    "data":
-                    {
-                        "kind": "existingDirectory",
-                        "basePath": "%{InitialPath}",
-                        "path": "%{InitialPath}"
-                    }
-                },
-                {
-                    "visible": "%{CreateNewInterface}",
                     "name": "InterfacePath",
                     "type": "PathChooser",
                     "trDisplayName": "Interface path:",
-                    "mandatory": true,
                     "data":
                     {
                         "kind": "existingDirectory",
@@ -121,38 +110,33 @@
             "typeId": "File",
             "data":
             [
-                {
-                    "source": "iplugin.h",
-                    "target": "%{IPath}",
-                    "openInEditor": true,
-                    "options": [
-                        { "key": "Cpp:License:FileName", "value": "%{IFileName}" },
-                        { "key": "Cpp:License:ClassName", "value": "%{CN}" }
-                    ],
-                    "condition": "%{CreateNewInterface}"
-                },
 				{
                     "source": "plugin.h",
-                    "target": "%{HdrPath}",
-                    "openInEditor": true,
-                    "options": [
-                        { "key": "Cpp:License:FileName", "value": "%{HdrFileName}" },
-                        { "key": "Cpp:License:ClassName", "value": "%{CN}" }
-                    ]
+                    "target": "%{Path}/plugin.h",
+                    "openInEditor": true
                 },
                 {
                     "source": "plugin.cpp",
+                    "target": "%{Path}/plugin.cpp"
+                },
+                {
+                    "source": "i_plugin.h",
+                    "target": "%{IPath}",
+                    "condition": "%{CreateNewInterface}"
+                },
+                {
+                    "source": "interface_impl.h",
+                    "target": "%{HdrPath}",
+                    "condition": "%{CreateNewInterface}"
+                },
+                {
+                    "source": "interface_impl.cpp",
                     "target": "%{SrcPath}",
-                    "openInEditor": true,
-                    "options": [
-                        { "key": "Cpp:License:FileName", "value": "%{SrcFileName}" },
-                        { "key": "Cpp:License:ClassName", "value": "%{CN}" }
-                    ]
+                    "condition": "%{CreateNewInterface}"
                 },
                 {
                     "source": "PluginMeta.json",
-                    "target": "%{Path}/PluginMeta.json",
-                    "openInEditor": true
+                    "target": "%{Path}/PluginMeta.json"
                 },
                 {
                     "source": "plugin.pro",

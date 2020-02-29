@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.3
 
 Item {
 	id: root
+	property var ratio: 1
 	
 	Rectangle {
 		anchors.fill: parent
@@ -38,9 +39,9 @@ Item {
 		anchors.left: parent.left
 		anchors.right: parent.right
 		anchors.bottom: parent.bottom
-		anchors.margins: 40
-		columnSpacing: anchors.margins * 2 * ratio
-		columns: parent.width / columnSpacing * 2
+		anchors.margins: 40 * ratio
+		columnSpacing: anchors.margins * 2
+		columns: (children.length !== 0) ? (parent.width / (children[0].width + 2 * anchors.margins)) : 1
 	}
 	
 	function recreateMenuItems () {
@@ -52,7 +53,6 @@ Item {
 	}
 	
 	function addButton (element) {
-		console.log(element.name)
 		var component = Qt.createComponent("qrc:/MenuItem.qml")
 		var button = component.createObject(grid, {
 												"uid": element.uid,

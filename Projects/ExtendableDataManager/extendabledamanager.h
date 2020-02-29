@@ -1,5 +1,5 @@
-#ifndef TASKDBTOOLPLUGIN_H
-#define TASKDBTOOLPLUGIN_H
+#pragma once
+
 
 #include <QHash>
 #include <QString>
@@ -33,7 +33,7 @@ public:
 
 	// PluginBase interface
 public:
-	virtual void onPluginReferencesSet() override;
+	virtual void onReferencesSet() override;
 
 	// IExtendableDataManagerPlugin interface
 public:
@@ -67,4 +67,4 @@ private:
 	void SetupTable(QString &tableName);
 };
 //!  \}
-#endif // TASKDBTOOLPLUGIN_H
+

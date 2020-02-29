@@ -1,21 +1,8 @@
-#ifndef IPLUGINLINKER_H
-#define IPLUGINLINKER_H
+#pragma once
 
 #include <QtCore>
 
 #include "../../Interfaces/Architecture/ireferencedescriptor.h"
-
-//!  \defgroup PluginLinker PluginLinker
-//!      \ingroup Plugins
-//!  \defgroup PluginLinker_int Interface
-//!      \ingroup PluginLinker
-//!  \defgroup PluginLinker_imp Implementation
-//!      \ingroup PluginLinker
-//!  \defgroup PluginLinker_dep Dependent plugins
-//!      \ingroup PluginLinker
-
-//!  \addtogroup PluginLinker_int
-//!  \{
 
 class IPluginLinker
 {
@@ -45,6 +32,4 @@ public:
 signals:
     void onLinkageFinished();
 };
-//!  \}
 Q_DECLARE_INTERFACE(IPluginLinker, "IPluginLinker/1.0")
-#endif // IPLUGINLINKER_H

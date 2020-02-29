@@ -17,9 +17,9 @@ MyTreeView::MyTreeView(QWidget *parent) : QTreeView(parent)
     setVerticalScrollMode(ScrollPerPixel);
     setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    setStyleSheet("QTreeView::item:selected"
-    "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #D9E5E6, stop: 1 #C4D0D0);}"
-    );
+//    setStyleSheet("QTreeView::item:selected"
+//    "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #D9E5E6, stop: 1 #C4D0D0);}"
+//    );
     setExpandsOnDoubleClick(false);
     setFocusPolicy(Qt::StrongFocus);
 
@@ -37,8 +37,8 @@ MyTreeView::MyTreeView(QWidget *parent) : QTreeView(parent)
     setAcceptDrops(true);
 #endif
 
-    connect(this, SIGNAL(clicked(QModelIndex)), SLOT(OnTreeViewItemCheck(QModelIndex)));
-    connect(this, SIGNAL(pressed(QModelIndex)), SLOT(OnTreeViewItemCheck(QModelIndex)));
+    connect(this, &QTreeView::clicked, this, &MyTreeView::OnTreeViewItemCheck);
+    connect(this, &QTreeView::pressed, this, &MyTreeView::OnTreeViewItemCheck);
 }
 
 // For Android drag and drop handling
@@ -74,7 +74,7 @@ bool MyTreeView::eventFilter(QObject *obj, QEvent *event)
 
 void MyTreeView::OnTreeViewItemCheck(const QModelIndex &index)
 {
-    if(!index.parent().isValid())
+    if(!index.isValid())
     {
         clearSelection();
         return;

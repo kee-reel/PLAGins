@@ -29,7 +29,7 @@ bool PluginBase::pluginInit(quint32 uid, const QWeakPointer<QJsonObject> &meta)
 	}
 	else
 	{
-		onPluginInited();
+		onInited();
 	}
 	return !m_descr.isNull();
 }
@@ -72,17 +72,12 @@ void PluginBase::onStateChanged(ReferencesHandlerState state)
 	case ReferencesHandlerState::SETTING_REFS:
 		break;
 	case ReferencesHandlerState::WAITING:
-		onPluginReferencesSet();
+		onReferencesSet();
 		break;
 	case ReferencesHandlerState::READY:
-		onPluginReady();
+		onReady();
 		break;
 	}
-}
-
-void PluginBase::onReferencesListUpdated(const Interface &interface)
-{
-	onPluginReferencesListUpdated(interface);
 }
 
 PluginBaseSignal::PluginBaseSignal(PluginBase* instance, QWeakPointer<PluginReferencesHandler> handler) :

@@ -46,7 +46,7 @@ bool TableHandler::CreateTable()
 		QString queryStr = QString("CREATE TABLE IF NOT EXISTS %1 (%2)")
 				.arg(tableName)
 				.arg(GetHeaderString(coreTableStruct));
-		QSqlQuery query = dataSource->instance()->ExecuteQuery(queryStr);
+		QSqlQuery query = dataSource->ExecuteQuery(queryStr);
 	}
 	
 	CombineWholeTableStruct();
@@ -95,7 +95,7 @@ bool TableHandler::SetRelation(QString relationName, TableStructMap fields, QVec
 		QString queryStr = QString("CREATE TABLE IF NOT EXISTS %1 (%2)")
 				.arg(databaseRelationName)
 				.arg(dataFields);
-		QSqlQuery queryResult = dataSource->instance()->ExecuteQuery(queryStr);
+		QSqlQuery queryResult = dataSource->ExecuteQuery(queryStr);
 	}
 	
 	fields.remove("id");
@@ -129,7 +129,7 @@ bool TableHandler::DeleteRelation(QString relationName)
 	QString queryStr = QString("DROP TABLE  r_%1_%2")
 			.arg(tableName)
 			.arg(relationName);
-	QSqlQuery queryResult = dataSource->instance()->ExecuteQuery(queryStr);
+	QSqlQuery queryResult = dataSource->ExecuteQuery(queryStr);
 	relationTablesStructs.remove(relationName);
 	CombineWholeTableStruct();
 	return true;
@@ -157,7 +157,7 @@ TableHandler::ManagerDataItem TableHandler::GetItem(int id)
 						.arg(joinTables[i]));
 	}
 	
-	QSqlQuery query = dataSource->instance()->ExecuteQuery(queryStr);
+	QSqlQuery query = dataSource->ExecuteQuery(queryStr);
 	ManagerDataItem buf;
 	QString bufStr;
 	int queryFieldNum;
@@ -202,7 +202,7 @@ QList<IExtendableDataManager::ManagerDataItem> TableHandler::GetData()
 						.arg(joinTables[i]));
 	}
 	
-	QSqlQuery query = dataSource->instance()->ExecuteQuery(queryStr);
+	QSqlQuery query = dataSource->ExecuteQuery(queryStr);
 	QList<ManagerDataItem> itemInfoList;
 	ManagerDataItem buf;
 	QString bufStr;
@@ -259,7 +259,7 @@ QAbstractItemModel *TableHandler::GetModel()
 int TableHandler::AddItem(ManagerDataItem item)
 {
 	QString queryStr = QString("INSERT INTO %1 (id) VALUES (NULL)").arg(tableName);
-	QSqlQuery query = dataSource->instance()->ExecuteQuery(queryStr);
+	QSqlQuery query = dataSource->ExecuteQuery(queryStr);
 	int lastId = query.lastInsertId().toInt();
 	QStringList joinTables = item.dataChunks.keys();
 	qDebug() << joinTables.count();
@@ -276,7 +276,7 @@ int TableHandler::AddItem(ManagerDataItem item)
 							.arg(joinTables[i])
 							.arg(valuesString)
 							);
-			dataSource->instance()->ExecuteQuery(queryStr);
+			dataSource->ExecuteQuery(queryStr);
 		}
 		else
 		{
@@ -312,7 +312,7 @@ bool TableHandler::UpdateItem(ManagerDataItem item)
 				list[i] = ":" + list[i].toUpper();
 			
 			QList<QVariant> values = item.dataChunks[joinTables[i]].toList();
-			dataSource->instance()->ExecuteQuery(queryStr, &list, &values);
+			dataSource->ExecuteQuery(queryStr, &list, &values);
 		}
 		else
 		{
@@ -327,7 +327,7 @@ bool TableHandler::DeleteItem(int id)
 {
 	QString queryStr = QString("delete from %1 where id=%2").arg(tableName).arg(id);
 	qDebug() << "Delete Task" << queryStr;
-	QSqlQuery query = dataSource->instance()->ExecuteQuery(queryStr);
+	QSqlQuery query = dataSource->ExecuteQuery(queryStr);
 	return true;
 }
 
@@ -500,7 +500,7 @@ QString TableHandler::GetUpdateValuesString(TableHandler::TableStructMap &tableS
 bool TableHandler::IsTableExists(QString tableName)
 {
 	QString queryStr = QString("pragma table_info(%1)").arg(tableName);
-	QSqlQuery query = dataSource->instance()->ExecuteQuery(queryStr);
+	QSqlQuery query = dataSource->ExecuteQuery(queryStr);
 	return query.next();
 }
 
@@ -520,7 +520,7 @@ void TableHandler::CombineWholeTableStruct()
 bool TableHandler::IsTableHasRightStructure(QString tableName, TableStructMap &tableStruct)
 {
 	QString queryStr = QString("pragma table_info(%1)").arg(tableName);
-	QSqlQuery query = dataSource->instance()->ExecuteQuery(queryStr);
+	QSqlQuery query = dataSource->ExecuteQuery(queryStr);
 	auto tableStructIter = tableStruct.begin();
 	while(tableStructIter != tableStruct.end())
 	{

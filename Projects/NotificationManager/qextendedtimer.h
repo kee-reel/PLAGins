@@ -1,5 +1,5 @@
-#ifndef QTIMERWITHID_H
-#define QTIMERWITHID_H
+#pragma once
+
 
 #include <QTimer>
 
@@ -16,4 +16,4 @@ private slots:
     void OnTimeout();
 };
 
-#endif // QTIMERWITHID_H
+

@@ -1,5 +1,5 @@
-#ifndef PLUGINLINKERITEM_H
-#define PLUGINLINKERITEM_H
+#pragma once
+
 
 #include <QObject>
 #include <QDebug>
@@ -47,4 +47,4 @@ private:
 	ReferenceInstancePtr<IPlugin> m_pluginInstance;
 };
 
-#endif // PLUGINLINKERITEM_H
+

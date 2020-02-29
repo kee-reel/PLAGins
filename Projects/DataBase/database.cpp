@@ -15,7 +15,7 @@ DataBase::~DataBase()
 {
 }
 
-void DataBase::onPluginReady()
+void DataBase::onReady()
 {
 	Setup();
 }
