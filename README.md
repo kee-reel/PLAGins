@@ -2,7 +2,7 @@
 
 ## About
 
-It is repository with plugins for MASS application: `https://gitlab.com/c4rb0n_un1t/MASS`
+It is repository with plugins for MASS application: https://gitlab.com/c4rb0n_un1t/MASS
 
 To use this plugins, download and prepare MASS first:
 ```
