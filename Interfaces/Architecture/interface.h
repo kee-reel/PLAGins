@@ -4,13 +4,13 @@
 
 struct Interface
 {
-private:
+	Interface() = default;
+	
 	Interface(QString iid) : m_iid(iid)
 	{
 		Q_ASSERT(!iid.isEmpty());
 	}
 	
-public:
 	Interface(const Interface &other) : m_iid(other.iid())
 	{
 	}
@@ -29,22 +29,23 @@ public:
 	
 	friend bool operator<(const Interface& key1, const Interface& key2)
 	{
-		return key1.m_iid < key2.m_iid;
+		return key1.iid() < key2.iid();
 	}
 	
 	friend bool operator==(const Interface& key1, const Interface& key2)
 	{
-		return key1.m_iid == key2.m_iid;
+		return key1.iid() == key2.iid();
 	}
 	
 	friend QDebug operator<<(QDebug &debug, const Interface &instance)
 	{
-		debug << instance.m_iid;
+		debug << instance.iid();
 		return debug;
 	}
 	
-	const QString &iid() const
+	inline const QString &iid() const
 	{
+		Q_ASSERT(!m_iid.isEmpty());
 		return m_iid;
 	}
 	
