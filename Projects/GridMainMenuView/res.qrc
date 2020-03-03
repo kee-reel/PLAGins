@@ -1,9 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>Res/back.png</file>
-        <file>Res/next.png</file>
-        <file>Menu.qml</file>
-        <file>MenuItem.qml</file>
-        <file>Res/clipboards.png</file>
-    </qresource>
-</RCC>

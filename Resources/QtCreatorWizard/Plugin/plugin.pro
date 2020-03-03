@@ -14,7 +14,7 @@ DEFINES += QML_UIElement
 
 include(../../Common/common.pri)
 
-include(../../../Application/PluginBuildInfo.pri)
+include(../../plugin.pri)
 
 include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 
