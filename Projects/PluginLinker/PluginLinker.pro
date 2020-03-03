@@ -7,6 +7,9 @@ TARGET = PluginLinker
 TEMPLATE = lib
 QT += core widgets
 
+include(../../../Application/PluginBuildInfo.pri)
+
+include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 
 SOURCES += \
     linkeritembase.cpp \
@@ -20,12 +23,6 @@ HEADERS += \
     linkeritembase.h \
     pluginlinkeritem.h \
     pluginlinker.h
-
-include(../../Common/common.pri)
-
-include(../../../Application/PluginBuildInfo.pri)
-
-include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 
 DISTFILES += \
     PluginMeta.json

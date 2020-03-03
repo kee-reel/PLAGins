@@ -3,6 +3,10 @@ TARGET = TaskCalendar
 TEMPLATE = lib
 QT += widgets
 
+include(../../../Application/PluginBuildInfo.pri)
+
+include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
+
 SOURCES += \
     taskcalendar.cpp
 
@@ -14,9 +18,3 @@ DEFINES += \
     
 DISTFILES += \
     PluginMeta.json
-
-include(../../Common/common.pri)
-
-include(../../../Application/PluginBuildInfo.pri)
-
-include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)

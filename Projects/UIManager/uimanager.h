@@ -5,7 +5,7 @@
 #include <QWidget>
 
 
-#include "../../../Application/iapplication.h"
+#include "../../../Application/Interfaces/iapplication.h"
 #include "../../Interfaces/Architecture/iuielement.h"
 #include "../../Interfaces/Middleware/ipluginlinker.h"
 #include "../../Interfaces/Architecture/PluginBase/plugin_base.h"

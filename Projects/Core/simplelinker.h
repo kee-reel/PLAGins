@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../../../Application/iapplication.h"
+#include "../../../Application/Interfaces/iapplication.h"
 #include "../../Interfaces/Architecture/iplugin.h"
 #include "../../Interfaces/Architecture/referenceinstance.h"
 

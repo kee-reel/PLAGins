@@ -11,7 +11,7 @@
 #include <QHash>
 
 #include "../../Interfaces/Middleware/ipluginlinker.h"
-#include "../../../Application/ipluginhandler.h"
+#include "../../../Application/Interfaces/ipluginhandler.h"
 
 
 class LinkerItemBase : public QObject, public IPluginLinker::ILinkerItem

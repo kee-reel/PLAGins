@@ -7,10 +7,6 @@ TARGET = ExtendableDataManagerPlugin
 TEMPLATE = lib
 QT += core sql widgets
 
-
-
-include(../../Common/common.pri)
-
 include(../../../Application/PluginBuildInfo.pri)
 
 include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)

@@ -10,10 +10,10 @@
 #include <QMap>
 #include <QHash>
 
-#include "../../../Application/iapplication.h"
+#include "../../../Application/Interfaces/iapplication.h"
 #include "../../Interfaces/Middleware/ipluginlinker.h"
 
-#include "../../../Application/ipluginhandler.h"
+#include "../../../Application/Interfaces/ipluginhandler.h"
 #include "../../Interfaces/Architecture/PluginBase/plugin_base.h"
 
 #include "pluginlinkeritem.h"

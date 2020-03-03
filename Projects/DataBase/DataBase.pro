@@ -7,8 +7,6 @@ TARGET = DataBase
 TEMPLATE = lib
 QT += core sql
 
-include(../../Common/common.pri)
-
 include(../../../Application/PluginBuildInfo.pri)
 
 include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)

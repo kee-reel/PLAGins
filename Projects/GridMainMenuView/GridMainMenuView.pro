@@ -3,8 +3,6 @@ TARGET = GridMainMenuView
 TEMPLATE = lib
 QT += core widgets quickwidgets qml quick
 
-include(../../Common/common.pri)
-
 include(../../../Application/PluginBuildInfo.pri)
 
 include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
