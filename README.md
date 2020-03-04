@@ -12,6 +12,7 @@ git clone https://gitlab.com/c4rb0n_un1t/MASS-Plugins
 ```
 After that you can download plugins, that supports base interfaces of this repository, inside `Projects/` directory. For example:
 ```
+cd MASS-Plugins
 cd Projects
 git clone https://gitlab.com/c4rb0n_un1t/mass-common-plugins
 git clone https://gitlab.com/c4rb0n_un1t/mass-pim-plugins
