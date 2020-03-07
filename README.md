@@ -2,18 +2,30 @@
 
 ## About
 
-It is repository with plugins for MASS application: https://gitlab.com/c4rb0n_un1t/MASS
+It is repository with interfaces and base classes for plugins to MASS application: https://gitlab.com/c4rb0n_un1t/MASS
 
-To use this plugins, download and prepare MASS first:
+To use this plugins, you need to download MASS, then download this repo inside MASS:
 ```
 git clone https://gitlab.com/c4rb0n_un1t/MASS
-```
-When MASS is loaded open MASS folder and download this repository inside.
-```
 cd MASS
 git clone https://gitlab.com/c4rb0n_un1t/MASS-Plugins
 ```
-After this you’re ready to use existing and add new plugins.
+After that you can download plugins, that supports base interfaces of this repository, inside `Projects/` directory. For example:
+```
+cd MASS-Plugins
+cd Projects
+git clone https://gitlab.com/c4rb0n_un1t/mass-common-plugins
+git clone https://gitlab.com/c4rb0n_un1t/mass-pim-plugins
+```
+
+## Running application
+Open `MASS/Application/MASS.pro` project. On opening of “MASS.pro” toggle off “Shadow build” setting.
+
+![ShadowBuild](/Resources/Images/ShadowBuild.png)
+
+Run building of plugins project, you’ll see that plugin libraries will appear inside `MASS/Application/Plugins` directory.
+
+Run application - all plugins stored in `MASS/Application/Plugins` will be loaded.
 
 ## How to create plugin
 Create symlink of QtCreator wizard directory `MASS/MASS-Plugins/Resources/QtCreatorWizard/Plugin` inside of `[your Qt installation directory]/share/qtcreator/templates/wizards` directory.
@@ -241,18 +253,12 @@ Value is number that represents how many references of this interface your plugi
 * 1 – means that your plugin requires only one reference of this interface (use ReferenceInterfacePtr for it);
 * from 2 to 2147483647 – means that your plugin requires specific amount of references that you’ve set (use ReferenceInstancesListPtr for it).
 
-## Running your plugin
-Open `MASS/Application/MASS.pro` project. On opening of “MASS.pro” toggle off “Shadow build” setting.
-
-![ShadowBuild](/Resources/Images/ShadowBuild.png)
+## Running app with your plugin
 
 Open “MASS/MASS-Plugins/plugins.pro” project, you’ll see that your plugin is among other plugins.
 
 ![PluginProject](/Resources/Images/PluginProject.png)
 
-Run building of plugins project, you’ll see that plugin libraries will appear inside `MASS/Application/Plugins` directory.
-
 Run MASS application, you’ll see your plugin output.
 
 ![PluginOutput](/Resources/Images/PluginOutput.png)
-
