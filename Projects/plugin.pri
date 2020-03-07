@@ -1,4 +1,4 @@
 CONFIG += plugin
-DESTDIR = $${PWD}/Plugins
+DESTDIR = $${PWD}/../../Application/Plugins
 
 include(../../Application/common.pri)

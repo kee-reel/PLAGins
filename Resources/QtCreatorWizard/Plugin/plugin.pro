@@ -12,8 +12,6 @@ QT += quickwidgets qml quick
 DEFINES += QML_UIElement
 @endif
 
-include(../../Common/common.pri)
-
 include(../../plugin.pri)
 
 include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
