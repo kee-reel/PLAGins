@@ -142,11 +142,11 @@ Plugin meta data is JSON file that describes your plugin. Someone could opened w
 ## Adding plugin reference
 Now, when we’ve covered basics, we can check how to add reference to our plugin.
 
-First you need to pick interface of reference that you want to use. For now it’s manual process – you need to search for it inside `MASS/MASS-Plugins/Interfaces` directory, but later on we’ll add tool for searching interfaces and plugins based on your requirements.
+First you need to pick interface of reference that you want to use. For now it’s manual process – you need to search for it inside `MASS/MASS-Plugins/Projects/Interfaces` directory, but later on we’ll add tool for searching interfaces and plugins based on your requirements.
 
 Let’s assume that you’ve picked IPluginLinker interface – it can provide you with list of plugins that currently loaded in the app.
 
-IPluginInterface file is here: `MASS/MASS-Plugins/Interfaces/Middleware/ipluginlinker.h`. Here is how it looks like:
+IPluginInterface file is here: `MASS/MASS-Plugins/Projects/Interfaces/Middleware/ipluginlinker.h`. Here is how it looks like:
 
 To add reference of this interface you need make changes in header, source and meta data of your plugin.
 
@@ -246,7 +246,7 @@ Inside overridden onPluginReady method we will output total count of plugins tha
 ```
 Add reference interface to “references” map.
 
-Key must be interface with version, that you can pick from interface file in Q_DECLARE_INTERFACE macro (check at the bottom of the `MASS/MASS-Plugins/Interfaces/Middleware/ipluginlinker.h` file).
+Key must be interface with version, that you can pick from interface file in Q_DECLARE_INTERFACE macro (check at the bottom of the `MASS/MASS-Plugins/Projects/Interfaces/Middleware/ipluginlinker.h` file).
 
 Value is number that represents how many references of this interface your plugin require, it could be:
 * 0 – means that references value isn’t specified and that any amount (from zero to 2147483647) of references could be added to your plugin (use ReferenceInstancesListPtr for it);
