@@ -34,8 +34,8 @@ public:
     virtual ManagerDataItem GetDataItem(QString treeName, int id) = 0;
     virtual QMap<QString, QVariant::Type> GetTableHeader(QString treeName) = 0;
 
-    virtual QAbstractItemModel *GetDataModel(QString treeName) = 0;
-    virtual QAbstractItemModel *GetDataModel(QVector<QPair<QString, QString> > dataModelFields) = 0;
+    virtual QPointer<QAbstractItemModel> GetDataModel(QString treeName) = 0;
+    virtual QPointer<QAbstractItemModel> GetDataModel(QVector<QPair<QString, QString> > dataModelFields) = 0;
 
     virtual bool AddExtention(QString mainName, QString relationName,
                               QMap<QString, QVariant::Type> fields,

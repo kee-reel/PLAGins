@@ -19,6 +19,7 @@ void UIElementBase::initUIElementBase(QMap<QString, IReferenceInstancePtr > inst
 
 #ifdef QML_UIElement
 	setResizeMode(QQuickWidget::SizeRootObjectToView);
+	rootContext()->setContextProperty("uiElement", this);
 #endif
 }
 
