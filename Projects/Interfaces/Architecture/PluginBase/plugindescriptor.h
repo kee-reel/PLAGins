@@ -7,7 +7,7 @@ class PluginDescriptor : public IReferenceDescriptor
 {
 public:
 	static PluginDescriptor* make(quint32 uid, QObject* instance, QWeakPointer<QJsonObject> meta,
-	                              QMap<Interface, QObject*> interfaces, const QSharedPointer<IReferencesHandler<Interface>> &instances)
+	        QMap<Interface, QObject*> interfaces, const QSharedPointer<IReferencesHandler<Interface>> &instances)
 	{
 		auto metaData = meta.toStrongRef()->value("MetaData").toObject();
 		auto section = metaData.value("iplugin").toObject();
@@ -40,7 +40,7 @@ public:
 			else
 			{
 				assert(interfacesNames.contains(interface));
-//				qDebug() << QString("PluginBase::parseMetaInfo: plugin and meta data interfaces description doesn't match.");
+				//				qDebug() << QString("PluginBase::parseMetaInfo: plugin and meta data interfaces description doesn't match.");
 			}
 		}
 
@@ -64,8 +64,10 @@ public:
 			else
 			{
 				assert(referencesNames.contains(referenceName));
+				referencesNames.removeOne(referenceName);
 			}
 		}
+		assert(referencesNames.empty());
 
 		auto ptr = new PluginDescriptor();
 		ptr->m_uid = uid;
@@ -74,13 +76,13 @@ public:
 		ptr->m_instance = instance;
 		ptr->m_interfaces = interfaces.keys().toVector();
 
-//        qDebug() << "PluginDescriptor::make: created reference descriptor:" <<
-//            "uid:" << uid << endl <<
-//            "name:" << name << endl <<
-//            "about:" << about << endl <<
-//            "instance:" << instance << endl <<
-//            "interfaces:" << interfaces << endl <<
-//            "references:" << referencesNames << endl;
+		//        qDebug() << "PluginDescriptor::make: created reference descriptor:" <<
+		//            "uid:" << uid << endl <<
+		//            "name:" << name << endl <<
+		//            "about:" << about << endl <<
+		//            "instance:" << instance << endl <<
+		//            "interfaces:" << interfaces << endl <<
+		//            "references:" << referencesNames << endl;
 
 		return ptr;
 	}

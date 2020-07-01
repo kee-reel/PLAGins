@@ -22,19 +22,19 @@ public:
 			m_identifiers[iter.key()] = iter.value().toStrongRef()->limit();
 		}
 	}
-	
+
 	// IReferencesHandler interface
 public:
 	virtual const QMap<IdentifierT, int> &requiredReferences() override
 	{
 		return m_identifiers;
 	}
-	
+
 	virtual const QMap<IdentifierT, QList<IReferenceDescriptorPtr> > &references() override
 	{
 		return m_references;
 	}
-	
+
 	virtual bool setReferences(IdentifierT identifier, QList<IReferenceDescriptorPtr> references) override
 	{
 		auto iter = m_identifiers.find(identifier);
@@ -42,13 +42,13 @@ public:
 		{
 			return false;
 		}
-		
+
 		auto &&referencesCount = iter.value();
 		if(referencesCount != 0 && referencesCount != references.size())
 		{
 			return false;
 		}
-		
+
 		if(referencesCount == 1)
 		{
 			auto instance = m_instances[identifier];
@@ -66,34 +66,37 @@ public:
 			instancesList.toStrongRef()->clearInstances();
 			for(auto &ref : references)
 			{
-				if(!instancesList.toStrongRef()->append(std::move(ref)))
+				if(!instancesList.toStrongRef()->append(ref))
 				{
 					return false;
 				}
 				m_references[identifier].append(ref);
 			}
-			referencesListUpdated(identifier);
+			if(m_state == ReferencesHandlerState::READY)
+			{
+				referencesListUpdated(identifier);
+			}
 		}
-		
+
 		checkReferencesUpdate();
 		return true;
 	}
-	
+
 	virtual bool transitToReadyState() override
 	{
-		if(m_state != ReferencesHandlerState::WAITING)
+		if(m_state == ReferencesHandlerState::SETTING_REFS)
 		{
 			return false;
 		}
 		setState(ReferencesHandlerState::READY);
 		return true;
 	}
-	
+
 	virtual ReferencesHandlerState state() override
 	{
 		return m_state;
 	}
-	
+
 protected:
 	void checkReferencesUpdate()
 	{
@@ -106,35 +109,35 @@ protected:
 				break;
 			}
 		}
-		
+
 		ReferencesHandlerState newState = m_state;
 		switch(m_state)
 		{
-			case ReferencesHandlerState::SETTING_REFS:
-				if(isSet)
-				{
-					newState = ReferencesHandlerState::WAITING;
-				}
-				break;
-			case ReferencesHandlerState::WAITING:
-			case ReferencesHandlerState::READY:
-				if(!isSet)
-				{
-					newState = ReferencesHandlerState::SETTING_REFS;
-				}
-				break;
+		case ReferencesHandlerState::SETTING_REFS:
+			if(isSet)
+			{
+				newState = ReferencesHandlerState::WAITING;
+			}
+			break;
+		case ReferencesHandlerState::WAITING:
+		case ReferencesHandlerState::READY:
+			if(!isSet)
+			{
+				newState = ReferencesHandlerState::SETTING_REFS;
+			}
+			break;
 		}
-		
+
 		setState(newState);
 	}
-	
+
 protected:
 	virtual void setState(ReferencesHandlerState state) = 0;
-	virtual void referencesListUpdated(IdentifierT identifier) = 0;	
+	virtual void referencesListUpdated(IdentifierT identifier) = 0;
 
 protected:
 	ReferencesHandlerState m_state;
-	
+
 private:
 	QMap<IdentifierT, int> m_identifiers;
 	QMap<IdentifierT, QList<IReferenceDescriptorPtr>> m_references;

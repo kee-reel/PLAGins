@@ -5,9 +5,9 @@ PluginBase::PluginBase(QObject *object) :
 {
 }
 
-void PluginBase::initPluginBase(QMap<Interface, QObject *> interfaces, 
-	const QMap<Interface, IReferenceInstancePtr> &instances, 
-	const QMap<Interface, IReferenceInstancesListPtr> &instancesList)
+void PluginBase::initPluginBase(QMap<Interface, QObject *> interfaces,
+        const QMap<Interface, IReferenceInstancePtr> &instances,
+        const QMap<Interface, IReferenceInstancesListPtr> &instancesList)
 {
 	auto pluginInterface = INTERFACE(IPlugin);
 	if(!interfaces.contains(pluginInterface))

@@ -8,10 +8,11 @@ UIElementBase::UIElementBase(QObject *parentObject, QStringList linkNames, QIcon
 	m_icon(icon),
 	m_isOpened(false)
 {
+	UIElementBaseParent::close();
 }
 
 void UIElementBase::initUIElementBase(QMap<QString, IReferenceInstancePtr > instances,
-									  QMap<QString, IReferenceInstancesListPtr > instancesLists)
+        QMap<QString, IReferenceInstancesListPtr > instancesLists)
 {
 	m_linksHandler.reset(new UIElementLinksHandler(instances, instancesLists));
 	connect(m_linksHandler.data(), &UIElementLinksHandler::onStateChanged, this, &UIElementBase::onStateChanged);
@@ -30,12 +31,12 @@ void UIElementBase::openLink(quint32 referenceUID)
 
 void UIElementBase::closeLink(quint32 referenceUID)
 {
-	emit linkClosed(m_pluginBase->getDescriptor().toStrongRef()->uid(), referenceUID);	
+	emit linkClosed(m_pluginBase->getDescriptor().toStrongRef()->uid(), referenceUID);
 }
 
 void UIElementBase::closeSelf()
 {
-	emit selfClosed(m_pluginBase->getDescriptor().toStrongRef()->uid());	
+	emit selfClosed(m_pluginBase->getDescriptor().toStrongRef()->uid());
 }
 
 QWeakPointer<IReferencesHandler<QString> > UIElementBase::getLinksHandler()
@@ -93,14 +94,14 @@ void UIElementBase::onStateChanged(ReferencesHandlerState state)
 {
 	switch (state)
 	{
-		case ReferencesHandlerState::SETTING_REFS:
-			break;
-		case ReferencesHandlerState::WAITING:
-			onUIElementReferencesSet();
-			break;
-		case ReferencesHandlerState::READY:
-			onUIElementReady();
-			break;
+	case ReferencesHandlerState::SETTING_REFS:
+		break;
+	case ReferencesHandlerState::WAITING:
+		onUIElementReferencesSet();
+		break;
+	case ReferencesHandlerState::READY:
+		onUIElementReady();
+		break;
 	}
 }
 
@@ -117,7 +118,7 @@ void UIElementBase::onReferencesListUpdated(QString link)
 #include <QGuiApplication>
 
 void UIElementBase::resizeEvent(QResizeEvent *event)
-{	
+{
 	qreal refDpi = 102.;
 	qreal refWidth = 540.;
 	qreal refHeight = 960.;

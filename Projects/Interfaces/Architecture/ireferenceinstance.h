@@ -18,7 +18,7 @@ typedef QWeakPointer<IReferenceInstance> IReferenceInstancePtr;
 class IReferenceInstancesList
 {
 public:
-	virtual bool append(IReferenceDescriptorPtr &&descriptor) = 0;
+	virtual bool append(IReferenceDescriptorPtr descriptor) = 0;
 	virtual void clearInstances() = 0;
 	virtual int limit() = 0;
 protected:

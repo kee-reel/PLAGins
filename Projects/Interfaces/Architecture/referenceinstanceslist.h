@@ -10,7 +10,7 @@ class ReferenceInstancesListObject : public QObject, public IReferenceInstancesL
 	Q_PROPERTY(int count READ count NOTIFY instancesChanged)
 public:
 	ReferenceInstancesListObject(QObject* parent=nullptr, int limit=0) :
-		QObject(parent), 
+		QObject(parent),
 		m_limit(limit)
 	{
 	}
@@ -21,14 +21,14 @@ public:
 
 Q_SIGNALS:
 	void instancesChanged();
-	
+
 	// IReferenceInstancesVariableList interface
-public:	
+public:
 	virtual int limit() override
 	{
 		return m_limit;
 	}
-	
+
 private:
 	int m_limit;
 };
@@ -38,14 +38,14 @@ class ReferenceInstancesList : public ReferenceInstancesListObject, public QList
 {
 public:
 	ReferenceInstancesList(QObject* parent=nullptr, int limit=0) :
-		ReferenceInstancesListObject(parent, limit), 
+		ReferenceInstancesListObject(parent, limit),
 		QList<ReferenceInstancePtr<T>>()
 	{
 	}
 
 	// IReferenceInstancesVariableList interface
 public:
-	virtual bool append(IReferenceDescriptorPtr &&descriptor) override
+	virtual bool append(IReferenceDescriptorPtr descriptor) override
 	{
 		assert(limit() == 0 || this->size() != limit());
 		ReferenceInstancePtr<T> instance;
@@ -57,13 +57,13 @@ public:
 		}
 		return false;
 	}
-	
+
 	void clearInstances() override
 	{
 		QList<ReferenceInstancePtr<T>>::clear();
 		emit instancesChanged();
 	}
-	
+
 	QList<QObject*> instances() override
 	{
 		QList<QObject*> instances;
@@ -74,11 +74,11 @@ public:
 		}
 		return instances;
 	}
-	
+
 	int count() override
 	{
-		return this->length(); 
-	} 
+		return this->length();
+	}
 };
 
 template<class T>
