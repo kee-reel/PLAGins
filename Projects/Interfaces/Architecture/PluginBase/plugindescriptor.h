@@ -39,8 +39,8 @@ public:
 			}
 			else
 			{
-				assert(interfacesNames.contains(interface));
-				//				qDebug() << QString("PluginBase::parseMetaInfo: plugin and meta data interfaces description doesn't match.");
+				Q_ASSERT_X(interfacesNames.contains(interface),
+				        "PluginBase::parseMetaInfo", "plugin and meta data interfaces description doesn't match");
 			}
 		}
 

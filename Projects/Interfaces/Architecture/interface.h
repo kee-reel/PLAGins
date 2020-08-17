@@ -36,6 +36,11 @@ struct Interface
 	{
 		return key1.iid() == key2.iid();
 	}
+
+	friend bool operator!=(const Interface& key1, const Interface& key2)
+	{
+		return key1.iid() != key2.iid();
+	}
 	
 	friend QDebug operator<<(QDebug &debug, const Interface &instance)
 	{

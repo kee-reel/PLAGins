@@ -72,7 +72,7 @@ public:
 				}
 				m_references[identifier].append(ref);
 			}
-			if(m_state == ReferencesHandlerState::READY)
+			if(m_state == ReferencesHandlerState::WAITING || m_state == ReferencesHandlerState::READY)
 			{
 				referencesListUpdated(identifier);
 			}
