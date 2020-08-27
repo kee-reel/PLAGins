@@ -49,6 +49,5 @@ CMakeLists.txt.user*
 # Windows
 *object_script.*
 
-Projects/*
-!Projects/Interfaces/*
-!Projects/plugin.pri
+Projects/mass-common-plugins
+Projects/mass-pim-plugins
