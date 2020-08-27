@@ -50,7 +50,6 @@ struct Interface
 	
 	inline const QString &iid() const
 	{
-		Q_ASSERT(!m_iid.isEmpty());
 		return m_iid;
 	}
 	

@@ -1,45 +1,34 @@
 #pragma once
 
-
 #include <QtCore>
 
-template <class A>
-class QVector;
-class QAbstractItemModel;
-class QModelIndex;
-class QTimer;
-class QDateTime;
+#include "../../Interfaces/Middleware/iextendabledatamodel.h"
 
-//!  \defgroup PomodoroManager PomodoroManager
-//!      \ingroup Plugins
-//! \defgroup PomodoroManager_int Interface
-//!     \ingroup PomodoroManager
-//! \defgroup PomodoroManager_imp Implementation
-//!     \ingroup PomodoroManager
-//!  \defgroup PomodoroManager_dep Dependent plugins
-//!      \ingroup PomodoroManager
-
-//! \addtogroup PomodoroManager_int
-//!  \{
 class IPomodoroManager
 {
 public:
-    struct WorkSetup{
-        int workSessionDuration;
-        int easyRestDuration;
-        int longRestDuration;
-        int longRestPeriod;
-    };
+	enum class TimerStatus : quint8
+	{
+		PAUSE,
+		WORK,
+		REST
+	};
 
-    virtual void SetActiveProject(QModelIndex) = 0;
-    virtual QModelIndex* GetActiveProject() = 0;
-    virtual WorkSetup GetWorkSetup() = 0;
+	virtual QPointer<IExtendableDataModel> GetTaskModel() = 0;
+	virtual QPointer<QSortFilterProxyModel> GetTaskModelFilter() = 0;
+	virtual void SetActiveProject(QModelIndex) = 0;
+	virtual QModelIndex GetActiveProject() = 0;
+	virtual QPair<QString, quint16> getActiveProjectPomodoros() = 0;
 
+	virtual QVariantMap getSettings() = 0;
+	virtual void setSetting(QString setting, QVariant value) = 0;
+	
+	virtual TimerStatus getStatus() = 0;
 public slots:
-    virtual void StartPomodoro() = 0;
+	virtual void changeStatus(TimerStatus status) = 0;
 signals:
-    void OnPomodoroFinished();
+	void onStatusChanged(TimerStatus newStatus, QTime newTime);
+	void onTimerTick(QTime timeLeft);
 };
-//!  \}
 Q_DECLARE_INTERFACE(IPomodoroManager, "IPomodoroManager/1.0")
 
