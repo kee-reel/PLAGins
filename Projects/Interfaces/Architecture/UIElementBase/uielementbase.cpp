@@ -71,6 +71,7 @@ bool UIElementBase::open(QWidget* parent)
 		this->setParent(parent);
 		this->show();
 		m_isOpened = true;
+		emit onOpened();
 	}
 	return true;
 }
