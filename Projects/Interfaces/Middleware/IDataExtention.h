@@ -6,11 +6,16 @@
 #include "../../Interfaces/Architecture/interface.h"
 #include "iextendabledatamodel.h"
 
+#define IDataExtention_EXTENTION_PROPERTY \
+	Q_PROPERTY(QObject* model READ model NOTIFY modelChanged)
+
 class IDataExtention
 {
-	Q_PROPERTY(QObject* model READ model NOTIFY modelChanged)
-public:
+	IDataExtention_EXTENTION_PROPERTY
+
+public slots:
 	virtual QObject* model() = 0;
+
 signals:
 	virtual void modelChanged() = 0;
 

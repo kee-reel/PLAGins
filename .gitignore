@@ -45,6 +45,7 @@ CMakeLists.txt.user*
 
 # Android build
 *.so-deployment-settings.*
+android-build
 
 # Windows
 *object_script.*

@@ -23,5 +23,7 @@ public:
 	IUserTaskRepeatDataExtention_EXTENTION_PROPERTY
 	virtual int repeatType() = 0;
 	virtual bool isSpawnedNewTask() = 0;
+signals:
+	virtual void spawnedNewTask(int completedTaskId, int spawnedTaskId) = 0;
 };
 Q_DECLARE_INTERFACE(IUserTaskRepeatDataExtention, "IUserTaskRepeatDataExtention/1.0")

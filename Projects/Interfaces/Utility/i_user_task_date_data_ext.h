@@ -6,7 +6,8 @@
 
 #define IUserTaskDateDataExtention_EXTENTION_PROPERTY \
 	Q_PROPERTY(QDateTime startDate READ startDate) \
-	Q_PROPERTY(QDateTime dueDate READ dueDate)
+	Q_PROPERTY(QDateTime dueDate READ dueDate) \
+	Q_PROPERTY(QDateTime timeCost READ timeCost)
 
 class IUserTaskDateDataExtention : public IUserTaskDataExtention
 {
@@ -14,5 +15,6 @@ public:
 	IUserTaskDateDataExtention_EXTENTION_PROPERTY
 	virtual QDateTime startDate() = 0;
 	virtual QDateTime dueDate() = 0;
+	virtual QDateTime timeCost() = 0;
 };
 Q_DECLARE_INTERFACE(IUserTaskDateDataExtention, "IUserTaskDateDataExtention/1.0")

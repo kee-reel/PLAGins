@@ -6,9 +6,9 @@
 #include "../IDataExtention.h"
 
 #define DATA_EXTENTION_BASE_DEFINITIONS(ExtentionDataInterfaceType, ExtendableDataInterfaceType, ...) \
+	IDataExtention_EXTENTION_PROPERTY \
 	ExtentionDataInterfaceType##_EXTENTION_PROPERTY \
 	ExtendableDataInterfaceType##_EXTENTION_PROPERTY \
-	Q_PROPERTY(QObject* model READ model NOTIFY modelChanged) \
 	public: \
 	QPointer<IExtendableDataModel> getModel() override \
 	{ \

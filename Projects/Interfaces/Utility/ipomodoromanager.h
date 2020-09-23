@@ -15,7 +15,7 @@ public:
 	};
 
 	virtual QPointer<IExtendableDataModel> GetTaskModel() = 0;
-	virtual QPointer<QSortFilterProxyModel> GetTaskModelFilter() = 0;
+	virtual QPointer<IExtendableDataModelFilter> GetTaskModelFilter() = 0;
 	virtual void SetActiveProject(QModelIndex) = 0;
 	virtual QModelIndex GetActiveProject() = 0;
 	virtual QPair<QString, quint16> getActiveProjectPomodoros() = 0;
