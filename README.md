@@ -302,7 +302,7 @@ Value is number that represents how many references of this interface your plugi
 
 * 0 – means that references value isn’t specified and that any amount of references could be added to your plugin (use ReferenceInstancesListPtr for it);
 * 1 – means that your plugin requires only one reference of this interface (use ReferenceInterfacePtr for it);
-* 1 < – means that your plugin requires specific amount of references that you’ve set (use ReferenceInstancesListPtr for it).
+* 2... – means that your plugin requires specific amount of references that you’ve set (use ReferenceInstancesListPtr for it).
 
 # Running app with your plugin
 
