@@ -10,7 +10,7 @@ git clone https://gitlab.com/c4rb0n_un1t/MASS
 cd MASS
 git clone https://gitlab.com/c4rb0n_un1t/MASS-Plugins
 ```
-After that you can download plugins, that supports base interfaces of this repository, inside `Projects/` directory. For example:
+After that you download plugins, that supports base interfaces of this repository, inside `Projects/` directory:
 ```
 cd MASS-Plugins
 cd Projects
@@ -44,7 +44,7 @@ Select «New file or project...» and choose «MASS plugin» project.
 | ------ | ------ |
 | Class name | Name of your plugin. |
 | Plugin type | Possible types:<br>• QtObject – it’s business logic plugin and it won’t contain any UI.<br>• QWidget – it’s UI plugin that uses QWidgets. Pick if you want to use QWidgets.<br>• QWidget with QML – it’s UI plugin with QWidget that wraps QML. Pick this if you want to use QML.|
-| Project path | Path where plugin files will be created. Create new folder inside `MASS/MASS-Plugins/Projects` directory and set path to this folder. | 
+| Project path | Path where plugin files will be created. Create new folder inside `MASS/MASS-Plugins/Projects/mass-pim-plugins` directory and set path to this folder. | 
 | Create new interface for plugin | Toggle if you want to create new interface for your plugin. | 
 | Interface path | Path where interface file will be created. Pick one of folders inside `MASS/MASS-Plugins/Interfaces` directory. | 
 
@@ -314,5 +314,3 @@ If it's not there, you need to reopen this plugins project or restart QtCreator.
 Run MASS application, you’ll see your plugin output.
 
 ![PluginOutput](/Resources/Images/PluginOutput.png)
-
-### Plugin interface changes
