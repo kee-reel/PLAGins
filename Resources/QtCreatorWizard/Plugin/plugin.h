@@ -15,7 +15,6 @@ class Form;
 
 @endif
 @if %{CreateNewInterface}
-#include "%{IPath}"
 #include "%{HdrFileName}"
 
 @endif
