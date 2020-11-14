@@ -56,8 +56,7 @@
                     "type": "ComboBox",
                     "data":
                     {
-                        "items": [ { "trKey": "QObject", "value": "QObject" },
-                        "QWidget", "QWidget with QML" ]
+                        "items": [ "QObject", "QWidget", "QWidget with QML" ]
                     }
                 },
                 {
@@ -146,17 +145,17 @@
                 {
                     "source": "form.ui",
                     "target": "%{Path}/form.ui",
-                    "condition": "%{JS: '%{PluginType}' == 'QWidget')}"
+                    "condition": "%{JS: '%{PluginType}' == 'QWidget'}"
                 },
                 {
                     "source": "form.qml",
                     "target": "%{Path}/form.qml",
-                    "condition": "%{JS: '%{PluginType}' == 'QWidget with QML')}"
+                    "condition": "%{JS: '%{PluginType}' == 'QWidget with QML'}"
                 },
                 {
                     "source": "res.qrc",
                     "target": "%{Path}/res.qrc",
-                    "condition": "%{JS: '%{PluginType}' == 'QWidget with QML')}"
+                    "condition": "%{JS: '%{PluginType}' == 'QWidget with QML'}"
                 }
             ]
         }

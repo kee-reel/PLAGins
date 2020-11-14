@@ -10,7 +10,7 @@ Plugin::Plugin() :
 	, ui(new Ui::Form)
 @endif
 @if '%{PluginType}' === 'QWidget' || '%{PluginType}' === 'QWidget with QML'
-	, m_uiElementBase(new UIElementBase(this, {""}))
+	, m_uiElementBase(new UIElementBase(this, {"MainMenuItem"}))
 @endif
 @if %{CreateNewInterface}
 	, m_impl(new %{CN}(this))
@@ -37,6 +37,9 @@ Plugin::Plugin() :
 		{}, 
 		{}
 	);
+@endif
+@if '%{PluginType}' === 'QWidget'
+	connect(ui->exitButton, &QPushButton::clicked, m_uiElementBase, &UIElementBase::closeSelf);
 @endif
 @if '%{PluginType}' === 'QWidget with QML'
 	m_uiElementBase->setSource(QUrl("qrc:/form.qml"));
