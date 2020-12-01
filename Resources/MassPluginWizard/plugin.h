@@ -38,4 +38,10 @@ private:
 @if %{CreateNewInterface}
 	%{CN}* m_impl;
 @endif
+	// Commented code shows how to add new references. Uncomment, include reference interface and replace IExample with it.
+	// After that add new entry to PluginMeta.json according to name of reference interface (don't forget version and keep valid JSON):
+	// "references": {
+	// 	"IHelloWorld/1.0": 1
+	// },
+	//ReferenceInstancePtr<IExample> m_exampleReference;
 };

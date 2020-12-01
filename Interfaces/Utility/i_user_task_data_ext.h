@@ -2,7 +2,7 @@
 
 #include <QtCore>
 
-#include "../Middleware/IDataExtention.h"
+#include "../Middleware/idataextention.h"
 
 #define IUserTaskDataExtention_EXTENTION_PROPERTY \
 	Q_PROPERTY(QString name READ name) \

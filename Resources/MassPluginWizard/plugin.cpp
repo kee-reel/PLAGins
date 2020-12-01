@@ -16,9 +16,6 @@ Plugin::Plugin() :
 	, m_impl(new %{CN}(this))
 @endif
 {
-@if '%{PluginType}' === 'QWidget'
-	ui->setupUi(m_uiElementBase);
-@endif
 	initPluginBase(
 		{
 			{INTERFACE(IPlugin), this}
@@ -29,20 +26,24 @@ Plugin::Plugin() :
 			, {INTERFACE(%{InterfaceName}), m_impl}
 @endif
 		},
-		{},
-		{}
+		{
+		// Commented code shows how to add new references. Uncomment and modify according to type used in plugin.h
+		//	{INTERFACE(IExample), m_exampleReference}
+		}
 	);
-@if '%{PluginType}' === 'QWidget' || '%{PluginType}' === 'QWidget with QML'
-	m_uiElementBase->initUIElementBase(
-		{}, 
-		{}
-	);
-@endif
+
 @if '%{PluginType}' === 'QWidget'
+	ui->setupUi(m_uiElementBase);
+	m_uiElementBase->initUIElementBase();
 	connect(ui->exitButton, &QPushButton::clicked, m_uiElementBase, &UIElementBase::closeSelf);
 @endif
 @if '%{PluginType}' === 'QWidget with QML'
-	m_uiElementBase->setSource(QUrl("qrc:/form.qml"));
+	m_uiElementBase->initUIElementBase("qrc:/form.qml",
+		{
+		// Commented code shows how to use reference to QML file. Uncomment, modify and go to form.qml for further instructions.
+		//	{"exampleReference", m_exampleReference.data()}
+		}
+	);
 @endif
 }
 

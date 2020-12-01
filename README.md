@@ -30,11 +30,7 @@ Build `plugins.pro` project, you’ll see that plugin libraries will appear insi
 Run `MASS.pro` - all plugins stored in `MASS/Application/Plugins` will be loaded.
 
 # Creating plugin
-Create symlink of QtCreator wizard directory `MASS/MASS-Plugins/Resources/QtCreatorWizard/Plugin` inside of `[your Qt installation directory]/share/qtcreator/templates/wizards` directory.
-
-On Linux you can do it by calling `MASS/MASS-Plugins/Resources/QtCreatorWizard/create_symlink.sh`.
-
-![WizardLink](/Resources/Images/WizardLink.png)
+It's much easier to use QtCreator wizard to create new plugins. To do it you should copy folder `Resources/MassPluginWizard` into the directory: "[your Qt installation directory]/Tools/QtCreator/share/qtcreator/templates/wizards/".
 
 Select «New file or project...» and choose «MASS plugin» project.
 
