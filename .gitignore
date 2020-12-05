@@ -49,3 +49,6 @@ android-build
 
 # Windows
 *object_script.*
+
+# MASS plugins
+mass-*-plugin*/
