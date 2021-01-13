@@ -28,7 +28,11 @@ class UIElementBase : public UIElementBaseParent, public IUIElement
 	Q_OBJECT
 	Q_INTERFACES(IUIElement)
 public:
-	UIElementBase(QObject* parentObject, QStringList linkNames, QIcon icon=QIcon());
+#ifdef QML_UIElement
+	UIElementBase(QObject* parentObject, QStringList linkNames, QString mainFileName=QString());
+#else
+	UIElementBase(QObject* parentObject, QStringList linkNames);
+#endif
 	~UIElementBase() override = default;
 
 	// IUIElement interface
@@ -38,7 +42,6 @@ public slots:
 	quint32 getUID() override;
 	QStringList linkNames() override;
 	QWidget *getWidget() override;
-	QIcon getIcon() override;
 
 	bool open(QWidget *parent) override;
 	bool close() override;
@@ -51,7 +54,13 @@ public:
 	virtual void onUIElementReferencesSet() {}
 	virtual void onUIElementReady() {}
 	virtual void onUIElementReferencesListUpdated(QString link) {Q_UNUSED(link)}
-	void initUIElementBase(QMap<QString, IReferenceInstancePtr> instances = {}, QMap<QString, IReferenceInstancesListPtr> instancesLists = {});
+	void initUIElementBase(
+#ifdef QML_UIElement
+		QMap<QString, QObject*> references = {},
+#endif		
+		QMap<QString, IReferenceInstancePtr> instances = {},
+		QMap<QString, IReferenceInstancesListPtr> instancesLists = {}
+	);
 
 public slots:
 	void openLink(quint32 referenceUID);
@@ -76,13 +85,14 @@ private:
 	// QWidget interface
 protected:
 	void resizeEvent(QResizeEvent *event) override;
+protected:
+	QString m_mainFileName;
 #endif
 
 protected:
 	QPointer<QObject> m_parentObject;
 	IPlugin* m_pluginBase;
 	QStringList m_linkNames;
-	QIcon m_icon;
 	QSharedPointer<UIElementLinksHandler> m_linksHandler;
 	bool m_isOpened;
 };

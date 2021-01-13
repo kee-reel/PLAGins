@@ -9,9 +9,6 @@
 {
 }
 
-%{CN}::~%{CN}()
-{
-}
 
 QString %{CN}::testString()
 {

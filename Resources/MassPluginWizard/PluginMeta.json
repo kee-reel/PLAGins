@@ -2,7 +2,7 @@
 	"iplugin": {
 		"interfaces": [
 		"IPlugin/1.0"
-@if '%{PluginType}' === 'QWidget' || '%{PluginType}' === 'QWidget with QML'
+@if '%{PluginType}' === 'QWidget' || '%{PluginType}' === 'QML'
 		, "IUIElement/1.0"
 @endif
 @if %{CreateNewInterface}

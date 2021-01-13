@@ -6,7 +6,7 @@ QT += core
 QT += widgets
 
 DEFINES += QWidget_UIElement
-@elsif '%{PluginType}' === 'QWidget with QML'
+@elsif '%{PluginType}' === 'QML'
 QT += quickwidgets qml quick
 
 DEFINES += QML_UIElement
@@ -16,7 +16,7 @@ include(../../plugin.pri)
 
 include(../../Interfaces/Architecture/PluginBase/PluginBase.pri)
 
-@if '%{PluginType}' === 'QWidget' || '%{PluginType}' === 'QWidget with QML'
+@if '%{PluginType}' === 'QWidget' || '%{PluginType}' === 'QML'
 include(../../Interfaces/Architecture/UIElementBase/UIElementBase.pri)
 @endif
 
@@ -42,6 +42,6 @@ DISTFILES += PluginMeta.json
 
 @if '%{PluginType}' === 'QWidget'
 FORMS += form.ui
-@elsif '%{PluginType}' === 'QWidget with QML'
+@elsif '%{PluginType}' === 'QML'
 RESOURCES += res.qrc
 @endif

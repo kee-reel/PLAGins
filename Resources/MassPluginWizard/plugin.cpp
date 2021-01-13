@@ -9,8 +9,8 @@ Plugin::Plugin() :
 @if '%{PluginType}' === 'QWidget'
 	, ui(new Ui::Form)
 @endif
-@if '%{PluginType}' === 'QWidget' || '%{PluginType}' === 'QWidget with QML'
-	, m_uiElementBase(new UIElementBase(this, {"MainMenuItem"}))
+@if '%{PluginType}' === 'QWidget' || '%{PluginType}' === 'QML'
+	, m_uiElementBase(new UIElementBase(this, {"MainMenuItem"}), "qrc:/form.qml")
 @endif
 @if %{CreateNewInterface}
 	, m_impl(new %{CN}(this))
@@ -19,7 +19,7 @@ Plugin::Plugin() :
 	initPluginBase(
 		{
 			{INTERFACE(IPlugin), this}
-@if '%{PluginType}' === 'QWidget' || '%{PluginType}' === 'QWidget with QML'
+@if '%{PluginType}' === 'QWidget' || '%{PluginType}' === 'QML'
 			, {INTERFACE(IUIElement), m_uiElementBase}
 @endif
 @if %{CreateNewInterface}
@@ -37,8 +37,8 @@ Plugin::Plugin() :
 	m_uiElementBase->initUIElementBase();
 	connect(ui->exitButton, &QPushButton::clicked, m_uiElementBase, &UIElementBase::closeSelf);
 @endif
-@if '%{PluginType}' === 'QWidget with QML'
-	m_uiElementBase->initUIElementBase("qrc:/form.qml",
+@if '%{PluginType}' === 'QML'
+	m_uiElementBase->initUIElementBase(,
 		{
 		// Commented code shows how to use reference to QML file. Uncomment, modify and go to form.qml for further instructions.
 		//	{"exampleReference", m_exampleReference.data()}

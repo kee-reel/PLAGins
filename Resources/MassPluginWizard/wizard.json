@@ -4,9 +4,9 @@
     "id": "C.MASSPlugin",
     "category": "A.Plugins",
 
-    "trDescription": "Creates plugin for MASS.",
-    "trDisplayName": "MASS Plugin",
-    "trDisplayCategory": "Project",
+    "trDescription": "Creates common plugin for MASS.",
+    "trDisplayName": "Common MASS Plugin",
+    "trDisplayCategory": "MASS",
 	"icon": "Logo128.png",
 	"enabled": "true",
 
@@ -36,8 +36,8 @@
                     "trDisplayName": "Plugin name:",
                     "mandatory": true,
                     "type": "LineEdit",
-                    "data": 
-                    { 
+                    "data":
+                    {
                         "trPlaceholder": "How your plugin will be called",
                         "validator": "(?:(?:[a-zA-Z_][a-zA-Z_0-9]*::)*[a-zA-Z_][a-zA-Z_0-9]*|)"
                     }
@@ -51,18 +51,18 @@
                 },
                 {
                     "name": "PluginType",
-                    "trDisplayName": "Plugin type:",
+                    "trDisplayName": "Plugin type:\nQObject - logic plugin\nQWidget - QWidget UI plugin\nQML - QML UI plugin",
                     "mandatory": true,
                     "type": "ComboBox",
                     "data":
                     {
-                        "items": [ "QObject", "QWidget", "QWidget with QML" ]
+                        "items": [ "QObject", "QWidget", "QML" ]
                     }
                 },
                 {
                     "name": "Path",
                     "type": "PathChooser",
-                    "trDisplayName": "Project path:",
+                    "trDisplayName": "Project path:\nMASS-Plugins/[your_repo_folder]/[plugin_folder]",
                     "mandatory": true,
                     "data":
                     {
@@ -73,7 +73,7 @@
                 },
                 {
                     "name": "CreateNewInterface",
-                    "trDisplayName": "Create new interface for plugin:",
+                    "trDisplayName": "Plugin provides interface",
                     "type": "CheckBox",
                     "data":
                     {
@@ -86,7 +86,7 @@
                     "visible": "%{CreateNewInterface}",
                     "name": "InterfacePath",
                     "type": "PathChooser",
-                    "trDisplayName": "Interface path:",
+                    "trDisplayName": "Interface path:\nMASS-Plugins/Interfaces/[interface_type_folder]",
                     "data":
                     {
                         "kind": "existingDirectory",
@@ -150,12 +150,12 @@
                 {
                     "source": "form.qml",
                     "target": "%{Path}/form.qml",
-                    "condition": "%{JS: '%{PluginType}' == 'QWidget with QML'}"
+                    "condition": "%{JS: '%{PluginType}' == 'QML'}"
                 },
                 {
                     "source": "res.qrc",
                     "target": "%{Path}/res.qrc",
-                    "condition": "%{JS: '%{PluginType}' == 'QWidget with QML'}"
+                    "condition": "%{JS: '%{PluginType}' == 'QML'}"
                 }
             ]
         }

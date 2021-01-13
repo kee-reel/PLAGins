@@ -1,18 +1,28 @@
 #include "uielementbase.h"
 
-UIElementBase::UIElementBase(QObject *parentObject, QStringList linkNames, QIcon icon) :
+#ifdef QML_UIElement
+UIElementBase::UIElementBase(QObject *parentObject, QStringList linkNames, QString mainFileName) :
+#else
+UIElementBase::UIElementBase(QObject *parentObject, QStringList linkNames) :
+#endif
 	UIElementBaseParent(nullptr),
+#ifdef QML_UIElement
+	m_mainFileName(mainFileName),
+#endif
 	m_parentObject(parentObject),
 	m_pluginBase(qobject_cast<IPlugin*>(parentObject)),
 	m_linkNames(linkNames),
-	m_icon(icon),
 	m_isOpened(false)
 {
 	UIElementBaseParent::close();
 }
 
-void UIElementBase::initUIElementBase(QMap<QString, IReferenceInstancePtr > instances,
-        QMap<QString, IReferenceInstancesListPtr > instancesLists)
+void UIElementBase::initUIElementBase(
+#ifdef QML_UIElement
+	QMap<QString, QObject*> references,
+#endif
+	QMap<QString, IReferenceInstancePtr > instances,
+	QMap<QString, IReferenceInstancesListPtr > instancesLists)
 {
 	m_linksHandler.reset(new UIElementLinksHandler(instances, instancesLists));
 	connect(m_linksHandler.data(), &UIElementLinksHandler::onStateChanged, this, &UIElementBase::onStateChanged);
@@ -21,6 +31,14 @@ void UIElementBase::initUIElementBase(QMap<QString, IReferenceInstancePtr > inst
 #ifdef QML_UIElement
 	setResizeMode(QQuickWidget::SizeRootObjectToView);
 	rootContext()->setContextProperty("uiElement", this);
+	for(auto iter = references.begin(); iter != references.end(); ++iter)
+	{
+		rootContext()->setContextProperty(iter.key(), iter.value());
+	}
+	if(!m_mainFileName.isEmpty())
+	{
+		setSource(m_mainFileName);
+	}
 #endif
 }
 
@@ -57,11 +75,6 @@ QStringList UIElementBase::linkNames()
 QWidget *UIElementBase::getWidget()
 {
 	return this;
-}
-
-QIcon UIElementBase::getIcon()
-{
-	return m_icon;
 }
 
 bool UIElementBase::open(QWidget* parent)
