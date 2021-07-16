@@ -1,11 +1,11 @@
-#include "uielementbase.h"
+#include "guielementbase.h"
 
 #ifdef QML_UIElement
-UIElementBase::UIElementBase(QObject *parentObject, QStringList linkNames, QString mainFileName) :
+GUIElementBase::GUIElementBase(QObject *parentObject, QStringList linkNames, QString mainFileName) :
 #else
-UIElementBase::UIElementBase(QObject *parentObject, QStringList linkNames) :
+GUIElementBase::GUIElementBase(QObject *parentObject, QStringList linkNames) :
 #endif
-	UIElementBaseParent(nullptr),
+	GUIElementBaseParent(nullptr),
 #ifdef QML_UIElement
 	m_mainFileName(mainFileName),
 #endif
@@ -14,19 +14,19 @@ UIElementBase::UIElementBase(QObject *parentObject, QStringList linkNames) :
 	m_linkNames(linkNames),
 	m_isOpened(false)
 {
-	UIElementBaseParent::close();
+	GUIElementBaseParent::close();
 }
 
-void UIElementBase::initUIElementBase(
+void GUIElementBase::initGUIElementBase(
 #ifdef QML_UIElement
-	QMap<QString, QObject*> references,
+        QMap<QString, QObject*> references,
 #endif
-	QMap<QString, IReferenceInstancePtr > instances,
-	QMap<QString, IReferenceInstancesListPtr > instancesLists)
+        QMap<QString, IReferenceInstancePtr > instances,
+        QMap<QString, IReferenceInstancesListPtr > instancesLists)
 {
 	m_linksHandler.reset(new UIElementLinksHandler(instances, instancesLists));
-	connect(m_linksHandler.data(), &UIElementLinksHandler::onStateChanged, this, &UIElementBase::onStateChanged);
-	connect(m_linksHandler.data(), &UIElementLinksHandler::onReferencesListUpdated, this, &UIElementBase::onReferencesListUpdated);
+	connect(m_linksHandler.data(), &UIElementLinksHandler::onStateChanged, this, &GUIElementBase::onStateChanged);
+	connect(m_linksHandler.data(), &UIElementLinksHandler::onReferencesListUpdated, this, &GUIElementBase::onReferencesListUpdated);
 
 #ifdef QML_UIElement
 	setResizeMode(QQuickWidget::SizeRootObjectToView);
@@ -42,42 +42,42 @@ void UIElementBase::initUIElementBase(
 #endif
 }
 
-void UIElementBase::openLink(quint32 referenceUID)
+void GUIElementBase::openLink(quint32 referenceUID)
 {
 	emit linkOpened(m_pluginBase->getDescriptor().toStrongRef()->uid(), referenceUID);
 }
 
-void UIElementBase::closeLink(quint32 referenceUID)
+void GUIElementBase::closeLink(quint32 referenceUID)
 {
 	emit linkClosed(m_pluginBase->getDescriptor().toStrongRef()->uid(), referenceUID);
 }
 
-void UIElementBase::closeSelf()
+void GUIElementBase::closeSelf()
 {
 	emit selfClosed(m_pluginBase->getDescriptor().toStrongRef()->uid());
 }
 
-QWeakPointer<IReferencesHandler<QString> > UIElementBase::getLinksHandler()
+QWeakPointer<IReferencesHandler<QString> > GUIElementBase::getLinksHandler()
 {
 	return m_linksHandler;
 }
 
-quint32 UIElementBase::getUID()
+quint32 GUIElementBase::getUID()
 {
 	return m_pluginBase->getDescriptor().toStrongRef()->uid();
 }
 
-QStringList UIElementBase::linkNames()
+QStringList GUIElementBase::linkNames()
 {
 	return m_linkNames;
 }
 
-QWidget *UIElementBase::getWidget()
+QWidget *GUIElementBase::getWidget()
 {
 	return this;
 }
 
-bool UIElementBase::open(QWidget* parent)
+bool GUIElementBase::open(QWidget* parent)
 {
 	if(!m_isOpened)
 	{
@@ -89,7 +89,7 @@ bool UIElementBase::open(QWidget* parent)
 	return true;
 }
 
-bool UIElementBase::close()
+bool GUIElementBase::close()
 {
 	if(m_isOpened)
 	{
@@ -99,12 +99,12 @@ bool UIElementBase::close()
 	return true;
 }
 
-bool UIElementBase::isOpened() const
+bool GUIElementBase::isOpened() const
 {
 	return m_isOpened;
 }
 
-void UIElementBase::onStateChanged(ReferencesHandlerState state)
+void GUIElementBase::onStateChanged(ReferencesHandlerState state)
 {
 	switch (state)
 	{
@@ -115,11 +115,16 @@ void UIElementBase::onStateChanged(ReferencesHandlerState state)
 		break;
 	case ReferencesHandlerState::READY:
 		onUIElementReady();
+		auto links = m_linksHandler->references();
+		for(auto iter = links.begin(); iter != links.end(); ++iter)
+		{
+			onReferencesListUpdated(iter.key());
+		}
 		break;
 	}
 }
 
-void UIElementBase::onReferencesListUpdated(QString link)
+void GUIElementBase::onReferencesListUpdated(QString link)
 {
 	onUIElementReferencesListUpdated(link);
 }
@@ -131,7 +136,7 @@ void UIElementBase::onReferencesListUpdated(QString link)
 #include <QQuickItem>
 #include <QGuiApplication>
 
-void UIElementBase::resizeEvent(QResizeEvent *event)
+void GUIElementBase::resizeEvent(QResizeEvent *event)
 {
 	qreal refDpi = 102.;
 	qreal refWidth = 540.;
@@ -144,6 +149,6 @@ void UIElementBase::resizeEvent(QResizeEvent *event)
 	qreal ratioFont = qMin(height*dpi/(refDpi*refHeight), width*dpi/(refDpi*refWidth));
 	this->rootContext()->setContextProperty("ratio", ratio);
 	this->rootContext()->setContextProperty("ratioFont", ratioFont);
-	return UIElementBaseParent::resizeEvent(event);
+	return GUIElementBaseParent::resizeEvent(event);
 }
 #endif

@@ -26,7 +26,7 @@ public:
     virtual bool linkPlugins(quint32 referent, QString interface, quint32 reference) = 0;
     virtual bool unlinkPlugins(quint32 referent, QString interface, quint32 reference) = 0;
 
-    virtual QWeakPointer<ILinkerItem> getItemByUID(quint32 uid) = 0;
+	virtual QWeakPointer<ILinkerItem> getItemByUID(quint32 uid) = 0;
     virtual QWeakPointer< QList<QWeakPointer<ILinkerItem>> > getItemsWithInterface(Interface interface) = 0;
 
 signals:

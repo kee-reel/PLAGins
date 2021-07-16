@@ -4,7 +4,7 @@
 
 #include "../../Interfaces/Architecture/ireferenceshandler.h"
 
-class IUIElement
+class IGUIElement
 {
 public:
 	virtual QWeakPointer<IReferencesHandler<QString>> getLinksHandler() = 0;
@@ -21,6 +21,6 @@ public:
 	void linkClosed(quint32 selfUID, quint32 referenceUID);
 	void selfClosed(quint32 selfUID);
 protected:
-	virtual ~IUIElement() = default;
+	virtual ~IGUIElement() = default;
 };
-Q_DECLARE_INTERFACE(IUIElement, "IUIElement/1.0")
+Q_DECLARE_INTERFACE(IGUIElement, "IGUIElement/1.0")

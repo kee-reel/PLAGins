@@ -1,4 +1,4 @@
-#include "uielementlinkshandler.h"
+#include "guielementlinkshandler.h"
 
 UIElementLinksHandler::UIElementLinksHandler(QMap<QString, IReferenceInstancePtr> instances, QMap<QString, IReferenceInstancesListPtr> instancesLists) :
 	QObject(nullptr),

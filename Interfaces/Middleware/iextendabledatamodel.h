@@ -17,6 +17,7 @@ public:
 	virtual int getItemId(const QModelIndex &index) = 0;
 	virtual const ExtendableItemDataMap& getItem(const QModelIndex &itemIndex) = 0;
 	virtual const ExtendableItemDataMap& getItem(int itemId) = 0;
+	virtual bool hasItem(int itemId) = 0;
 	virtual QList<int> getItemIds() = 0;
 
 public slots:

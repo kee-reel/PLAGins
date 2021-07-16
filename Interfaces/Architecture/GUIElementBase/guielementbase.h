@@ -3,39 +3,39 @@
 #include <QtCore>
 #include <QIcon>
 
-#include "../../Interfaces/Architecture/iuielement.h"
+#include "../../Interfaces/Architecture/iguielement.h"
 #include "../../Interfaces/Architecture/iplugin.h"
 #include "../../Interfaces/Architecture/referenceshandler.h"
-#include "uielementlinkshandler.h"
+#include "guielementlinkshandler.h"
 
 
 #ifdef QML_UIElement
 #include <QQuickItem>
 #include <QQmlContext>
 #include <QQuickWidget>
-#define UIElementBaseParent QQuickWidget
+#define GUIElementBaseParent QQuickWidget
 #endif
 
 #ifdef QWidget_UIElement
 #include <QWidget>
-#define UIElementBaseParent QWidget
+#define GUIElementBaseParent QWidget
 #endif
 
 
-class UIElementBase : public UIElementBaseParent, public IUIElement
+class GUIElementBase : public GUIElementBaseParent, public IGUIElement
 {
-	friend class UIElementBaseSignal;
+	friend class GUIElementBaseSignal;
 	Q_OBJECT
-	Q_INTERFACES(IUIElement)
+	Q_INTERFACES(IGUIElement)
 public:
 #ifdef QML_UIElement
-	UIElementBase(QObject* parentObject, QStringList linkNames, QString mainFileName=QString());
+	GUIElementBase(QObject* parentObject, QStringList linkNames, QString mainFileName=QString());
 #else
-	UIElementBase(QObject* parentObject, QStringList linkNames);
+	GUIElementBase(QObject* parentObject, QStringList linkNames);
 #endif
-	~UIElementBase() override = default;
+	~GUIElementBase() override = default;
 
-	// IUIElement interface
+	// IGUIElement interface
 public slots:
 	QWeakPointer<IReferencesHandler<QString>> getLinksHandler() override;
 
@@ -54,7 +54,7 @@ public:
 	virtual void onUIElementReferencesSet() {}
 	virtual void onUIElementReady() {}
 	virtual void onUIElementReferencesListUpdated(QString link) {Q_UNUSED(link)}
-	void initUIElementBase(
+	void initGUIElementBase(
 #ifdef QML_UIElement
 		QMap<QString, QObject*> references = {},
 #endif		
@@ -77,7 +77,7 @@ private:
 	void onReferencesListUpdated(QString link);
 
 private:
-	UIElementBase* m_instance;
+	GUIElementBase* m_instance;
 	QWeakPointer<UIElementLinksHandler> m_handler;
 
 

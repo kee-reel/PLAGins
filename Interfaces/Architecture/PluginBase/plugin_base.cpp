@@ -76,6 +76,11 @@ void PluginBase::onStateChanged(ReferencesHandlerState state)
 		break;
 	case ReferencesHandlerState::READY:
 		onReady();
+		auto links = m_instancesHandler->references();
+		for(auto iter = links.begin(); iter != links.end(); ++iter)
+		{
+			onReferencesListUpdated(iter.key());
+		}
 		break;
 	}
 }
