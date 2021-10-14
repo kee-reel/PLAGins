@@ -23,6 +23,8 @@ public:
 public slots:
 	virtual QVariantMap getVariantDefaultItem() = 0;
 	virtual QVariantMap getVariantItem(int itemId) = 0;
+	virtual QVariantMap getFirstVariantItem() = 0;
+	virtual const ExtendableItemDataMap& getFirstItem() = 0;
 	virtual QModelIndex getItemIndex(int itemId) = 0;
 	virtual int appendItem(const QMap<Interface, QVariantMap>& itemValues) = 0;
 	virtual int addItem(const QMap<Interface, QVariantMap>& itemValues, int row, QModelIndex parentIndex) = 0;

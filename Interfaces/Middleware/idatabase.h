@@ -23,23 +23,21 @@ class QSqlQuery;
 class IDataBase
 {
 public:
-    //! \brief Execute query whithin connected data base using given string.
-    //! \param Query string.
-    //! \return Query result.
-    //!
-    virtual QSqlQuery ExecuteQuery(QString &query) = 0;
-    //! \brief Execute query whithin connected data base using given string and parameters.
-    //! \param Query string.
-    //! \param Placeholders contained in string.
-    //! \param Values that will be inserted in given placeholders.
-    //! \return Query result.
-    //!
-    virtual QSqlQuery ExecuteQuery(QString &query, QList<QString> *valuePlaceholders, QList<QVariant> *values) = 0;
-
-    virtual void SetPassword(QString password) = 0;
+	//! \brief Execute query whithin connected data base using given string.
+	//! \param Query string.
+	//! \return Query result.
+	//!
+	virtual QSqlQuery ExecuteQuery(QString &query) = 0;
+	//! \brief Execute query whithin connected data base using given string and parameters.
+	//! \param Query string.
+	//! \param Placeholders contained in string.
+	//! \param Values that will be inserted in given placeholders.
+	//! \return Query result.
+	//!
+	virtual QSqlQuery ExecuteQuery(QString &query, QList<QString> *valuePlaceholders, QList<QVariant> *values) = 0;
 
 protected:
-    virtual ~IDataBase() {}
+	virtual ~IDataBase() {}
 };
 Q_DECLARE_INTERFACE(IDataBase, "IDataBase/1.0")
 //! @}
