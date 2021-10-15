@@ -17,20 +17,20 @@ find_package(Qt6 COMPONENTS Core)
 @QML@find_package(Qt6 COMPONENTS Quick)
 
 add_library(%{CN} SHARED
-@UI@    ../../Interfaces/Architecture/GUIElementBase/../iguielement.h
-@UI@    ../../Interfaces/Architecture/GUIElementBase/../referenceinstance.h
-@UI@    ../../Interfaces/Architecture/GUIElementBase/../referenceinstanceslist.h
-@UI@    ../../Interfaces/Architecture/GUIElementBase/../referenceshandler.h
-@UI@    ../../Interfaces/Architecture/GUIElementBase/guielementbase.cpp ../../Interfaces/Architecture/GUIElementBase/guielementbase.h
-@UI@    ../../Interfaces/Architecture/GUIElementBase/guielementlinkshandler.cpp ../../Interfaces/Architecture/GUIElementBase/guielementlinkshandler.h
-    ../../Interfaces/Architecture/PluginBase/../iplugin.h
-    ../../Interfaces/Architecture/PluginBase/../referenceinstance.h
-    ../../Interfaces/Architecture/PluginBase/../referenceinstanceslist.h
-    ../../Interfaces/Architecture/PluginBase/../referenceshandler.h
-    ../../Interfaces/Architecture/PluginBase/plugin_base.cpp ../../Interfaces/Architecture/PluginBase/plugin_base.h
-    ../../Interfaces/Architecture/PluginBase/plugindescriptor.h
-    plugin.cpp plugin.h
-    PluginMeta.json
+@UI@	../../Interfaces/Architecture/GUIElementBase/../iguielement.h
+@UI@	../../Interfaces/Architecture/GUIElementBase/../referenceinstance.h
+@UI@	../../Interfaces/Architecture/GUIElementBase/../referenceinstanceslist.h
+@UI@	../../Interfaces/Architecture/GUIElementBase/../referenceshandler.h
+@UI@	../../Interfaces/Architecture/GUIElementBase/guielementbase.cpp ../../Interfaces/Architecture/GUIElementBase/guielementbase.h
+@UI@	../../Interfaces/Architecture/GUIElementBase/guielementlinkshandler.cpp ../../Interfaces/Architecture/GUIElementBase/guielementlinkshandler.h
+	../../Interfaces/Architecture/PluginBase/../iplugin.h
+	../../Interfaces/Architecture/PluginBase/../referenceinstance.h
+	../../Interfaces/Architecture/PluginBase/../referenceinstanceslist.h
+	../../Interfaces/Architecture/PluginBase/../referenceshandler.h
+	../../Interfaces/Architecture/PluginBase/plugin_base.cpp ../../Interfaces/Architecture/PluginBase/plugin_base.h
+	../../Interfaces/Architecture/PluginBase/plugindescriptor.h
+	plugin.cpp plugin.h
+	PluginMeta.json
 @INT@	%{IPath}
 @INT@	%{SrcFileName} %{HdrFileName}
 @WID@	form.ui
@@ -38,26 +38,29 @@ add_library(%{CN} SHARED
 )
 
 @UI@target_compile_definitions(%{CN} PUBLIC
-@QML@    QML_UIElement
-@WID@    QWidget_UIElement
+@QML@	QML_UIElement
+@WID@	QWidget_UIElement
 @UI@)
 target_compile_options( %{CN} PRIVATE -Wall -Wno-undef )
 target_link_libraries(%{CN} PUBLIC
-    Qt::Core
-@UI@    Qt::Gui
-@QML@    Qt::Qml
-@QML@    Qt::Quick
-@QML@    Qt::QuickWidgets
+	Qt::Core
+@UI@	Qt::Gui
+@QML@	Qt::Qml
+@QML@	Qt::Quick
+@QML@	Qt::QuickWidgets
 )
 
+set(CMAKE_INSTALL_COMPONENT %{CN})
+file(INSTALL "${CMAKE_CURRENT_BINARY_DIR}/lib%{CN}.so" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/../../../Application/Plugins")
+
 @QML@qt6_add_qml_module(QML_StaticLib
-@QML@    VERSION 1.0
-@QML@    URI "Plugins"
+@QML@	VERSION 1.0
+@QML@	URI "Plugins"
 @QML@)
 @QML@
 if(WIN32)
-    target_compile_definitions(Supper PUBLIC
-        WIN32_LEAN_AND_MEAN
-    )
+	target_compile_definitions(%{CN} PUBLIC
+		WIN32_LEAN_AND_MEAN
+	)
 endif()
 
