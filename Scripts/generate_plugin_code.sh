@@ -23,7 +23,7 @@ if [[ $IS_UI == 'n' ]]; then
 		if [[ -n $RES ]]; then
 			I_FILENAME=$RES
 		fi
-		I_PATH="../../Interfaces/$I_FILENAME"
+		I_PATH="../../Interfaces/Utility/$I_FILENAME"
 		if [[ -e $I_PATH ]]; then
 			echo 'Interface with same name already exists in ./Plugins!'
 			exit
@@ -36,6 +36,19 @@ else
 1 - QML(recommended)
 2 - QWidjets
 Type option number: " UI_TYPE
+	if [[ $UI_TYPE == '1' ]]; then
+		REF_FILENAMES=($(ls -1 Interfaces/Utility | sort))
+		echo "Your plugin is graphical user interface of other plugin. Please, choose name of file that contains interface of that plugin:"
+		for ((i = 0; i < ${#REF_FILENAMES[@]}; i++)); do
+			echo "$i: ${REF_FILENAMES[i]}"
+		done
+		read -p 'File index: ' INDEX
+		REF_FILENAME=${REF_FILENAMES[INDEX]}
+		echo $REF_FILENAME
+		REF=$(grep -oE 'INTERFACE(.+),' Interfaces/Utility/$REF_FILENAME | sed -E 's/INTERFACE\((.+)\,/\1/')
+		echo $REF
+		REF_FILENAME="../../Interfaces/Utility/$REF_FILENAME"
+	fi
 fi
 
 cp -r ./Resources/PluginTemplate ./Plugins/$NAME
@@ -66,6 +79,8 @@ for f in $(ls | grep -E '\.(txt|cpp|h|qml|json)$'); do
 	sed -i -E "s|%.SrcFileName.|$SRC_FILENAME|g" $f
 	sed -i -E "s|%.InterfaceName.|$I_NAME|g" $f
 	sed -i -E "s|%.IPath.|$I_PATH|g" $f
+	sed -i -E "s|%.REF.|$REF|g" $f
+	sed -i -E "s|%.REF_FILENAME.|$REF_FILENAME|g" $f
 done
 
 

@@ -13,6 +13,8 @@
 @WID@
 @INT@#include "%{HdrFileName}"
 @INT@
+@QML@#include "%{REF_FILENAME}"
+@QML@
 class Plugin : public QObject, public PluginBase
 {
 	Q_OBJECT
@@ -27,4 +29,5 @@ private:
 @WID@	QSharedPointer<Ui::Form> ui;
 @UI@	GUIElementBase* m_guiElementBase;
 @INT@	%{CN}* m_impl;
+@QML@	ReferenceInstancePtr<%{REF}> m_reference;
 };

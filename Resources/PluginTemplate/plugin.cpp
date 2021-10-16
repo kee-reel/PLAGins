@@ -16,8 +16,8 @@ Plugin::Plugin() :
 @INT@			, {INTERFACE(%{InterfaceName}), m_impl}
 		},
 		{
-		// Commented code shows how to add new references. Uncomment and modify according to type used in plugin.h
-		//	{INTERFACE(IExample), m_exampleReference}
+@QML@			// Set reference pointer object to internal plugin map, so it could be accessed by plugin linker
+@QML@			{INTERFACE(%{REF}), m_reference}
 		}
 	);
 
@@ -26,8 +26,8 @@ Plugin::Plugin() :
 @WID@	connect(ui->exitButton, &QPushButton::clicked, m_guiElementBase, &GUIElementBase::closeSelf);
 @QML@	m_guiElementBase->initGUIElementBase(
 @QML@		{
-@QML@		// Commented code shows how to use reference to QML file. Uncomment, modify and go to form.qml for further instructions.
-@QML@		//	{"exampleReference", m_exampleReference.data()}
+@QML@			// Pass reference pointer object into QML
+@QML@			{"reference", m_reference.data()}
 @QML@		}
 @QML@	);
 }

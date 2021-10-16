@@ -8,6 +8,7 @@ class %{CN} : public QObject, public %{InterfaceName}
 {
 	Q_OBJECT
 	Q_INTERFACES(%{InterfaceName})
+	Q_PROPERTY(QString testString READ testString WRITE setTestString NOTIFY testStringChanged)
 
 public:
 	%{CN}(QObject* parent);

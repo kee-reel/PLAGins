@@ -3,9 +3,9 @@ import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 
 Item {
-id: root
-	// Commented code shows how to interact with references in QML. Uncomment and modify according to interface of your reference.
-	//property var exampleReferenceObject: exampleReference.object
+	id: root
+	// Reference object of %{REF}
+	property var referenceObject: reference.object
 
 	Rectangle {
 		anchors.fill: parent
@@ -17,7 +17,7 @@ id: root
 		Text {
 			id: label
 			Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
-			//text: exampleReferenceObject.testString
+			text: referenceObject.testString
 			color: "white"
 			font.pixelSize: 36 * ratio
 		}
@@ -29,8 +29,7 @@ id: root
 			placeholderText: "Type in"
 			font.pixelSize: 36 * ratio
 			onTextChanged: {
-				//exampleReferenceObject.testString = text
-				label.text = text
+				referenceObject.testString = text
 			}
 		}
 	}

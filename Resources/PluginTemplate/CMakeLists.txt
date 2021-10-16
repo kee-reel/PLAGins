@@ -50,8 +50,11 @@ target_link_libraries(%{CN} PUBLIC
 @QML@	Qt::QuickWidgets
 )
 
-set(CMAKE_INSTALL_COMPONENT %{CN})
-file(INSTALL "${CMAKE_CURRENT_BINARY_DIR}/lib%{CN}.so" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/../../../Application/Plugins")
+add_custom_command(
+	TARGET %{CN} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+		"${CMAKE_CURRENT_BINARY_DIR}/lib%{CN}.so"
+                "${CMAKE_CURRENT_BINARY_DIR}/../../../Application/Plugins")
 
 @QML@qt6_add_qml_module(QML_StaticLib
 @QML@	VERSION 1.0
