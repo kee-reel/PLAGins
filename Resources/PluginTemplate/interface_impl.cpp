@@ -21,5 +21,6 @@ void %{CN}::setTestString(QString testString)
 		return;
 	
 	m_testString = testString;
+	qDebug() << "New text:" << testString;
 	emit testStringChanged(m_testString);
 }

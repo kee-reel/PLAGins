@@ -1,11 +1,13 @@
 {
 	"iplugin": {
 		"interfaces": [
-		"IPlugin/1.0"
-@UI@		, "IGUIElement/1.0"
-@INT@		, "%{InterfaceName}/1.0"
+			"IPlugin/1.0"
+@UI@			, "IGUIElement/1.0"
+@INT@			, "%{InterfaceName}/1.0"
 		],
-		"references": {},
+		"references": {
+@QML@			"%{REF}/1.0": 1
+		},
 		"info": {
 			"name": "%{CN}",
 			"about": "%{Description}"

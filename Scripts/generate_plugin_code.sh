@@ -44,9 +44,7 @@ Type option number: " UI_TYPE
 		done
 		read -p 'File index: ' INDEX
 		REF_FILENAME=${REF_FILENAMES[INDEX]}
-		echo $REF_FILENAME
 		REF=$(grep -oE 'INTERFACE(.+),' Interfaces/Utility/$REF_FILENAME | sed -E 's/INTERFACE\((.+)\,/\1/')
-		echo $REF
 		REF_FILENAME="../../Interfaces/Utility/$REF_FILENAME"
 	fi
 fi
@@ -79,8 +77,8 @@ for f in $(ls | grep -E '\.(txt|cpp|h|qml|json)$'); do
 	sed -i -E "s|%.SrcFileName.|$SRC_FILENAME|g" $f
 	sed -i -E "s|%.InterfaceName.|$I_NAME|g" $f
 	sed -i -E "s|%.IPath.|$I_PATH|g" $f
-	sed -i -E "s|%.REF.|$REF|g" $f
 	sed -i -E "s|%.REF_FILENAME.|$REF_FILENAME|g" $f
+	sed -i -E "s|%.REF.|$REF|g" $f
 done
 
 
