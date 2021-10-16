@@ -49,7 +49,7 @@ Type option number: " UI_TYPE
 	fi
 fi
 
-cp -r ./Resources/PluginTemplate ./Plugins/$NAME
+cp -r ./Scripts/PluginTemplate ./Plugins/$NAME
 cd ./Plugins/$NAME
 DESC='Author of this plugin have nothing to say'
 
