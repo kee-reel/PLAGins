@@ -109,10 +109,8 @@ public:
 	
 	T* instance()
 	{
-		if(isSet())
-			return m_instance;
-		else
-			assert(false);
+		assert(isSet());
+		return m_instance;
 	}
 	
 private:
