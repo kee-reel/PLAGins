@@ -23,7 +23,7 @@ if [[ $IS_UI == 'n' ]]; then
 		if [[ -n $RES ]]; then
 			I_FILENAME=$RES
 		fi
-		I_PATH="../../Interfaces/Utility/$I_FILENAME"
+		I_PATH="../../Interfaces/$I_FILENAME"
 		if [[ -e $I_PATH ]]; then
 			echo 'Interface with same name already exists in ./Plugins!'
 			exit
@@ -37,15 +37,15 @@ else
 2 - QWidjets
 Type option number: " UI_TYPE
 	if [[ $UI_TYPE == '1' ]]; then
-		REF_FILENAMES=($(ls -1 Interfaces/Utility | sort))
+		REF_FILENAMES=($(ls -1 ./Interfaces | sort))
 		echo "Your plugin is graphical user interface of other plugin. Please, choose name of file that contains interface of that plugin:"
 		for ((i = 0; i < ${#REF_FILENAMES[@]}; i++)); do
 			echo "$i: ${REF_FILENAMES[i]}"
 		done
 		read -p 'File index: ' INDEX
 		REF_FILENAME=${REF_FILENAMES[INDEX]}
-		REF=$(grep -oE 'INTERFACE(.+),' Interfaces/Utility/$REF_FILENAME | sed -E 's/INTERFACE\((.+)\,/\1/')
-		REF_FILENAME="../../Interfaces/Utility/$REF_FILENAME"
+		REF=$(grep -oE 'INTERFACE(.+),' Interfaces/$REF_FILENAME | sed -E 's/INTERFACE\((.+)\,/\1/')
+		REF_FILENAME="../../Interfaces/$REF_FILENAME"
 	fi
 fi
 

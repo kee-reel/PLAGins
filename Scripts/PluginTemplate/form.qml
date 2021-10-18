@@ -41,12 +41,12 @@ Item {
 		anchors.left: parent.left
 		anchors.top: parent.top
 		anchors.margins: 10 * ratio
-		width: 60 * ratio
-		height: width
 		onClicked: uiElement.closeSelf()
 		background: Rectangle {
 			color: exitButton.pressed ? "#d8dee9" : "#81a1c1"
 			radius: 90
+			width: 60 * ratio
+			height: width
 		}
 	}
 }

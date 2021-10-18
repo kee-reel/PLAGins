@@ -5,12 +5,14 @@ set( REL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../Common/GUIElement" )
 set( SOURCES ${SOURCES}
     ${REL_PATH}/iguielement.h
     ${REL_PATH}/guielementbase.cpp
-    ${REL_PATH}/guielementbase.h
     ${REL_PATH}/guielementlinkshandler.cpp
     ${REL_PATH}/guielementlinkshandler.h
     ${REL_PATH}/../Plugin/referenceinstance.h
     ${REL_PATH}/../Plugin/referenceinstanceslist.h
     ${REL_PATH}/../Plugin/referenceshandler.h
+)
+set( MOC_HEADERS ${MOC_HEADERS}
+    ${REL_PATH}/guielementbase.h
 )
 
 if( IS_QWIDGET_UI )
