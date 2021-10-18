@@ -3,9 +3,9 @@
 #include <QtCore>
 #include <QIcon>
 
-#include "../../Interfaces/Architecture/iguielement.h"
-#include "../../Interfaces/Architecture/iplugin.h"
-#include "../../Interfaces/Architecture/referenceshandler.h"
+#include "iguielement.h"
+#include "../Plugin/iplugin.h"
+#include "../Plugin/referenceshandler.h"
 #include "guielementlinkshandler.h"
 
 
@@ -20,7 +20,6 @@
 #include <QWidget>
 #define GUIElementBaseParent QWidget
 #endif
-
 
 class GUIElementBase : public GUIElementBaseParent, public IGUIElement
 {

@@ -2,7 +2,7 @@
 
 #include <QtCore>
 
-#include "../../Interfaces/Architecture/ireferencedescriptor.h"
+#include "../Common/Plugin/ireferencedescriptor.h"
 
 class IPluginLinker
 {

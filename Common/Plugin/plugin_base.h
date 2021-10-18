@@ -4,8 +4,8 @@
 #include <QtCore>
 #include <QJsonObject>
 
-#include "../iplugin.h"
-#include "../referenceshandler.h"
+#include "iplugin.h"
+#include "referenceshandler.h"
 #include "plugindescriptor.h"
 
 class PluginReferencesHandler : public QObject, public ReferencesHandler<Interface>

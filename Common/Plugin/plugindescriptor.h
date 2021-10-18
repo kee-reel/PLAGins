@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../../Architecture/ireferenceshandler.h"
+#include "ireferenceshandler.h"
 
 class PluginDescriptor : public IReferenceDescriptor
 {

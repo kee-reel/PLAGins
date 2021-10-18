@@ -3,7 +3,7 @@
 #include <QtGlobal>
 #include <QObject>
 
-#include "../../Interfaces/Architecture/interface.h"
+#include "../Plugin/interface.h"
 
 typedef QMap<Interface, QMap<QString, QVariant>> ExtendableItemDataMap;
 

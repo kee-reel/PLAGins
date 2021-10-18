@@ -2,7 +2,7 @@
 
 #include <QtCore>
 
-#include "../Middleware/idataextention.h"
+#include "../Common/DataExtention/idataextention.h"
 
 #define IMusicPlayerTrackDataExtention_EXTENTION_PROPERTY \
 	Q_PROPERTY(QString name READ name) \

@@ -3,7 +3,7 @@
 #include <QtGlobal>
 #include <QVariant>
 
-#include "../../Interfaces/Architecture/interface.h"
+#include "../Plugin/interface.h"
 #include "iextendabledatamodel.h"
 
 #define IDataExtention_EXTENTION_PROPERTY \

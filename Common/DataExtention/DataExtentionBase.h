@@ -2,8 +2,8 @@
 
 #include <QtCore>
 
-#include "../../Interfaces/Architecture/interface.h"
-#include "../idataextention.h"
+#include "../Plugin/interface.h"
+#include "idataextention.h"
 
 #define DATA_EXTENTION_BASE_DEFINITIONS(ExtentionDataInterfaceType, ExtendableDataInterfaceType, ...) \
 	IDataExtention_EXTENTION_PROPERTY \

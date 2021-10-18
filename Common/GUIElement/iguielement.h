@@ -2,7 +2,7 @@
 
 #include <QtCore>
 
-#include "../../Interfaces/Architecture/ireferenceshandler.h"
+#include "../Plugin/ireferenceshandler.h"
 
 class IGUIElement
 {

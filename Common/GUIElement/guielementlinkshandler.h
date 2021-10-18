@@ -2,7 +2,7 @@
 
 #include <QtCore>
 
-#include "../../Interfaces/Architecture/referenceshandler.h"
+#include "../Plugin/referenceshandler.h"
 
 class UIElementLinksHandler : public QObject, public ReferencesHandler<QString>
 {
